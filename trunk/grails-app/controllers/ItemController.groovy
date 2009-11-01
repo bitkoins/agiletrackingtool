@@ -157,5 +157,5 @@ class ItemController {
 	
 	def listGroups = {
 		redirect(controller:'itemGroup', action:'list')
-	}
+	}	
 }

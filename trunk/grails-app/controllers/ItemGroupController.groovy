@@ -31,4 +31,29 @@ class ItemGroupController {
 	]
 
 	def list = { [groups:ItemGroup.list()] }
+	
+	def delete = { 
+		def group = ItemGroup.get(Integer.parseInt(params.id))
+		if ( group) {
+			
+			group.items.collect{it}.each{ item ->			
+				item.iteration?.deleteItem(item.id)
+				item.group?.deleteItem(item.id)
+	    		item.delete()
+			}
+			
+			PointsSnapShot.list().each{ snapShot ->
+				def pointsForGroup = snapShot.getPointsForGroup(group)
+				
+				if (pointsForGroup) {
+	   		        pointsForGroup.snapShot.removeFromPointsForGroups(pointsForGroup)
+					pointsForGroup.delete()					
+				}
+			}
+			
+			group.delete(flush:true)
+		}
+			
+		redirect(action:'list')
+	}
 }

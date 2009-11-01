@@ -33,19 +33,31 @@ along with Agile Tracking Tool.  If not, see <http://www.gnu.org/licenses/>.
         
     	<h2>Groups overview</h2>
 		<br/>
+		
+		<div class="itemGroup">
 		<table>
-		<tr>
-			<td>Id.</td>
-			<td>Name</td>
-			<td/>
-		</tr>
-		<g:each var="group" in="${groups}">
 			<tr>
-				<td>${group.id}</td>
-				<td>${group.name}</td>
-				<td><g:link action="edit" id="${group.id}" >Edit</g:link></td>
+				<td>Id</td>
+				<td>Name</td>
+				<td>Number of Items</td>
+				<td>Finished points</td>
+				<td>Total points</td>
+				<td/>
+				<td/>
 			</tr>
-		</g:each>
+		
+			<g:each var="group" in="${groups}">
+				<tr>
+					<td>${group.id}</td>
+					<td>${group.name}</td>
+					<td>${group.items?.size()}</td>
+					<td>${group.finishedPoints()}</td>
+					<td>${group.totalPoints()}</td>
+					<td><g:link action="edit" id="${group.id}" >Edit</g:link></td>
+					<td><g:link action="delete" id="${group.id}" onclick="return confirm('This will delete all items and history of this group. Sure?');" >Delete</g:link></td>
+				</tr>
+			</g:each>
 		</table>
+		</div>
     </body>
 </html>

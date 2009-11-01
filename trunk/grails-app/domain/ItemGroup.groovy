@@ -21,7 +21,9 @@ along with Agile Tracking Tool.  If not, see <http://www.gnu.org/licenses/>.
 
 class ItemGroup extends ItemContainer {
 	
-	String name
-         
+	String name         
 	String toString() { return name }
+	
+	def totalPoints() { return items.sum{ it.points } }
+	def finishedPoints() { return items.sum{ (it.status == ItemStatus.Finished } ? it.points : 0 } }	
 }
