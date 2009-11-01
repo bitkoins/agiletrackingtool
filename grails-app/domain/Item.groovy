@@ -153,4 +153,10 @@ class Item {
 	{
 		return criteria ? criteria.trim().size() != 0 : false
 	}
+	
+	def removeItemRelations()
+	{
+		iteration?.deleteItem(id)
+		group?.deleteItem(id)
+	}
 }

@@ -61,4 +61,16 @@ class ItemGroupTests extends GroovyTestCase {
     	items.each{ item -> group.addItem(item) }
     	assertTrue group.items.size() == items.size() 
     }
+    
+    void testFinishedPointsWhenAllPointsAreFinished()
+    {
+    	items.each{ it.status = ItemStatus.Finished }
+    	assertTrue group.finishedPoints() == items.sum{ it.points }
+    }
+    	
+    	void testFinishedPointsWhenAllPointsAreRequest()
+    {
+       	items.each{ it.status = ItemStatus.Request }
+       	assertTrue group.finishedPoints() == 0
+    }
 }
