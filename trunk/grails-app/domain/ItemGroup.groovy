@@ -25,5 +25,5 @@ class ItemGroup extends ItemContainer {
 	String toString() { return name }
 	
 	def totalPoints() { return items.sum{ it.points } }
-	def finishedPoints() { return items.sum{ (it.status == ItemStatus.Finished } ? it.points : 0 } }	
+	def finishedPoints() { return items.sum{ (it.status == ItemStatus.Finished) ? it.points : 0 } }	
 }
