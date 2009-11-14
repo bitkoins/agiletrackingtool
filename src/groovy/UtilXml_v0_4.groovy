@@ -204,8 +204,9 @@ class UtilXml_v0_4 {
 		
 		/*-----------------SnapShots---------------------------------*/
 		def snapShots = []
-		def pointsSnapShotsParser = { PointsSnapShotsXml ->
-			def dates = PointsSnapShotsXml.dates.text().split(seperator).collect{ odf.parse(it) }
+		def pointsSnapShotsParser = { PointsSna    def datesText = PointsSnapShotsXml.dates.text()
+		    if (!datesText) return
+			def dates = datesTextml.dates.text().split(seperator).collect{ odf.parse(it) }
 			def overViews = dates.collect{ new PointsOverView() }
 			
 			PointsSnapShotsXml.PointsByPriority.each{ 
@@ -265,7 +266,4 @@ class UtilXml_v0_4 {
 		}
 	
 		map.itemsByGroup.each{ group, items ->
-			items.each{ item -> group.addItem(item) }
-		}
-	}
-}
+			items.each{ item -> group.addItem(i
