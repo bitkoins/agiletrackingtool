@@ -61,6 +61,7 @@ along with Agile Tracking Tool.  If not, see <http://www.gnu.org/licenses/>.
 				newSubItemsCounter++;
 			}
 		</script>
+		
         <nav:resources override="false"/>			
     </head>
  

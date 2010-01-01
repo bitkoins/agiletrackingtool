@@ -19,10 +19,7 @@ You should have received a copy of the GNU General Public License
 along with Agile Tracking Tool.  If not, see <http://www.gnu.org/licenses/>.
 ------------------------------------------------------------------------------*/
 
-enum IterationStatus { FutureWork, Ongoing, Finished }
-
-class Iteration extends ItemContainer {
-	
+class Iteration extends ItemContainer {	
 	String workingTitle
 	IterationStatus status
 	Date startTime

@@ -45,16 +45,16 @@ class UtilXml {
 	static def importFromXmlString(def xmlString)
 	{
 		def ret 
-		def doc = new XmlParser().parseText(xmlString)
+		def doc = new XmlSlurper().parseText(xmlString)
 		def docVersion = doc.DocumentVersion.text()
 		
 		switch(docVersion)
 		{
 			case UtilXml_v0_4.docVersion:
-				ret = UtilXml_v0_4.importFromXmlString(doc)
+				ret = UtilXml_v0_4.importFromXmlDoc(doc)
 				break;
 			case UtilXml_v0_3.docVersion:
-				ret = UtilXml_v0_3.importFromXmlString(doc)
+				ret = UtilXml_v0_3.importFromXmlDoc(doc)
 				break;
 			default:
 				throw new Exception("Version ${docVersion} is not supported.")
@@ -73,5 +73,5 @@ class UtilXml {
 			items.each{ item -> group.addItem(item) }
 		}
 	}
-	
 }
+
