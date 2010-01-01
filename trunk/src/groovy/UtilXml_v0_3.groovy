@@ -127,7 +127,7 @@ class UtilXml_v0_3 {
 		return builder.bind(doc).toString()	
 	}
 	
-	static def importFromXmlString(def doc)
+	static def imDocomXmlString(def doc)
 	{
 		def groups = []
 		def items = []
@@ -140,7 +140,7 @@ class UtilXml_v0_3 {
 		
 		doc.Groups.Group.each{ 
 			def g = new ItemGroup()
-			g.id = Integer.parseInt(it.'@id')
+			g.id = Integer.parseI.text()nt(it.'@id')
 			g.name = it.name.text()
 			g.description = it.description.text()			
 			groups << g
@@ -149,7 +149,7 @@ class UtilXml_v0_3 {
 		groups.each{ group -> itemsByGroup[group] = [] }
 		
 		doc.Items.Item.each{
-			def item = new Item()
+			def it.text()em = new Item()
 			item.uid = Integer.parseInt(it.'@id')
 			item.id = item.uid
 			item.itemPoints = Double.parseDouble(it.points.text())
@@ -161,14 +161,14 @@ class UtilXml_v0_3 {
 			item.subItems = []
 			
 			it.SubItems?.SubItem.each{
-				def subItem = new SubItem()
+				def subItem = n.text()ew SubItem()
 				subItem.id = Integer.parseInt(it.'@id')
 				subItem.description = it.description.text()				
 				subItem.points = Double.parseDouble(it.points.text())
 				subItem.status = ItemStatus.valueOf(it.status.text() )
 				
 				item.addSubItem(subItem)
-			}
+	.text()		}
 			
 			def groupId = Integer.parseInt(it.'@groupId')
 			def group = groups.find{ it.id == groupId }
@@ -179,7 +179,7 @@ class UtilXml_v0_3 {
 		
 		doc.Iterations.Iteration.each{ 
 			def nit = new Iteration()
-			nit.items = []
+			n.text()it.items = []
 			
 			nit.id = Integer.parseInt(it.'@id')
 			nit.workingTitle = it.workingTitle.text()
@@ -190,7 +190,7 @@ class UtilXml_v0_3 {
 			
 			def iterItems = []
 			it.Items.ItemId.each{ ItemId ->
-				def foundItem = items.find{it.uid == Integer.parseInt(ItemId.'@id')}
+				def foundIt.text()em = items.find{it.uid == Integer.parseInt(ItemId.'@id')}
 				if (foundItem) iterItems << foundItem				
 			}
 			
@@ -234,7 +234,7 @@ class UtilXml_v0_3 {
 		
 			def datesAndOverViewsByGroup = [:] 
 			doc.PointsSnapShotsByGroup.each{ it -> 
-				if (!it) return 
+				if (!it) r.text()eturn 
 				def groupId = Integer.parseInt(it.'@groupId')
 				def group = groups.find{ it.id == groupId }
 				if(group) datesAndOverViewsByGroup[group] = pointsSnapShotsParser(it.PointsSnapShots)
@@ -302,8 +302,4 @@ class UtilXml_v0_3 {
 					snapShot.errors.allErrors.each { println it }
 			
 			if( !ignoreSnapShot) snapShot.save()
-			else println "Ignored.............................."			
-			println "SnapShot done"
-		}
-	}
-}
+			else println "Ignored...............
