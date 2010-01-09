@@ -266,40 +266,4 @@ class UtilXml_v0_3 {
 			items.each{ item -> iter.addItem(item) } 
 		}
 	
-		map.itemsByGroup.each{ group, items ->
-			items.each{ item -> group.addItem(item) }
-		}
-	}
-	
-	
-	// TODO: when old data is exported to new format this can be removed.
-	static void importHistoricalData()
-	{
-		def currentGroups = ItemGroup.list()
-		
-		def dirName = "H:\\Documents\\DoaPlanning\\BackupXml"
-		def directory = new File(dirName)
-		directory.eachFile{ file ->
-			def fileName = dirName + "\\" + file.name
-			println "Import file " + fileName  
-		
-			def xml = new File(fileName).text
-			def map = UtilXml.importFromXmlString(xml)
-			UtilXml.setRelationToDomainObjects(map)
-			
-			println "Take snapShot"
-			def snapShot = PointsSnapShot.takeSnapShot(map.groups, map.exportDate)
-			
-			// Issue with saving the groups. Have to get the right group... //
-			def ignoreSnapShot = false
-			snapShot.pointsForGroups.each{ pg ->
-				def currentGroup = currentGroups.find{ it.name == pg.group.name }
-				if ( !currentGroup) ignoreSnapShot = true
-				else pg.group = currentGroup
-			}
-			
-			if ( !snapShot.validate() )
-					snapShot.errors.allErrors.each { println it }
-			
-			if( !ignoreSnapShot) snapShot.save()
-			else println "Ignored...............
+		map.itemsByGroup.each{ group, items }
