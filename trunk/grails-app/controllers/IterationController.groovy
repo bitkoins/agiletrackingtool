@@ -26,10 +26,10 @@ class IterationController {
 		group:'tags', 
 		order:40, 
 		title:'Iterations', 
-		action:'list',
+		action:'showCurrent',
 		subItems: [
-			[action:'list', order:1, title:"Manage"],
-			[action:'showCurrent', order:10, title:'Show current iteration'],
+			[action:'showCurrent', order:1, title:'Show current iteration'],
+			[action:'list', order:10, title:"Manage"],
 			[action:'create', order:20, title:'New iteration'],
 			[action:'history', order:50, title:'List all iterations']
 		] 
@@ -82,7 +82,7 @@ class IterationController {
 		}
 		
 		if (!iter) { 
-			render "Could not find the iteration"
+			redirect(action:'list')
 			return
 		}
 		
