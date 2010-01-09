@@ -56,4 +56,8 @@ class ItemGroupController {
 			
 		redirect(action:'list')
 	}
+	
+	def show = {
+		redirect(action:'list')
+	} 
 }
