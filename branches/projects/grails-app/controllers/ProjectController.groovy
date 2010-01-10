@@ -20,8 +20,7 @@ class ProjectController {
 		redirect(action:'list')
 	}
 	
-	def select = {
-		session.project = Project.get(params.id) 
+	def select = {		
 		redirect(controller:'item',action:'backlog')
 	}
 }
