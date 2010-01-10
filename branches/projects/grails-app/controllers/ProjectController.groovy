@@ -12,12 +12,16 @@ class ProjectController {
 		] 
 	]
 	
-	
 	def list = {
 		return [projects:Project.list()]
 	} 
 	
 	def show = {
-		redirect(action:list)
+		redirect(action:'list')
+	}
+	
+	def select = {
+		session.project = Project.get(params.id) 
+		redirect(controller:'item',action:'backlog')
 	}
 }

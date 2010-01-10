@@ -31,14 +31,12 @@ along with Agile Tracking Tool.  If not, see <http://www.gnu.org/licenses/>.
     	<g:javascript library="prototype" />
     	<nav:renderSubItems group="tags" />
 		
-		
-		
 		<div class="itemGroup">
 		<table>				
 		<g:each var="project" in="${projects}">
 			<tr>
-				<td>${project.name}</td>
-				<td width="200">${project.email}</td>
+				<td width="80"><g:link action="select" id="${project.id}">${project.name}</g:link></td>			
+				<td width="200">${project.email}</td>				
 				<td width="80"><g:link action="edit" id="${project.id}">edit</g:link></td>
 				<td width="80"><g:link action="delete" id="${project.id}">delete</g:link></td>
 			</tr>

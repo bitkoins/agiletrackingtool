@@ -27,40 +27,7 @@ along with Agile Tracking Tool.  If not, see <http://www.gnu.org/licenses/>.
         
         <g:layoutHead />
         <g:javascript library="application" />
-        
-        <script>
-    		function hideItem(itemId) {
-    			var divElement = document.getElementById(itemId);
-    			divElement.style.display='none';
-    		}
-    		
-    		function showItem(itemId) {
-    			var divElement = document.getElementById(itemId);
-    			divElement.style.display='block';
-    		}
-    	
-			var newSubItemsCounter = 0;
-	
-			function getSubItemContainer()
-			{
-				return document.getElementById("subItemContainer")
-			}
-			
-			function deleteChild(id) {
-			    var subItem = document.getElementById(id)
-				getSubItemContainer().removeChild(subItem)
-			}
-			
-			function addNewSubItem() {
-				var node = document.getElementById("subItemTemplate").cloneNode(true)
-				var subItemId = "newSubItem_" + newSubItemsCounter;
-				node.setAttribute("id", subItemId)
-				node.getElementsByTagName("a")[0].onclick = function() { deleteChild(subItemId); };
-				
-				getSubItemContainer().appendChild(node)
-				newSubItemsCounter++;
-			}
-		</script>
+        <g:javascript library="item" />
 		
         <nav:resources override="false"/>			
     </head>
@@ -74,10 +41,9 @@ along with Agile Tracking Tool.  If not, see <http://www.gnu.org/licenses/>.
             <img src="${createLinkTo(dir:'images',file:'spinner.gif')}" alt="Spinner" />
         </div>	
         <div style="position:absolute;top:2px;right:10px;"><a href="http://sites.google.com/site/agiletrackingtool/"><img width="125" src="${createLinkTo(dir:'images',file:'logo.jpg')}" alt="Grails" /></a></div>	
-        <div style="color:#006dba;float:left;font-size:200%;margin-left:20px;margin-bottom:3px;margin-top:0px"><g:meta name="app.projectName"/></div>
+        <div style="color:#006dba;float:left;font-size:200%;margin-left:20px;margin-bottom:3px;margin-top:0px">${session.project?.name}</div>
         <div style="float:right;font-size:85%;font-weight:bold;margin-right:1px;margin-top:2px"><a href="http://sites.google.com/site/agiletrackingtool/">Powered by: Agile Tracking Tool</a></div>
         <div style="clear:both" />
-        
         
         <g:layoutBody />		
     </body>	
