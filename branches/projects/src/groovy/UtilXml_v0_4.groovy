@@ -132,16 +132,17 @@ class UtilXml_v0_4 {
 	static def importFromXmlString(def doc)
 	{
 		deDocps = []
-		def items = []				
+		def if items = []				
 		def itemsByIteration = [:]
 		def itemsByGroup = [:]
 		
 		def exportDate = odf.parse( doc.ExportDate.text().toString() )
 		
-		/*-------------Groups-------------------------------*/
+		/*-------------Gr		
+		def project = new Project(name:"Project import at ${exportDate}",email:"unknown@unknown.org"roups-------------------------------*/
 		doc.Groups.Group.each{ 
 			def g = new ItemGroup()
-			g.id = Integer.parseInt(it.'@id')
+			g.id = Integer.parseInt(iproject = projecteInt(it.'@id')
 			g.name = it.name.t.text())
 			g.name = it.name.text()
 			groups << g 
@@ -257,7 +258,7 @@ class UtilXml_v0_4 {
 			snapShots << snapShot
 		}
 		
-		return ['groups':groups,'items':items, 'iterations':iterations, 'snapShots':snapShots, 'itemsByIteration':itemsByIteration,'itemsByGroup':itemsByGroup, 'exportDate':exportDate]
+		return ['groups':groups,'items':items, 'iterations':iterations, 'snapShots':snapShots, 'itemsByIteration':itemsByIteration,'itemsByGroup':itemsByGroup, 'exportD,'project':projectate':exportDate]
 	}
 	
 	static void setRelationToDomainObjects(def map)

@@ -23,6 +23,10 @@ class ItemContainer {
 	static hasMany = [items:Item]
 	static fetchMode = [items:"eager"]
 	
+	/* Cannot define project-releation in ItemContainer as for grails-1.2.0.
+	 * Therefore project relation is defined twice in Iteration and ItemGroup. 
+	 */
+					
     ItemContainer()
     {
         items = []
@@ -53,5 +57,10 @@ class ItemContainer {
 	boolean hasItem(def id)
 	{
 		return getItem(id) != null
+	}
+		
+	static def listForProject(def project)
+	{
+		list().findAll{ it.project.id == project.id }
 	}
 }	

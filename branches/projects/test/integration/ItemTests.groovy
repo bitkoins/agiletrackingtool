@@ -21,28 +21,33 @@ along with Agile Tracking Tool.  If not, see <http://www.gnu.org/licenses/>.
 
 class ItemTests extends GroovyTestCase {
 
+	def projects
 	def groups
 	def items
 	
 	void setUp()
 	{
-		groups = Defaults.getGroups(2)
+		projects	 = Defaults.getProjects(1)
+		groups = Defaults.getGroups(2,projects)
 		items = Defaults.getItems(5,groups)
 	}
 	
 	void tearDown()
 	{
 		items*.delete()
+		projects*.delete()
 		groups*.delete()
 	}
 	
 	void saveItemsAndGroups()
 	{
+		projects*.save()
 		groups*.save()
 	}
 	
     void testSave() {
     	def item = items[0]
+    	item.group.project.save()
 		item.group.save()
     	
     	if ( !item.validate() )

@@ -80,6 +80,7 @@ class Util {
 		alliterations*.delete()
 		ItemGroup.list()*.delete()
 		allitems*.delete()
+		Project.list()*.delete()
 	}
 }
 

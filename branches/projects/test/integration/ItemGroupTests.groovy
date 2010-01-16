@@ -23,10 +23,12 @@ class ItemGroupTests extends GroovyTestCase {
 	
 	def group
 	def items
+	def project
 	
 	void setUp()
 	{
-		group = Defaults.getGroups(1)[0]
+		project = Defaults.getProjects(1)[0]
+		group = Defaults.getGroups(1,[project])[0]
 		items = Defaults.getItems(5,[group])
 	}
 	
@@ -38,14 +40,16 @@ class ItemGroupTests extends GroovyTestCase {
     void testSave() {
     	if ( !group.validate() )
     		group.errors.allErrors.each { println it }
-    	
+    	project.save()
     	assertNotNull group.save()
+    	project.delete()
     }
     
     void testAddingAndDeletingItem()
     {
     	def item = items[0]
     	group.addItem(item)
+    	project.save()
     	group.save()
     	assertTrue group.hasItem(item.id)
     	assertTrue item.group == group
@@ -54,6 +58,7 @@ class ItemGroupTests extends GroovyTestCase {
     	group.save()
     	assertFalse group.hasItem(item.id)
     	assertTrue item.group == null
+    	project.delete()
     }
     
     void testAddingMultipleItems()
@@ -68,9 +73,53 @@ class ItemGroupTests extends GroovyTestCase {
     	assertTrue group.finishedPoints() == items.sum{ it.points }
     }
     	
-    	void testFinishedPointsWhenAllPointsAreRequest()
+    void testFinishedPointsWhenAllPointsAreRequest()
     {
        	items.each{ it.status = ItemStatus.Request }
        	assertTrue group.finishedPoints() == 0
+    }
+    
+    void testListForProject()
+    {
+    	def projectA = Defaults.getProjects(1)[0]
+    	def groupsA = Defaults.getGroups(2,[projectA])
+    	def groupsB = Defaults.getGroups(3,Defaults.getProjects(3))
+    	
+    	def groups = groupsA + groupsB    	
+    	groups.each{ it.project.save(); it.save() }
+    	
+    	def foundGroups = ItemGroup.listForProject(projectA) 
+    	assertTrue foundGroups.size() == groupsA.size()
+    	groupsA.each{ group -> assertTrue foundGroups.contains(group)  }
+    	
+    	groups.collect{ it.project }.unique()*.delete()
+    }
+    
+    void testDeleteWholeGroup()
+    {
+    	def project = Defaults.getProjects(1)[0]
+		def groups = Defaults.getGroups(2,[project])    
+    	def (groupA, groupB) = groups
+    	
+    	def itemsA = Defaults.getItems(2,[groupA])
+    	def itemsB = Defaults.getItems(3,[groupB])
+    	items = (itemsA + itemsB)
+    	
+    	def iteration = Defaults.getIterations(1)[0]
+    	
+		project.save()    	    	
+    	groups*.save()
+    	iteration.save()    	
+    	items.each{ it.save(); iteration.addItem(it) }
+    	
+    	groupA.deleteWholeGroup()
+    	
+    	assertTrue ItemGroup.count() == 1
+    	assertTrue Item.count() == itemsB.size()
+    	assertTrue iteration.items.size() == itemsB.size()
+
+		iteration.delete()
+		groupB.deleteWholeGroup()
+		project.delete()
     }
 }

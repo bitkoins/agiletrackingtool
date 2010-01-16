@@ -25,6 +25,11 @@ class PointsSnapShot
 	PointsOverView  overView
 	
 	static  hasMany = [ pointsForGroups: PointsForGroup ]
+	//static belongsTo = [project:Project]
+	
+	static constraints = {
+		//project(nullable:false)
+	}
 
 	PointsSnapShot() { this(new Date()) }
 	
@@ -33,7 +38,7 @@ class PointsSnapShot
 		this.date = date
 		overView = new PointsOverView()
 		pointsForGroups = []
-	}
+	}	
 	
 	static def takeSnapShot(def groups, def date) 
 	{
@@ -78,6 +83,22 @@ class PointsSnapShot
 			it.snapShot = null
 			it.save()
 			it.snapShot = this
+		}
+	}
+	
+	static def listForProject(def project)
+	{
+		return PointsSnapShot.list().findAll{ it.project.id == project.id }
+	}
+	
+	static def deleteWholeGroup(def group)
+	{
+		PointsSnapShot.listForProject(group.project).each{ snapShot ->
+			def pointsForGroup = snapShot.getPointsForGroup(group)
+			if (pointsForGroup) {
+	   		       pointsForGroup.snapShot.removeFromPointsForGroups(pointsForGroup)
+				pointsForGroup.delete()					
+			}
 		}
 	}
 }

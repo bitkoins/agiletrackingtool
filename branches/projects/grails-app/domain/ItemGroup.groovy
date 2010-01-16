@@ -22,8 +22,25 @@ along with Agile Tracking Tool.  If not, see <http://www.gnu.org/licenses/>.
 class ItemGroup extends ItemContainer {
 	
 	String name         
+	static belongsTo = [project:Project]
+	
 	String toString() { return name }
 	
+	static constraints  = {
+		project(nullable:false)
+	}
+	
 	def totalPoints() { return items.sum{ it.points } }
-	def finishedPoints() { return items.sum{ (it.status == ItemStatus.Finished) ? it.points : 0 } }	
+	def finishedPoints() { return items.sum{ (it.status == ItemStatus.Finished) ? it.points : 0 } }
+	
+	def deleteWholeGroup()
+	{
+		items.collect{it}.each{ item ->
+			item.iteration?.deleteItem(item.id)
+			item.group?.deleteItem(item.id)
+	    	item.delete()
+		}
+		
+		delete()
+	}
 }

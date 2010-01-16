@@ -38,13 +38,14 @@ class Defaults {
 		return ret
 	}
 	
-	static List<ItemGroup> getGroups(Integer nr)
+	static List<ItemGroup> getGroups(Integer nr, def projects = getProjects(1) )
 	{
 		List<ItemGroup> ret = []
 		nr.times {
-			def group = new ItemGroup()
+			def group = new ItemGroup()			
 			group.name = "Group-${it}"
 			group.items = []
+			group.project = Util.random(projects)
 			
 			ret << group
 		}
@@ -138,4 +139,14 @@ class Defaults {
 		}
 		return snapShots
 	}
+	
+	static def getProjects(Integer nr)
+	{
+		def projects = []
+		nr.times{
+			def name = "Project-${it}"
+			projects << new Project(name:"${name}",email:"${name}@projects.org" ) 
+		}
+		return projects 
+	} 
 }

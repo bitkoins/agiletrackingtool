@@ -20,7 +20,6 @@ along with Agile Tracking Tool.  If not, see <http://www.gnu.org/licenses/>.
 ------------------------------------------------------------------------------*/
 
 class ItemGroupController {
-	def scaffold = ItemGroup
 	
 	static navigation = [
 		group:'itemGroup', 
@@ -30,34 +29,50 @@ class ItemGroupController {
 		] 
 	]
 
-	def list = { [groups:ItemGroup.list()] }
+	def list = { [groups:ItemGroup.list().findAll{ it.project.id == session.project.id} ] }
 	
-	def delete = { 
-		def group = ItemGroup.get(Integer.parseInt(params.id))
-		if ( group) {
-			
-			group.items.collect{it}.each{ item ->			
-				item.iteration?.deleteItem(item.id)
-				item.group?.deleteItem(item.id)
-	    		item.delete()
-			}
-			
-			PointsSnapShot.list().each{ snapShot ->
-				def pointsForGroup = snapShot.getPointsForGroup(group)
-				
-				if (pointsForGroup) {
-	   		        pointsForGroup.snapShot.removeFromPointsForGroups(pointsForGroup)
-					pointsForGroup.delete()					
-				}
-			}
-			
-			group.delete(flush:true)
-		}
-			
-		redirect(action:'list')
+	def create = {
+		render(view:'edit', model : [group:new ItemGroup()] ) 	
 	}
 	
-	def show = {
+	def edit = {
+		def group = ItemGroup.get(params.id)
+		if(belongsToProject(group)) {
+			return [group:group]
+		}
+		else {
+			redirect(action:'list')
+		}
+	}
+	
+	def save = {
+		def isNewGroup = (params.id?.size() == 0)
+		if(isNewGroup) {
+			new ItemGroup(name:params.name,project:session.project).save()
+		}
+		else
+		{
+			def group = ItemGroup.get(params.id)
+			if ( belongsToProject(group) ) {
+				group.name = params.name
+				group.save()
+			}	
+		}
 		redirect(action:'list')
-	} 
+	}
+		
+	def delete = { 
+		def group = ItemGroup.get(Integer.parseInt(params.id))
+		if ( belongsToProject(group) )
+		{
+			PointsSnapShot.deleteWholeGroup(group)
+			group.deleteWholeGroup()
+		}
+		redirect(action:'list')
+	}
+		
+	def belongsToProject(def group)
+	{
+		return (group && (group.project.id == session.project.id) )
+	}
 }

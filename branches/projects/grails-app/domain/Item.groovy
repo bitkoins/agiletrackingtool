@@ -28,7 +28,7 @@ class Item {
 	Integer       uid
 	
 	static hasMany = [subItems:SubItem]
-	static belongsTo = [iteration:Iteration,group:ItemGroup]
+	static belongsTo = [iteration:Iteration,group:ItemGroup]//, project:Project]
 	static fetchMode = [subItems:"eager"]
 	
 	static constraints  = {
@@ -39,6 +39,7 @@ class Item {
 		criteria(nullable:true,maxSize:1024)
 		itemPoints(scale:1)	
 		uid(nullable:true)
+		//project(nullable:false)
 	}
 
 	Item()  { subItems = [] }

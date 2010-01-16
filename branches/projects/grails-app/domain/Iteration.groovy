@@ -32,6 +32,7 @@ class Iteration extends ItemContainer {
 		startTime(nullable:true)
 		endTime(nullable:true)
 		status(nullable:true)
+		//project(nullable:false)
 	}
 	
 	static def getOngoingIteration()

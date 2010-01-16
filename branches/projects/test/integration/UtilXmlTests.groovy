@@ -80,6 +80,7 @@ class UtilXmlTests extends GroovyTestCase {
 		def importItems = outputMap.items
 		def importIterations = outputMap.iterations
 		def importSnapShots = outputMap.snapShots
+		def importProject = outputMap.project
 				
 		UtilXml.setRelationToDomainObjects(outputMap)
 		
@@ -91,6 +92,8 @@ class UtilXmlTests extends GroovyTestCase {
 			items.each{ item -> group.addItem(item) }
 		}
 		
+		assertTrue importProject != null
+		
 		assertTrue groups.size() == importGroups.size()
 		assertTrue items.size() == importItems.size()
 		assertTrue iterations.size() == importIterations.size()
@@ -98,6 +101,7 @@ class UtilXmlTests extends GroovyTestCase {
 		groups.eachWithIndex{ group, index ->
 			assertTrue group.id == importGroups[index].id
 			assertTrue group.name == importGroups[index].name
+			assertTrue importProject == importGroups[index].project
 			assertTrue group.description == importGroups[index].description
 		}
 				
@@ -160,8 +164,4 @@ class UtilXmlTests extends GroovyTestCase {
 		    snapShot.pointsForGroups.eachWithIndex{ pointsForGroup, groupIndex ->
 		    	def importPointsForGroup = importSnapShot.pointsForGroups.find{ it.group.id == pointsForGroup.group.id }
 		    	assertTrue importPointsForGroup != null
-		    	assertTrue overViewsAreEqual(pointsForGroup.overView, importPointsForGroup.overView)
-		    }
-		}
-	}
-}
+		    	assertTrue overViewsAreEqual(point
