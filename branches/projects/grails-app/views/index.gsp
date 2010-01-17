@@ -37,6 +37,7 @@ along with Agile Tracking Tool.  If not, see <http://www.gnu.org/licenses/>.
 				<br/>
 		        <li><g:link controller="pointsSnapShot" action="plot">Look at the History</g:link></li>
 		        <li><g:link style=";" controller="item" action="planning">Look at the Planning</g:link></li>
+		        <li><g:link style=";" controller="iteration" action="show">See the Current Iteration</g:link></li>
 	        </ul>
 	    </div>
 	    
