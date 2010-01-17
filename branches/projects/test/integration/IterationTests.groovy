@@ -25,14 +25,18 @@ class IterationTests extends GroovyTestCase {
 	def items
 	def groups
 	def projects 
+	def project
 	
 	void setUp() {
-		iter = Defaults.getIterations(1)[0]
+		projects = Defaults.getProjects(1)
+		projects*.save()
+		project = projects[0]
+	
+		iter = Defaults.getIterations(1,project)[0]
 		iter.endTime = iter.startTime + 10
 		iter.save()
 	
-		projects = Defaults.getProjects(1)
-		projects*.save()	
+			
 		groups = Defaults.getGroups(5,projects)
     	groups*.save()
     	items = Defaults.getItems(5,groups)
@@ -85,7 +89,7 @@ class IterationTests extends GroovyTestCase {
     	def newItem = Defaults.getItems(1,groups)[0]
     	newItem.save()
     	assertTrue !newItem.iteration
-    	def newIteration= Defaults.getIterations(1)[0]
+    	def newIteration= Defaults.getIterations(1,project)[0]
     	newIteration.addItem(newItem)
     	newIteration.save()
     	
@@ -96,7 +100,7 @@ class IterationTests extends GroovyTestCase {
     void testMoveItemToOtherIteration()
     {
     	assertTrue iter.hasItem(items[0].id)
-    	def newIteration= Defaults.getIterations(1)[0]
+    	def newIteration= Defaults.getIterations(1,project)[0]
     	newIteration.save()
     	newIteration.addItem(items[0])
     	assertTrue newIteration.hasItem(items[0].id)
@@ -136,11 +140,11 @@ class IterationTests extends GroovyTestCase {
     
     void testGetOngoingIteration()
     {
-    	def iters = Defaults.getIterations(10)
+    	def iters = Defaults.getIterations(10,project)
     	iters.each{ it.status = IterationStatus.Finished ; it.save() }    	
     	def current = iters[5]
     	current.status = IterationStatus.Ongoing  	
-    	def retrievedCurrent = Iteration.getOngoingIteration()
+    	def retrievedCurrent = Iteration.getOngoingIteration(project)
     	
     	assertTrue current.id == retrievedCurrent.id
     }
@@ -152,7 +156,7 @@ class IterationTests extends GroovyTestCase {
     
     void testGetNextIteration_WithFinishedFutureIteration()
     {
-    	def iterNext = Defaults.getIterations(1)[0]
+    	def iterNext = Defaults.getIterations(1,project)[0]
     	iterNext.startTime = iter.startTime+10
     	iterNext.endTime = iter.endTime + 10
     	iterNext.status = IterationStatus.Finished 
@@ -166,7 +170,7 @@ class IterationTests extends GroovyTestCase {
     {
     	def iters = []
     	2.times { 
-	    	def iterNext = Defaults.getIterations(1)[0]
+	    	def iterNext = Defaults.getIterations(1,project)[0]
 	    	iterNext.startTime = iter.startTime+10*(it+1)
 	    	iterNext.endTime = iter.endTime + 10*(it+1)
 	    	iterNext.save()
@@ -209,7 +213,7 @@ class IterationTests extends GroovyTestCase {
     
     void testStrangeArtifactOnListMethodOfIterationProbablyRelatedToEagerFetchingOfItems()
     {
-    	def iters = Defaults.getIterations(10)
+    	def iters = Defaults.getIterations(10,project)
     	items.each{ iters[2].addItem(it) }
     	iters*.save()
     	assertTrue Iteration.list().size() == 11    	

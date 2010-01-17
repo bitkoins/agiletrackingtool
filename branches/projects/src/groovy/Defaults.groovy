@@ -21,11 +21,11 @@ along with Agile Tracking Tool.  If not, see <http://www.gnu.org/licenses/>.
 
 class Defaults {
 	
-	static List<Iteration> getIterations(Integer nr)
+	static List<Iteration> getIterations(Integer nr, def project)
 	{
 		List<Iteration> ret = []
 		nr.times {
-			Iteration iter = new Iteration()
+			Iteration iter = new Iteration(project:project)
 			iter.workingTitle = "Iteration-${it}"
 			iter.status = IterationStatus.FutureWork
 			iter.startTime = new Date() - 10

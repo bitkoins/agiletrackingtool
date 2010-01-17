@@ -105,7 +105,7 @@ class ItemGroupTests extends GroovyTestCase {
     	def itemsB = Defaults.getItems(3,[groupB])
     	items = (itemsA + itemsB)
     	
-    	def iteration = Defaults.getIterations(1)[0]
+    	def iteration = Defaults.getIterations(1,project)[0]
     	
 		project.save()    	    	
     	groups*.save()

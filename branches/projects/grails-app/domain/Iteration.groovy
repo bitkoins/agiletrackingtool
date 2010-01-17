@@ -24,6 +24,7 @@ class Iteration extends ItemContainer {
 	IterationStatus status
 	Date startTime
 	Date endTime
+	static belongsTo = [project:Project]
 	
 	static constraints = {
 		pointsPerDay(nullable:true)
@@ -32,17 +33,17 @@ class Iteration extends ItemContainer {
 		startTime(nullable:true)
 		endTime(nullable:true)
 		status(nullable:true)
-		//project(nullable:false)
+		project(nullable:false)
 	}
 	
-	static def getOngoingIteration()
+	static def getOngoingIteration(def project)
 	{
-		return Iteration.list()?.unique().find{ it.status == IterationStatus.Ongoing }
+		return Iteration.findAllByProject(project)?.find{ it.status == IterationStatus.Ongoing }
 	}
 	
 	Iteration retrieveNextIteration()
 	{
-		return Iteration.list()?.unique().findAll{ (it.endTime > this.endTime) && (it.status != IterationStatus.Finished) }?.sort{it.endTime }[0]
+		return Iteration.findAllByProject(project)?.findAll{ (it.endTime > this.endTime) && (it.status != IterationStatus.Finished) }?.sort{it.endTime }[0]
 	}
 	
 	String toString() { return workingTitle }
@@ -77,7 +78,7 @@ class Iteration extends ItemContainer {
 
 	Iteration createTheNextIteration()
 	{
-		Iteration newIter = new Iteration()
+		Iteration newIter = new Iteration(project:this.project)
 		newIter.status = IterationStatus.Ongoing
 		newIter.startTime = new Date()
 		newIter.endTime = newIter.startTime + Util.getDaysInBetween(startTime,endTime)
@@ -176,7 +177,7 @@ class Iteration extends ItemContainer {
         
         def iter = this
         def now = new Date()
-		def snapShots = PointsSnapShot.getSnapShotsBetween(iter.startTime,iter.endTime)
+		def snapShots = PointsSnapShot.getSnapShotsBetween(iter.project,iter.startTime,iter.endTime)
 		def dates = snapShots.collect{it.date}
 		def overViews = snapShots.collect{it.overView}
 				

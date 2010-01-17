@@ -36,7 +36,7 @@ class IterationController {
 	]
 	
 	def list = {
-			def iterations = Iteration.list()?.unique().sort{it.startTime }.reverse()
+			def iterations = Iteration.findAllByProject(session.project)?.sort{it.startTime }.reverse()
 			
 			def plotData = new PlotData("Iteration history")
 			plotData.xLabel = "Days ago from now"
@@ -61,13 +61,22 @@ class IterationController {
 	
 	def delete = {
 			if ( params.id ) {
-				Iteration.get(Integer.parseInt(params.id)).unloadItemsAndDelete()
+				def iter = Iteration.get(Integer.parseInt(params.id))
+				
+				if(belongsToProject(iter)) {
+				    iter.unloadItemsAndDelete() 
+				}
+				else
+				{
+					redirect(controller:'project',action:'list')
+					return
+				}
 			}
 			redirect(action:"list")
 	}	
 	
 	def history = {
-			def iterations = Iteration.list().unique().collect{it}.sort{it.startTime }.reverse()
+			def iterations = Iteration.findAllByProject(session.project)?.collect{it}.sort{it.startTime }.reverse()
 			return [ iterations:iterations ]			
 	}
 	
@@ -78,11 +87,11 @@ class IterationController {
 			iter = Iteration.get(id)
 		}
 		else {
-			iter = Iteration.getOngoingIteration()
+			iter = Iteration.getOngoingIteration(session.project)
 		}
 		
-		if (!iter) { 
-			redirect(action:'list')
+		if (!belongsToProject(iter)) { 
+			redirect(controller:'project',action:'list')
 			return
 		}
 		
@@ -96,7 +105,7 @@ class IterationController {
 	
 	def closeCurrent = {
 			def nextAction
-			def iter = Iteration.getOngoingIteration()
+			def iter = Iteration.getOngoingIteration(session.project)
 	    	def iterNew = iter.retrieveNextIteration()
 			
 	    	if (iterNew) {
@@ -133,6 +142,12 @@ class IterationController {
 		def id = Integer.parseInt(params.id)
 		def item = Item.get(id)
 		
+		if( belongsToProject(item.group))
+		{
+			redirect(controller:'project',action:'list')
+			return
+		}
+		
 		item.status = newState
 		if ( item.status == ItemStatus.Finished ) {
 			item.subItems.each{ it.status = ItemStatus.Finished }
@@ -145,6 +160,13 @@ class IterationController {
 	def subItemFinished = {
 		def id = Integer.parseInt(params.id)
 		def subItem = SubItem.get(id)
+		
+		if( belongsToProject(subTtem.item.group))
+		{
+			redirect(controller:'project',action:'list')
+			return
+		}
+		
 		subItem.status = ItemStatus.Finished
 		subItem.save()
 			
@@ -158,14 +180,33 @@ class IterationController {
 	
 	def editItem = {
 		def item = Item.get(Integer.parseInt(params.id))
+		
+		if( belongsToProject(item.group))
+		{
+			redirect(controller:'project',action:'list')
+			return
+		}
+		
 		render(template:'/shared/item/edit',model:[item:item])
 	}
 	
 	def saveItem = {
 		def item = Item.get(Integer.parseInt(params.id))
+		
+		if(item.group.project.id != session.project.id)
+		{
+			redirect(controller:'project',action:'list')
+			return
+		}
+		
 		ItemParamsParser.updateItemWithParams(item,params, {param -> request.getParameterValues(param)} )
 		item.subItems*.save()
 		item.save()
 		render(template:'itemView',model:[item:item])
+	}
+	
+	def belongsToProject(def itemThatBelongsToProject)
+	{
+		return (itemThatBelongsToProject && (itemThatBelongsToProject.project.id == session.project.id) )
 	}
 }

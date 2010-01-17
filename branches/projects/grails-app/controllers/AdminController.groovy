@@ -67,44 +67,46 @@ class AdminController {
     }
     
     def loadDefaults = {
-    		def project = new Project(name:"Example project",email:"example@project.org")
-    		project.save()
+    		3.times { projectId ->
+    			def project = new Project(name:"Example project ${projectId}",email:"example@project.org")
+    			project.save()
     
-    		def groups = Defaults.getGroups(5)
-    		groups*.save()
-    		def items = Defaults.getItems(25,groups)
-    		items*.save()
+    			def groups = Defaults.getGroups(5,[project])
+    			groups*.save()
+    			def items = Defaults.getItems(25,groups)
+    			items*.save()
     		
-    		Defaults.getSubItems(items.size(),items)*.save()    			
-    		def iters = Defaults.getIterations(3)
+    			Defaults.getSubItems(items.size(),items)*.save()    			
+    			def iters = Defaults.getIterations(3,project)
      		
-    		def snapShots = []
+    			def snapShots = []
     		
-     		def nowDate = new Date()
-    		def durationInDays = 10
-    		def startDate = nowDate - iters.size()*durationInDays
-    		iters.eachWithIndex{ iter, iterIndex ->
-    			iter.startTime = startDate + iterIndex*durationInDays
-    			iter.endTime = iter.startTime+ durationInDays
-    			iter.status = IterationStatus.Finished
+     			def nowDate = new Date()
+    			def durationInDays = 10
+    			def startDate = nowDate - iters.size()*durationInDays
+    			iters.eachWithIndex{ iter, iterIndex ->
+    				iter.startTime = startDate + iterIndex*durationInDays
+    				iter.endTime = iter.startTime+ durationInDays
+    				iter.status = IterationStatus.Finished
     			    			
-    			5.times{ itemIndex -> 
-    				def item = Util.random(items)
-    				if (item)
-    				{
-    					item.status = ItemStatus.Finished
-    					item.save()
-    					items = items - item
-    					iter.addItem(item)
-    				}
+    				5.times{ itemIndex -> 
+    					def item = Util.random(items)
+    					if (item)
+    					{
+	    					item.status = ItemStatus.Finished
+    						item.save()
+    						items = items - item
+    						iter.addItem(item)
+    					}
     				
-    				def snapShot = PointsSnapShot.takeSnapShot(project, groups,iter.startTime+itemIndex)    	
-    				snapShot.save()
+    					def snapShot = PointsSnapShot.takeSnapShot(project, groups,iter.startTime+itemIndex)    	
+    					snapShot.save()
+    				}
     			}
-    		}
     		
-    		iters[-1].status = IterationStatus.Ongoing 
-    		iters*.save()
+    			iters[-1].status = IterationStatus.Ongoing 
+    			iters*.save()
+    		}
     		
     		redirect(controller:"item", action:"list")
     }

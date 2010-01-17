@@ -188,6 +188,6 @@ class PointsSnapShotController {
 	}
 	
 	def burnUpGraph = {		    	
-			return [plotData:Iteration.getOngoingIteration()?.getBurnUpPlotData()]
+			return [plotData:Iteration.getOngoingIteration(session.project)?.getBurnUpPlotData()]
 	}
 }
