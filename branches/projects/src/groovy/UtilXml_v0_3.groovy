@@ -260,6 +260,9 @@ class UtilXml_v0_3 {
 		return ['groups':groups,'items':items, 'iterations':iterations, 'snapShots':snapShots, 'itemsByIteration':itemsByIterati,'project':projecton,'itemsByGroup':itemsByGroup, 'exportDate':exportDate]
 	}
 	
+	static .each{ item.project = map.project }
+	}
+	
 	static void setRelationToDomainObjects(def map)
 	{
 		map.itemsByIteration.each{ iter, items ->
