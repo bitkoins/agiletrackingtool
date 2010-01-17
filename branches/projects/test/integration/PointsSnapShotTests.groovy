@@ -24,6 +24,7 @@ class PointsSnapShotTests extends GroovyTestCase {
 	def groups 
 	def items
 	def snapShot
+	def snapShots
 	def defaultItemPoint = 2
 	def date 
 		
@@ -34,6 +35,7 @@ class PointsSnapShotTests extends GroovyTestCase {
 		items.each{ it.itemPoints = defaultItemPoint }
 		this.date = new Date()
 		takeSnapShot()
+		snapShots = []
 	}	
 	
 	void tearDown() {
@@ -48,6 +50,7 @@ class PointsSnapShotTests extends GroovyTestCase {
 	
 	void deleteInstances()
 	{
+		snapShots*.delete()
 		snapShot.delete()
 		items*.delete()
 		groups*.delete()
@@ -125,8 +128,7 @@ class PointsSnapShotTests extends GroovyTestCase {
         assertTrue PointsSnapShot.getSnapShotClosestTo(project,nowDate-5,1)?.id == snapShots[5].id
    		assertTrue PointsSnapShot.getSnapShotClosestTo(project,nowDate-14,5)?.id == snapShots[9].id
    		assertTrue PointsSnapShot.getSnapShotClosestTo(project,nowDate-15,5)?.id == null
-        				
-		snapShots*.delete()        				
+        						
         deleteInstances()
     }
 	
@@ -142,7 +144,23 @@ class PointsSnapShotTests extends GroovyTestCase {
         assertTrue PointsSnapShot.getSnapShotsBetween(project,nowDate-1,nowDate)?.size() == 2
         assertTrue PointsSnapShot.getSnapShotsBetween(project,nowDate+1,nowDate+4)?.size() == 0
         
-        snapShots*.delete()
+        deleteInstances()
+	}
+	
+	
+	void testRetrieveSnapShotsWithinRangeFiltersOutCorrect()
+	{
+		saveInstances()
+        
+		def nowDate = new Date()   
+        def snapShots = setUpSnapShotList(project,nowDate,groups)
+        snapShots*.save()
+        
+        def otherProject = Defaults.getProjects(1)[0]
+        otherProject.id = 123
+        
+        assertTrue PointsSnapShot.getSnapShotsBetween(otherProject,nowDate-10,nowDate)?.size() == 0
+                
         deleteInstances()
 	}
 	
@@ -175,7 +193,6 @@ class PointsSnapShotTests extends GroovyTestCase {
 		assertTrue PointsForGroup.findAllByGroup(deletedGroup).size() == 0
 		snapShots.each{ assertTrue it.pointsForGroups.size() == (groups.size() -1) } 			
 		
-		snapShots*.delete()
 		deleteInstances()
 	}
 }
