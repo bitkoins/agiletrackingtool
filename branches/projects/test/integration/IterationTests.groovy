@@ -39,7 +39,7 @@ class IterationTests extends GroovyTestCase {
 			
 		groups = Defaults.getGroups(5,projects)
     	groups*.save()
-    	items = Defaults.getItems(5,groups)
+    	items = Defaults.getItems(5,groups,project)
     	items*.save()    		
 		items.each{ item ->
 			item.points = 100
@@ -86,7 +86,7 @@ class IterationTests extends GroovyTestCase {
     
     void testSetIterationForItem()
     {
-    	def newItem = Defaults.getItems(1,groups)[0]
+    	def newItem = Defaults.getItems(1,groups,project)[0]
     	newItem.save()
     	assertTrue !newItem.iteration
     	def newIteration= Defaults.getIterations(1,project)[0]

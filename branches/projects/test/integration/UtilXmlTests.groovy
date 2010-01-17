@@ -28,10 +28,11 @@ class UtilXmlTests extends GroovyTestCase {
 	
 	void setUp()
 	{
+		def project = Defaults.getProjects(1)[0]
 		groups = Defaults.getGroups(5)
-    	items = Defaults.getItems(5,groups, null)
+    	items = Defaults.getItems(5,groups,project)
     	subItems = Defaults.getSubItems(20,items)
-    	iterations = Defaults.getIterations(3,Defaults.getProjects(1)[0])
+    	iterations = Defaults.getIterations(3,project)
     	
     	[groups,items,subItems,iterations].each{ it.eachWithIndex{ element, index -> element.id = index } }
     	

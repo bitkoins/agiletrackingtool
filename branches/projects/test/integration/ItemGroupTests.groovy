@@ -29,7 +29,7 @@ class ItemGroupTests extends GroovyTestCase {
 	{
 		project = Defaults.getProjects(1)[0]
 		group = Defaults.getGroups(1,[project])[0]
-		items = Defaults.getItems(5,[group])
+		items = Defaults.getItems(5,[group],project)
 	}
 	
 	void tearDown()
@@ -101,8 +101,8 @@ class ItemGroupTests extends GroovyTestCase {
 		def groups = Defaults.getGroups(2,[project])    
     	def (groupA, groupB) = groups
     	
-    	def itemsA = Defaults.getItems(2,[groupA])
-    	def itemsB = Defaults.getItems(3,[groupB])
+    	def itemsA = Defaults.getItems(2,[groupA],project)
+    	def itemsB = Defaults.getItems(3,[groupB],project)
     	items = (itemsA + itemsB)
     	
     	def iteration = Defaults.getIterations(1,project)[0]

@@ -41,7 +41,7 @@ class ItemGroupController {
 			return [group:group]
 		}
 		else {
-			redirect(action:'list')
+			redirect(controller:'project',action:'list')
 		}
 	}
 	
@@ -56,6 +56,11 @@ class ItemGroupController {
 			if ( belongsToProject(group) ) {
 				group.name = params.name
 				group.save()
+			}
+			else
+			{
+				redirect(controller:'project',action:'list')
+				return
 			}	
 		}
 		redirect(action:'list')
@@ -67,8 +72,12 @@ class ItemGroupController {
 		{
 			PointsSnapShot.deleteWholeGroup(group)
 			group.deleteWholeGroup()
+			redirect(action:'list')
 		}
-		redirect(action:'list')
+		else
+		{
+			redirect(controller:'project',action:'list')
+		}
 	}
 		
 	def belongsToProject(def group)

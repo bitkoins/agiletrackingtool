@@ -130,7 +130,7 @@ along with Agile Tracking Tool.  If not, see <http://www.gnu.org/licenses/>.
 				<td width="20">${iter.finishedPoints}</td>
 				<td width="50">${iter.durationInDays}</td>
 				<td width="100"><g:formatDate format="dd-MMM yyyy" date="${iter.endTime}"/></td>
-				<td><g:link action="showCurrent" id="${iter.id}">Show</g:link></td>
+				<td><g:link action="show" id="${iter.id}">Show</g:link></td>
 			</tr>
 		</g:each>
 		</table>

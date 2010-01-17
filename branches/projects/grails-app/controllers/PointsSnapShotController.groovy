@@ -91,7 +91,7 @@ class PointsSnapShotController {
 
 		plots += _makePlots("for all items", snapShots.collect{it.overView}, snapShots.collect{it.date} )
 			
-		ItemGroup.list().each{ group ->
+		ItemGroup.findAllByProject(session.project).each{ group ->
 			def title = "for ${group}"
 			def overViews = []
 			def dates = []

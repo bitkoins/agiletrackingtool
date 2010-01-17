@@ -33,7 +33,13 @@ class AdminController {
     def exportFile = {
 			def docVersion = params.docVersion ? params.docVersion : UtilXml.currentDocVersion
 			
-    		def xml = UtilXml.exportToXmlString(ItemGroup.list(), Item.list(), Iteration.list(), PointsSnapShot.list(), new Date(), docVersion )
+			def findAllForProject = { domain -> domain.findAllByProject(session.project) } 
+			
+    		def xml = UtilXml.exportToXmlString(findAllForProject(ItemGroup), 
+    		                                    findAllForProject(Item), 
+    		                                    findAllForProject(Iteration), 
+    		                                    findAllForProject(PointsSnapShot),
+    		                                    new Date(), docVersion )
     		render(contentType: "text/xml", text:xml ) 
     }
     		
@@ -73,7 +79,7 @@ class AdminController {
     
     			def groups = Defaults.getGroups(5,[project])
     			groups*.save()
-    			def items = Defaults.getItems(25,groups)
+    			def items = Defaults.getItems(25,groups,project)
     			items*.save()
     		
     			Defaults.getSubItems(items.size(),items)*.save()    			

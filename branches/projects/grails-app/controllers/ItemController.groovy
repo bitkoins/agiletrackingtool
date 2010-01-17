@@ -41,17 +41,17 @@ class ItemController {
 			def itemsByGroup
 			
 			if ( params.priorities ) {				
-				itemsByGroup = Item.getUnfinishedItemsGroupMap(Util.parsePriorities(params.priorities))
+				itemsByGroup = Item.getUnfinishedItemsGroupMap(session.project, Util.parsePriorities(params.priorities))
 			}
 			else {
-				itemsByGroup = Item.getUnfinishedItemsGroupMap()
+				itemsByGroup = Item.getUnfinishedItemsGroupMap(session.project)
 			}
 			
 			return [itemsByGroup:itemsByGroup,title:title]
 	}
 	
 	def notInIteration = {
-			def itemsByGroup = Item.getUnfinishedItemsGroupMap()
+			def itemsByGroup = Item.getUnfinishedItemsGroupMap(session.project)
 			
 			def itemsByGroupFiltered = [:]
 			itemsByGroup.each{ group, items ->
@@ -75,6 +75,12 @@ class ItemController {
 				iter = Iteration.getOngoingIteration()	
 			}
 			
+			if(!belongsToProject(iter))
+			{
+				redirect(controller:'project',action:'list')
+				return
+			}
+			
 			def itemsByGroup = [:]
 			
 			def items = iter.items
@@ -94,11 +100,25 @@ class ItemController {
 		
 	def editItem = {
 		def item = Item.get(Integer.parseInt(params.id))
+		
+		if(!belongsToProject(item))
+		{
+			redirect(controller:'project',action:'list')
+			return
+		}
+		
 		render(template:'/shared/item/edit',model:[item:item])
 	}
 	
 	def saveItem = {
 		def item = Item.get(Integer.parseInt(params.id))
+		
+		if(!belongsToProject(item))
+		{
+			redirect(controller:'project',action:'list')
+			return
+		}
+		
 		ItemParamsParser.updateItemWithParams(item,params, {param -> request.getParameterValues(param)} )
 		item.subItems*.save()
 		item.save()
@@ -107,6 +127,13 @@ class ItemController {
 	
 	def deleteItem = {
 		def item = Item.get(Integer.parseInt(params.id))
+		
+		if(!belongsToProject(item))
+		{
+			redirect(controller:'project',action:'list')
+			return
+		}
+		
 		item.iteration?.deleteItem(item.id)
 		item.group?.deleteItem(item.id)
 		item.delete()
@@ -115,8 +142,14 @@ class ItemController {
 	
 	def addItemToGroup = {
 		def group = ItemGroup.get(Integer.parseInt(params.id))
+		
+		if(!belongsToProject(group))
+		{
+			redirect(controller:'project',action:'list')
+			return	
+		}
 			
-		def item = new Item(group)
+		def item = new Item(session.project,group)
 		item.save()
 		
 		group.addItem(item)
@@ -129,7 +162,7 @@ class ItemController {
 	}
 	
 	def showAll = {
-			def groups = ItemGroup.list().unique()
+			def groups = ItemGroup.findAllByProject(session.project)
 			
 			def totalPoints = 0
 			def unFinishedPoints = 0
@@ -143,7 +176,7 @@ class ItemController {
 	
 	def showSorted = {
 			def allItems = []
-			def groups = Item.getUnfinishedItemsGroupMap()
+			def groups = Item.getUnfinishedItemsGroupMap(session.project)
 			groups.each{ group, items -> items.each{ item ->
 					allItems << item 
 				}
@@ -157,5 +190,10 @@ class ItemController {
 	
 	def listGroups = {
 		redirect(controller:'itemGroup', action:'list')
-	}	
+	}
+	
+	def belongsToProject(def item)
+	{
+		return (item && (item.project.id == session.project.id))
+	}
 }

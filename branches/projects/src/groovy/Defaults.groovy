@@ -53,7 +53,7 @@ class Defaults {
 		return ret
 	}
 	
-	static List<Item> getItems(Integer nr, List<ItemGroup> groups, def maxUid = null)
+	static List<Item> getItems(Integer nr, List<ItemGroup> groups, def project = getProjects(1)[0], def maxUid = null)
 	{
 		maxUid = maxUid ? maxUid : Item.maxUid()				
 		List<Item> ret = []
@@ -63,9 +63,9 @@ class Defaults {
 		9.times{ points << it }
 		
 		nr.times{ index -> 
-			def item = new Item()
+			def item = new Item(project:project)
 			item.uid = index + (maxUid + 1) 
-			item.description = "Item  ${index}"			
+			item.description = "${project.name} + Item  ${index}"			
 			item.points = Util.random(points)
 			
 			if (groups)

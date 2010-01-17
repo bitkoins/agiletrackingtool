@@ -72,4 +72,9 @@ class IterationComposerController {
 	def saveItem = {
 		redirect(controller:'item',action:'saveItem',params:params)
 	}
+	
+	def belongsToProject(def item)
+	{
+		return (item && (item.project.id == session.project.id))
+	}
 }

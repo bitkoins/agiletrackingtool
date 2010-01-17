@@ -31,7 +31,6 @@ along with Agile Tracking Tool.  If not, see <http://www.gnu.org/licenses/>.
 		<div class="dialog" style="margin-left:20px;width:60%;">
           <h1>What would you like to do?</h1>
 	        <ul>
-	        	<li><g:link style=";" controller="iteration" action="showCurrent">See the Current Iteration</g:link></li>
 		        <li class="controller"><g:link controller="iteration">Manage the Iterations</g:link></li>
 		        <br/>
 				<li><g:link style=";" controller="item" action="backlog">Work on the Backlog</g:link></li>						        

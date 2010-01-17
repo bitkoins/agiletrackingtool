@@ -26,9 +26,9 @@ class IterationController {
 		group:'tags', 
 		order:40, 
 		title:'Iterations', 
-		action:'showCurrent',
+		action:'show',
 		subItems: [
-			[action:'showCurrent', order:1, title:'Show current iteration'],
+			[action:'show', order:1, title:'Show current iteration'],
 			[action:'list', order:10, title:"Manage"],
 			[action:'create', order:20, title:'New iteration'],
 			[action:'history', order:50, title:'List all iterations']
@@ -80,25 +80,16 @@ class IterationController {
 			return [ iterations:iterations ]			
 	}
 	
-	def showCurrent = {
-		def iter 
-		if(params.id) {
-			def id = Integer.parseInt(params.id)
-			iter = Iteration.get(id)
-		}
-		else {
-			iter = Iteration.getOngoingIteration(session.project)
-		}
-		
+	def show = {
+		def iter = params.id ? Iteration.get(params.id) : Iteration.getOngoingIteration(session.project)
+				
 		if (!belongsToProject(iter)) { 
 			redirect(controller:'project',action:'list')
 			return
 		}
 		
-		session.iterId = iter?.id
-		
 		def mlist = []
-		ItemStatus.each{ status -> mlist += iter?.items.findAll{ it.status == status }.sort{ it.uid } }
+		ItemStatus.each{ status -> mlist += iter.items?.findAll{ it.status == status }.sort{ it.uid } }
 		
 		return [iteration:iter,items:mlist,plotData:iter.getBurnUpPlotData()]
 	}
@@ -142,7 +133,7 @@ class IterationController {
 		def id = Integer.parseInt(params.id)
 		def item = Item.get(id)
 		
-		if( belongsToProject(item.group))
+		if( belongsToProject(item))
 		{
 			redirect(controller:'project',action:'list')
 			return
@@ -161,7 +152,7 @@ class IterationController {
 		def id = Integer.parseInt(params.id)
 		def subItem = SubItem.get(id)
 		
-		if( belongsToProject(subTtem.item.group))
+		if( belongsToProject(subTtem.item))
 		{
 			redirect(controller:'project',action:'list')
 			return
@@ -181,7 +172,7 @@ class IterationController {
 	def editItem = {
 		def item = Item.get(Integer.parseInt(params.id))
 		
-		if( belongsToProject(item.group))
+		if( belongsToProject(item))
 		{
 			redirect(controller:'project',action:'list')
 			return
@@ -193,7 +184,7 @@ class IterationController {
 	def saveItem = {
 		def item = Item.get(Integer.parseInt(params.id))
 		
-		if(item.group.project.id != session.project.id)
+		if(!belongsToProject(item))
 		{
 			redirect(controller:'project',action:'list')
 			return
