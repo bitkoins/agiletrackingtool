@@ -58,7 +58,7 @@ class PointsSnapShotController {
 			endTime = endCal.getTime()
 		}
 		
-		[ PointsSnapShot.getSnapShotsBetween(startTime, endTime), startTime, endTime]
+		[ PointsSnapShot.getSnapShotsBetween(session.project,startTime, endTime), startTime, endTime]
 	}
 	
 	def plot = {
@@ -128,8 +128,7 @@ class PointsSnapShotController {
 				if (true || (daysAgo <= 0) )  {
 					plotCurve.xValues << daysAgo
 					totalBugs += nrBugs
-					plotCurve.yValues << totalBugs
-					//plotCurve.yValues << nrBugs
+					plotCurve.yValues << totalBugs					
 				}
 			}
 			

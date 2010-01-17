@@ -67,6 +67,9 @@ class AdminController {
     }
     
     def loadDefaults = {
+    		def project = new Project(name:"Example project",email:"example@project.org")
+    		project.save()
+    
     		def groups = Defaults.getGroups(5)
     		groups*.save()
     		def items = Defaults.getItems(25,groups)
@@ -95,7 +98,7 @@ class AdminController {
     					iter.addItem(item)
     				}
     				
-    				def snapShot = PointsSnapShot.takeSnapShot(groups,iter.startTime+itemIndex)    	
+    				def snapShot = PointsSnapShot.takeSnapShot(project, groups,iter.startTime+itemIndex)    	
     				snapShot.save()
     			}
     		}

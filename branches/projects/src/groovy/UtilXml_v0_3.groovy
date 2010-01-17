@@ -242,8 +242,7 @@ class UtilXml_v0_3 {
 				else throw new Exception("GroupId (${groupId}) could not be found.")
 			}
 				
-			dateOverViewList.each{ 
-				def snapShot = new PointsSnapShot()
+			dateOveproject, it.date)hot = new PointsSnapShot()
 				snapShot.date =  it.date
 				snapShot.overView = it.overView
 				groups.each{ group ->

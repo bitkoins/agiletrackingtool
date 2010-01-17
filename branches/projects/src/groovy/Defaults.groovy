@@ -121,12 +121,12 @@ class Defaults {
 		return overView	
 	}
 	
-	static def getSnapShots(def groups, def startDate, def endDate)
+	static def getSnapShots(def groups, def startDate, def endDate, def project = getProjects(1)[0])
 	{
 		def snapShots = []
 							
 		(startDate..endDate).eachWithIndex{ date, index ->
-			def snapShot = new PointsSnapShot(date)
+			def snapShot = new PointsSnapShot(project, date)
 			snapShot.id = index + 1
 			snapShot.overView = getPointsOverView()
 			
