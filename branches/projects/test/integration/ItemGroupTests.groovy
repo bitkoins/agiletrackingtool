@@ -79,7 +79,7 @@ class ItemGroupTests extends GroovyTestCase {
        	assertTrue group.finishedPoints() == 0
     }
     
-    void testListForProject()
+    void testFindByProject()
     {
     	def projectA = Defaults.getProjects(1)[0]
     	def groupsA = Defaults.getGroups(2,[projectA])
@@ -88,7 +88,7 @@ class ItemGroupTests extends GroovyTestCase {
     	def groups = groupsA + groupsB    	
     	groups.each{ it.project.save(); it.save() }
     	
-    	def foundGroups = ItemGroup.listForProject(projectA) 
+    	def foundGroups = ItemGroup.findAllByProject(projectA) 
     	assertTrue foundGroups.size() == groupsA.size()
     	groupsA.each{ group -> assertTrue foundGroups.contains(group)  }
     	

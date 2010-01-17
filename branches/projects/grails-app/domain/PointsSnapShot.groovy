@@ -85,20 +85,4 @@ class PointsSnapShot
 			it.snapShot = this
 		}
 	}
-	
-	static def listForProject(def project)
-	{
-		return PointsSnapShot.list().findAll{ it.project.id == project.id }
-	}
-	
-	static def deleteWholeGroup(def group)
-	{
-		PointsSnapShot.listForProject(group.project).each{ snapShot ->
-			def pointsForGroup = snapShot.getPointsForGroup(group)
-			if (pointsForGroup) {
-	   		       pointsForGroup.snapShot.removeFromPointsForGroups(pointsForGroup)
-				pointsForGroup.delete()					
-			}
-		}
-	}
 }

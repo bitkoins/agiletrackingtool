@@ -58,9 +58,4 @@ class ItemContainer {
 	{
 		return getItem(id) != null
 	}
-		
-	static def listForProject(def project)
-	{
-		list().findAll{ it.project.id == project.id }
-	}
 }	

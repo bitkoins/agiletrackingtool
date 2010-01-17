@@ -29,7 +29,7 @@ class ItemGroupController {
 		] 
 	]
 
-	def list = { [groups:ItemGroup.list().findAll{ it.project.id == session.project.id} ] }
+	def list = { [groups:ItemGroup.findAllByProject(session.project) ] }
 	
 	def create = {
 		render(view:'edit', model : [group:new ItemGroup()] ) 	
