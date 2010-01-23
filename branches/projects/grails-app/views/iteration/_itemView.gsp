@@ -29,16 +29,16 @@ along with Agile Tracking Tool.  If not, see <http://www.gnu.org/licenses/>.
 		
 		<td width ="50">${item.points}</td>
 				
-		<g:if test="${item.status != ItemStatus.Finished}">		
+				
 			<td width ="50">	
 				<g:if test="${item.status != ItemStatus.InProgress}">
 					<g:remoteLink action="itemInProgress" id="${item.id}" update="item${item.id}">Set 'In Progress'</g:remoteLink>
 				</g:if>
 			</td>
-				
+			
+		<g:if test="${item.status != ItemStatus.Finished}">		
 			<td width ="50">			
 				<g:if test="${ item.status != ItemStatus.Finished && item.status != ItemStatus.Request}">
-					
 					<gui:toolTip text="Done: ${item.hasCriteria() ? item.criteria : ' ? '}">
    						<g:remoteLink action="itemDone" id="${item.id}" update="item${item.id}">Set 'Finished'</g:remoteLink>
 					</gui:toolTip>

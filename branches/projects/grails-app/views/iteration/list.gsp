@@ -61,6 +61,7 @@ along with Agile Tracking Tool.  If not, see <http://www.gnu.org/licenses/>.
 			<td width="20">Total points</td>
 			<td width="100">Closing date</td>
 			<td width="50"></td>
+			<td width="50"></td>
 		</tr>
 		
 		<g:each var="iter" in="${iterations.findAll{it.status == IterationStatus.Ongoing} }">
@@ -71,6 +72,7 @@ along with Agile Tracking Tool.  If not, see <http://www.gnu.org/licenses/>.
 				<td width="20">${iter.finishedPoints}</td>
 				<td width="20">${iter.totalPoints()}</td>
 				<td width="100"><g:formatDate format="dd-MMM yyyy" date="${iter.endTime}"/></td>
+				<td><g:link action="delete" id="${iter.id}" onclick="return confirm('This will delete the iteration. Sure?');" >Delete</g:link></td>
 				<td width="150">
 					<g:if test="${iter.status != IterationStatus.Finished}">
 						<g:link controller="iterationComposer" action="compose" id="${iter.id}">Select Items</g:link>
@@ -91,6 +93,7 @@ along with Agile Tracking Tool.  If not, see <http://www.gnu.org/licenses/>.
 			<td width="20">Remaining points</td>
 			<td width="100">Closing date</td>
 			<td width="50"></td>
+			<td width="50"></td>
 		</tr>
 		
 		<g:each var="iter" in="${iterations.findAll{it.status == IterationStatus.FutureWork} }">
@@ -100,6 +103,7 @@ along with Agile Tracking Tool.  If not, see <http://www.gnu.org/licenses/>.
 				<td width="60">${iter.items?.size()}</td>
 				<td width="20">${iter.totalPoints()}</td>
 				<td width="100"><g:formatDate format="dd-MMM yyyy" date="${iter.endTime}"/></td>
+				<td><g:link action="delete" id="${iter.id}" onclick="return confirm('This will delete the iteration. Sure?');" >Delete</g:link></td>
 				<td width="150"><g:link controller="iterationComposer" action="compose" id="${iter.id}">Select Items</g:link></td>
 			</tr>
 		</g:each>
@@ -118,6 +122,7 @@ along with Agile Tracking Tool.  If not, see <http://www.gnu.org/licenses/>.
 			<td width="20">Finished points</td>
 			<td width="50">Duration[days]</td>
 			<td width="100">Closing date</td>
+			<td width="50"></td>
 			<td with="50"/>
 		</tr>
 		
@@ -130,6 +135,7 @@ along with Agile Tracking Tool.  If not, see <http://www.gnu.org/licenses/>.
 				<td width="20">${iter.finishedPoints}</td>
 				<td width="50">${iter.durationInDays}</td>
 				<td width="100"><g:formatDate format="dd-MMM yyyy" date="${iter.endTime}"/></td>
+				<td><g:link action="delete" id="${iter.id}" onclick="return confirm('This will delete the iteration. Sure?');" >Delete</g:link></td>
 				<td><g:link action="show" id="${iter.id}">Show</g:link></td>
 			</tr>
 		</g:each>

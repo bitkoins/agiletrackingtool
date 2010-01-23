@@ -46,8 +46,8 @@ class ItemGroupController {
 	}
 	
 	def save = {
-		def isNewGroup = (params.id?.size() == 0)
-		if(isNewGroup) {
+		def isNew = (params.id?.size() == 0)
+		if(isNew) {
 			new ItemGroup(name:params.name,project:session.project).save()
 		}
 		else

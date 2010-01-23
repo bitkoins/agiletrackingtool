@@ -114,6 +114,6 @@ class AdminController {
     			iters*.save()
     		}
     		
-    		redirect(controller:"item", action:"list")
+    		redirect(controller:"project", action:"list")
     }
 }
