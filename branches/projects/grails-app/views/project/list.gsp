@@ -36,15 +36,12 @@ along with Agile Tracking Tool.  If not, see <http://www.gnu.org/licenses/>.
 		<g:each var="project" in="${projects}">
 			<tr>
 				<td width="80"><g:link action="select" id="${project.id}">${project.name}</g:link></td>			
-				<td width="200">${project.email}</td>				
 				<td width="80"><g:link action="edit" id="${project.id}">edit</g:link></td>
 				<td width="80"><g:link action="delete" id="${project.id}">delete</g:link></td>
 			</tr>
 		</g:each>		
 		</table>
 		</div>
-		
-		
 			
 	</body>
 </html>

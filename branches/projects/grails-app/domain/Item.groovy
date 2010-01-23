@@ -27,6 +27,9 @@ class Item {
 	String        criteria
 	Integer       uid
 	
+	Date          dateCreated
+    Date          lastUpdated
+   
 	static hasMany = [subItems:SubItem]
 	static belongsTo = [iteration:Iteration,group:ItemGroup, project:Project]
 	static fetchMode = [subItems:"eager"]
@@ -40,6 +43,7 @@ class Item {
 		itemPoints(scale:1)	
 		uid(nullable:true)
 		project(nullable:false)
+		lastUpdated(nullable:true)
 	}
 
 	Item()  { subItems = [] }

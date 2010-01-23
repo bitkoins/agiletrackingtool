@@ -136,7 +136,7 @@ class UtilXml_v0_3 {
 		def itemsByIteration = [:]
 		def itemsByGroup = [:]
 		
-		def exportDate = odf.parse( doc.ExportDate.text().toStdef project = new Project(name:"Project import at ${exportDate}",email:"unknown@unknown.org")
+		def exportDate = odf.parse( doc.ExportDate.text().toStdef project = new Project(name:"Project import at ${exportDate}")
 		
 		doc.Groups.Group.each{ 
 			def g = new ItemGroup()

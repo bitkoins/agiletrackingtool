@@ -19,12 +19,12 @@ You should have received a copy of the GNU General Public License
 along with Agile Tracking Tool.  If not, see <http://www.gnu.org/licenses/>.
 ------------------------------------------------------------------------------*/
 
-class UtilXml_v0_4 {
+class UtilXml_v0_5 {
 	static java.text.DateFormat odf = new java.text.SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-	static def docVersion = "0.4"
+	static def docVersion = "0.5"
 	static def seperator = ";"
 		
-	static def exportToXmlString(def groups, def items, def iterations, def pointsSnapShots = [], def exportDate )
+	static def exportToXmlString(def project, def groups, def items, def iterations, def pointsSnapShots = [], def exportDate )
 	{
 		def builder = new groovy.xml.StreamingMarkupBuilder()
 		builder.encoding = "UTF-8"
@@ -35,11 +35,16 @@ class UtilXml_v0_4 {
 			DocumentVersion(docVersion)
 			ExportDate(odf.format(exportDate))
 			
+			Project
+			{
+				name(project.name)
+			}
+			
 			Groups{
 				groups.each{ group ->
 					Group(id:group.id) {
 						name(group.name)
-						description(group.description)
+						description('None') //TODO: remove on next version */
 					}
 				}
 			} // Groups
@@ -53,6 +58,8 @@ class UtilXml_v0_4 {
 						status(item.status)
 						comment(item.comment)
 						criteria(item.criteria)
+						dateCreated(odf.format(item.dateCreated))
+						lastUpdated(odf.format(item.lastUpdated))
 						
 						SubItems {
 							item.subItems.each{ subItem ->
@@ -129,24 +136,24 @@ class UtilXml_v0_4 {
 		return builder.bind(doc).toString()	
 	}
 	
-	static def importFromXmlString(def doc)
+	static def importFromXmlDoc(def doc)
 	{
-		deDocps = []
-		def if items = []				
+		
+		def groups = []
+		def items = []				
 		def itemsByIteration = [:]
 		def itemsByGroup = [:]
 		
-		def exportDate = odf.parse( doc.ExportDate.text().toString() )
+		def exportDate = odf.parse( doc.ExportDate.text().toString() )		
+		def project = new Project(name:doc.Project.name.text() )
 		
-		/*-------------Gr		
-		def project = new Project(name:"Project import at ${exportDate}"roups-------------------------------*/
+		/*-------------Groups-------------------------------*/
 		doc.Groups.Group.each{ 
 			def g = new ItemGroup()
-			g.id = Integer.parseInt(iproject = projecteInt(it.'@id')
-			g.name = it.name.t.text())
+			g.project = project
+			g.id = Integer.parseInt(it.'@id'.text())
 			g.name = it.name.text()
 			groups << g 
-			groups << g
 		} 
 		
 		groups.each{ group -> itemsByGroup[group] = [] }
@@ -154,7 +161,7 @@ class UtilXml_v0_4 {
 		/*--------------------Items-------------------------*/
 		doc.Items.Item.each{
 			def item = new Item()
-			item.uid = Integer.pa.text()rseInt(it.'@id')
+			item.uid = Integer.parseInt(it.'@id'.text())
 			item.id = item.uid
 			item.itemPoints = Double.parseDouble(it.points.text())
 			item.description = it.description.text()
@@ -163,10 +170,12 @@ class UtilXml_v0_4 {
 			item.comment = it.comment.text()
 			item.criteria = it.criteria.text()
 			item.subItems = []
+			item.dateCreated = odf.parse( it.dateCreated.text().toString() )
+			item.lastUpdated = odf.parse( it.lastUpdated.text().toString() )
 			
 			it.SubItems?.SubItem.each{
 				def subItem = new SubItem()
-				subItem.id = Integer.pa.text()rseInt(it.'@id')
+				subItem.id = Integer.parseInt(it.'@id'.text())
 				subItem.description = it.description.text()				
 				subItem.points = Double.parseDouble(it.points.text())
 				subItem.status = ItemStatus.valueOf(it.status.text() )
@@ -174,7 +183,7 @@ class UtilXml_v0_4 {
 				item.addSubItem(subItem)
 			}
 			
-			def groupId = Integer.parseIn.text()t(it.'@groupId')
+			def groupId = Integer.parseInt(it.'@groupId'.text())
 			def group = groups.find{ it.id == groupId }
 			itemsByGroup[group] << item
 			
@@ -187,7 +196,7 @@ class UtilXml_v0_4 {
 			def nit = new Iteration()
 			nit.items = []
 			
-			nit.id = Integer.pa.text()rseInt(it.'@id')
+			nit.id = Integer.parseInt(it.'@id'.text())
 			nit.workingTitle = it.workingTitle.text()
 			nit.status = IterationStatus.valueOf(it.status.text())
 			
@@ -196,7 +205,7 @@ class UtilXml_v0_4 {
 			
 			def iterItems = []
 			it.Items.ItemId.each{ ItemId ->
-				def foundItem = items.find{it.uid == Integer.parseI.text()nt(ItemId.'@id')}
+				def foundItem = items.find{it.uid == Integer.parseInt(ItemId.'@id'.text())}
 				if (foundItem) iterItems << foundItem				
 			}
 			
@@ -206,9 +215,10 @@ class UtilXml_v0_4 {
 		
 		/*-----------------SnapShots---------------------------------*/
 		def snapShots = []
-		def pointsSnapShotsParser = { PointsSna    def datesText = PointsSnapShotsXml.dates.text()
+		def pointsSnapShotsParser = { PointsSnapShotsXml ->
+		    def datesText = PointsSnapShotsXml.dates.text()
 		    if (!datesText) return
-			def dates = datesTextml.dates.text().split(seperator).collect{ odf.parse(it) }
+			def dates = datesText.split(seperator).collect{ odf.parse(it) }
 			def overViews = dates.collect{ new PointsOverView() }
 			
 			PointsSnapShotsXml.PointsByPriority.each{ 
@@ -237,14 +247,14 @@ class UtilXml_v0_4 {
 		def datesAndOverViewsByGroup = [:] 
 		doc.SnapShots.PointsSnapShotsByGroup.each{ it -> 
 			if (!it) return 
-			def groupId = Integer.parseIn.text()t(it.'@groupId')
+			def groupId = Integer.parseInt(it.'@groupId'.text())
 			def group = groups.find{ it.id == groupId }
 			if(group) datesAndOverViewsByGroup[group] = pointsSnapShotsParser(it.PointsSnapShots)
 			else throw new Exception("GroupId (${groupId}) could not be found.")
 		}
 				
 		dateOverViewList.each{ 
-			def snapShot = new project,it.date)date =  it.date
+			def snapShot = new PointsSnapShot(project,it.date)
 			snapShot.overView = it.overView
 			groups.each{ group ->
 				def dateAndOverView = datesAndOverViewsByGroup[group]?.find{ Util.getDaysInBetween(it.date, snapShot.date)==0 }
@@ -257,15 +267,19 @@ class UtilXml_v0_4 {
 			snapShots << snapShot
 		}
 		
-		return ['groups':groups,'items':items, 'iterations':iterations, 'snapShots':snapShots, 'itemsByIteration':itemsByIteration,'itemsByGroup':itemsByGroup, 'exportD,'project':projectate':exportDate]
+		return ['groups':groups,'items':items, 'iterations':iterations, 'snapShots':snapShots, 'itemsByIteration':itemsByIteration,'itemsByGroup':itemsByGroup, 'exportDate':exportDate,'project':project]
 	}
 	
-	static void setRelationToDomainObjects(def map).each{ item.project = map.project }
-	cts(def map)
+	static void setRelationToDomainObjects(def map)
 	{
+		map.items.each{ item.project = map.project }
+	
 		map.itemsByIteration.each{ iter, items ->
 			items.each{ item -> iter.addItem(item) } 
 		}
 	
 		map.itemsByGroup.each{ group, items ->
-			items.each{ item -> group.addItem(i
+			items.each{ item -> group.addItem(item) }
+		}
+	}
+}

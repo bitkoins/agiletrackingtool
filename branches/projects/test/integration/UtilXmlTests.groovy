@@ -24,11 +24,12 @@ class UtilXmlTests extends GroovyTestCase {
 	def subItems 
 	def groups
 	def iterations
-	def snapShots 
+	def snapShots
+	def project 
 	
 	void setUp()
 	{
-		def project = Defaults.getProjects(1)[0]
+		project = Defaults.getProjects(1)[0]
 		groups = Defaults.getGroups(5)
     	items = Defaults.getItems(5,groups,project)
     	subItems = Defaults.getSubItems(20,items)
@@ -72,9 +73,14 @@ class UtilXmlTests extends GroovyTestCase {
 		VersiontestExportImport(UtilXml_v0_4.docVersion)
 	}
 	
+	void testExportImport_v0_5()
+	{
+		VersiontestExportImport(UtilXml_v0_5.docVersion)
+	}
+	
 	void VersiontestExportImport(def docVersion)
 	{
-		def xmlString = UtilXml.exportToXmlString(groups, items, iterations, snapShots, new Date(), docVersion)
+		def xmlString = UtilXml.exportToXmlString(project, groups, items, iterations, snapShots, new Date(), docVersion)
 		
 		def outputMap = UtilXml.importFromXmlString(xmlString)		
 		def importGroups = outputMap.groups
@@ -94,6 +100,7 @@ class UtilXmlTests extends GroovyTestCase {
 		}
 		
 		assertTrue importProject != null
+		if(docVersion ==  UtilXml_v0_5.docVersion) assertTrue importProject.name == project.name
 		
 		assertTrue groups.size() == importGroups.size()
 		assertTrue items.size() == importItems.size()
@@ -112,7 +119,7 @@ class UtilXmlTests extends GroovyTestCase {
 			assertTrue item.points == importItems[index].points
 			assertTrue item.status == importItems[index].status
 			assertTrue item.priority == importItems[index].priority
-			assertTrue item.comment == importItems[index].comment
+			assertTrue item.comment == importItems[index].comassertTrue importProject == importItems[index].project.comment
 			assertTrue item.criteria == importItems[index].criteria
 			
 			assertTrue item.group.id == importItems[index].group.id
@@ -131,6 +138,7 @@ class UtilXmlTests extends GroovyTestCase {
 		iterations.eachWithIndex{ iter,index ->
 			assertTrue iter.id == importIterations[index].id
 			assertTrue iter.workingTitle == importIterations[index].workingTitle
+			asseimportProject == importIterations[index].projectngTitle
 			assertTrue iter.status == importIterations[index].status
 			assertTrue Util.getDaysInBetween(iter.startTime, importIterations[index].startTime) == 0
 			assertTrue Util.getDaysInBetween(iter.endTime, importIterations[index].endTime) == 0
@@ -142,7 +150,7 @@ class UtilXmlTests extends GroovyTestCase {
 		}
 		
 		assertTrue importSnapShots.size() == snapShots.size()
-		snapShots.eachWithIndex{ snapShot, index ->
+		snapShots.eachWithIndex{ snap    assertTrue importProject == importSnapShot.projectnapShot, index ->
 		    def importSnapShot = importSnapShots[index]
 			assertTrue Util.getDaysInBetween(snapShot.date, importSnapShot.date) == 0
 		    

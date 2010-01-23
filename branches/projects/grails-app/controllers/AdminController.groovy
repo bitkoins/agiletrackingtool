@@ -31,11 +31,17 @@ class AdminController {
 	def index = { }
 
     def exportFile = {
+    		if(!session.project) {
+    			redirect(controller:'project',action:'list')
+    			return
+    		}
+    
 			def docVersion = params.docVersion ? params.docVersion : UtilXml.currentDocVersion
 			
 			def findAllForProject = { domain -> domain.findAllByProject(session.project) } 
 			
-    		def xml = UtilXml.exportToXmlString(findAllForProject(ItemGroup), 
+    		def xml = UtilXml.exportToXmlString(session.project,
+    											findAllForProject(ItemGroup), 
     		                                    findAllForProject(Item), 
     		                                    findAllForProject(Iteration), 
     		                                    findAllForProject(PointsSnapShot),
@@ -44,27 +50,22 @@ class AdminController {
     }
     		
     def importFile = {
-    		if ( Item.count() != 0) {
-    			render "DataBase must be empty!"
-    		}
-    		else
-    		{
-    			def xml = request.getFile("file").inputStream.text
-    			def map = UtilXml.importFromXmlString(xml)
+			def xml = request.getFile("file").inputStream.text
+			def map = UtilXml.importFromXmlString(xml)
 
-    			map.groups*.save()
-    			map.items*.save()
-    			map.iterations*.save()
-    			
-    			UtilXml.setRelationToDomainObjects(map)
-    			
-    			map.groups*.save()
-    			map.items*.save()
-    			map.iterations*.save()
-    			map.snapShots*.save()
-    			
-    			render "Imported ${map.items?.size()} items, ${map.groups?.size()} groups,${map.iterations?.size()} iterations and ${map.snapShots?.size()} snapShots."
-    		}
+			map.project.save()
+			map.groups*.save()
+			map.items*.save()
+			map.iterations*.save()
+			
+			UtilXml.setRelationToDomainObjects(map)
+			
+			map.groups*.save()
+			map.items*.save()
+			map.iterations*.save()
+			map.snapShots*.save()
+			
+			redirect(controller:'project', action:'list')
     }
     
     def deleteAll = {
@@ -74,7 +75,7 @@ class AdminController {
     
     def loadDefaults = {
     		3.times { projectId ->
-    			def project = new Project(name:"Example project ${projectId}",email:"example@project.org")
+    			def project = new Project(name:"Example project ${projectId}")
     			project.save()
     
     			def groups = Defaults.getGroups(5,[project])

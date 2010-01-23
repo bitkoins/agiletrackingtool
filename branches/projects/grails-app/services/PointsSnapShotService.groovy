@@ -40,7 +40,7 @@ class PointsSnapShotService {
 		       	def fileName = exportDir + "${project.name}_${dateTimeString}.xml"
 		       	println "Writing to file: " + fileName
 		       	def file = new File(fileName)
-		       	file.write(UtilXml.exportToXmlString(groups, Item.list(), Iteration.list(), PointsSnapShot.list(), exportDate))
+		       	file.write(UtilXml.exportToXmlString(project, groups, Item.list(), Iteration.list(), PointsSnapShot.list(), exportDate))
 		   }
 		   else
 		   {

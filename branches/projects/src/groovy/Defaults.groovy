@@ -67,6 +67,8 @@ class Defaults {
 			item.uid = index + (maxUid + 1) 
 			item.description = "${project.name} + Item  ${index}"			
 			item.points = Util.random(points)
+			item.dateCreated = new Date() - 10
+			item.lastUpdated = new Date()
 			
 			if (groups)
 			{
@@ -145,7 +147,7 @@ class Defaults {
 		def projects = []
 		nr.times{
 			def name = "Project-${it}"
-			projects << new Project(name:"${name}",email:"${name}@projects.org" ) 
+			projects << new Project(name:"${name}" ) 
 		}
 		return projects 
 	} 
