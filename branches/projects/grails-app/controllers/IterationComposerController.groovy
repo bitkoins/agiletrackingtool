@@ -27,18 +27,17 @@ class IterationComposerController {
 			redirect(action:"list")			
 		}
 		else {
-			def id = Integer.parseInt(params.id)
-			iter = Iteration.get(id)
+			iter = Iteration.get(params.id)
 		}
 		
 		session.iterId = iter?.id
 				
 		def itemsByGroup
 		if ( params.priorities) {
-			itemsByGroup = Item.getUnfinishedItemsGroupMap(Util.parsePriorities(params.priorities))
+			itemsByGroup = Item.getUnfinishedItemsGroupMap(session.project,Util.parsePriorities(params.priorities))
 		}
 		else {
-			itemsByGroup = Item.getUnfinishedItemsGroupMap()
+			itemsByGroup = Item.getUnfinishedItemsGroupMap(session.project)
 		}
 		
 		itemsByGroup.each{ group, items ->

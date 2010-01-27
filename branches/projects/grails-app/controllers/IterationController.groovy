@@ -81,6 +81,11 @@ class IterationController {
 	
 	def show = {
 		def iteration = params.id ? Iteration.get(params.id) : Iteration.getOngoingIteration(session.project)
+		
+		if(!iteration) {
+			redirect(action:'list')
+			return
+		}
 				
 		if (!belongsToProject(iteration)) { 
 			redirect(controller:'project',action:'list')

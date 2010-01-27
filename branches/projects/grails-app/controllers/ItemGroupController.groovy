@@ -63,7 +63,7 @@ class ItemGroupController {
 				return
 			}	
 		}
-		redirect(action:'list')
+		redirect(controller:'item',action:'backlog')
 	}
 		
 	def delete = { 
