@@ -23,4 +23,23 @@ class ProjectController {
 	def select = {		
 		redirect(controller:'item',action:'backlog')
 	}
+	
+	def delete = {
+		def project = Project.get(params.id)
+		
+		if(project) {
+		
+			if (session.project?.id == project.id)
+			{
+				session.project = null
+			}	
+			
+			PointsSnapShot.findAllByProject(project).each{ it.delete() }
+			Iteration.findAllByProject(project).each{ it.unloadItemsAndDelete() }
+			ItemGroup.findAllByProject(project).each{ it.deleteWholeGroup() }
+			project.delete()		
+		}
+		
+		redirect(action:'list')
+	}
 }
