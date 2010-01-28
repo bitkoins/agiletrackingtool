@@ -24,7 +24,7 @@ class UtilXml_v0_3 {
 	static def docVersion = "0.3"
 	static def seperator = ";"
 		
-	static def exportToXmlString(def groups, def items, def iterations, def pointsSnapShots = [], def exportDate )
+	static def exportToXmlString(def groups, def items, def iterations, def pointsSnapShots, def exportDate )
 	{
 		def builder = new groovy.xml.StreamingMarkupBuilder()
 		builder.encoding = "UTF-8"
