@@ -21,28 +21,35 @@ along with Agile Tracking Tool.  If not, see <http://www.gnu.org/licenses/>.
 
 class ItemTests extends GroovyTestCase {
 
+	def project 
+	def projects
 	def groups
 	def items
 	
 	void setUp()
 	{
-		groups = Defaults.getGroups(2)
-		items = Defaults.getItems(5,groups)
+		projects = Defaults.getProjects(1)
+		project = projects[0]
+		groups = Defaults.getGroups(2,projects)
+		items = Defaults.getItems(5,groups,project)
 	}
 	
 	void tearDown()
 	{
 		items*.delete()
+		projects*.delete()
 		groups*.delete()
 	}
 	
 	void saveItemsAndGroups()
 	{
+		projects*.save()
 		groups*.save()
 	}
 	
     void testSave() {
     	def item = items[0]
+    	project.save()
 		item.group.save()
     	
     	if ( !item.validate() )
@@ -56,7 +63,7 @@ class ItemTests extends GroovyTestCase {
     	def nr = 0
     	    	
     	items.each{ it.status = ItemStatus.Blocking; }
-    	def itemsGroupMap = Item.getUnfinishedItemsGroupMap()
+    	def itemsGroupMap = Item.getUnfinishedItemsGroupMap(project)
     	itemsGroupMap.each{group,itemList->
     		nr += itemList.size() 
     	}  
@@ -69,7 +76,7 @@ class ItemTests extends GroovyTestCase {
     	saveItemsAndGroups()
     	def nr = 0
     	items.each{ it.status = ItemStatus.Finished; }
-    	def itemsGroupMap = Item.getUnfinishedItemsGroupMap()
+    	def itemsGroupMap = Item.getUnfinishedItemsGroupMap(project)
     	itemsGroupMap.each{group,items-> nr += items.size() }    	   	
     	assertTrue nr == 0
     }
@@ -79,7 +86,7 @@ class ItemTests extends GroovyTestCase {
     	saveItemsAndGroups()
     	def nr = 0
     	def prios = [Priority.High]
-    	def itemsGroupMap = Item.getUnfinishedItemsGroupMap(prios)
+    	def itemsGroupMap = Item.getUnfinishedItemsGroupMap(project,prios)
     	itemsGroupMap.each{group,items-> nr += items.size() }    	   	
     	assertTrue nr == items.findAll{ it.priority == prios[0] }.size() 
     }
@@ -90,7 +97,7 @@ class ItemTests extends GroovyTestCase {
     	def nr = 0
     	items.each{ it.priority = Priority.Low }
     	def prios = [Priority.High, Priority.Low]
-    	def itemsGroupMap = Item.getUnfinishedItemsGroupMap(prios)
+    	def itemsGroupMap = Item.getUnfinishedItemsGroupMap(project,prios)
     	itemsGroupMap.each{group,items-> nr += items.size() }    	   	
     	assertTrue nr == items.size() 
     }
@@ -98,6 +105,7 @@ class ItemTests extends GroovyTestCase {
     void testSubItemSave()
     {
     	def subItem = Defaults.getSubItems(1,[items[0]])[0]
+    	project.save()
     	items[0].save()
     	
     	assertTrue subItem.item.id == items[0].id
@@ -136,6 +144,7 @@ class ItemTests extends GroovyTestCase {
     		
     	item.points = subItems.size()*1 + 5
     	subItems.each{ it.points = 1 }
+    	project.save()
     	item.save()
     	item = Item.get(items[0].id)
     		

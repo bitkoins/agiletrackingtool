@@ -20,40 +20,69 @@ along with Agile Tracking Tool.  If not, see <http://www.gnu.org/licenses/>.
 ------------------------------------------------------------------------------*/
 
 class ItemGroupController {
-	def scaffold = ItemGroup
 	
 	static navigation = [
-		group:'itemGroup', 
+		group:'itemGroup',
+		isVisible: { session.project != null }, 
 		subItems: [
 			[action:'list', order:1, title:'Show groups'],
 			[action:'create', order:10, title:'Create new group']			
 		] 
 	]
 
-	def list = { [groups:ItemGroup.list()] }
+	def list = { [groups:ItemGroup.findAllByProject(session.project) ] }
 	
+	def create = {
+		render(view:'edit', model : [group:new ItemGroup()] ) 	
+	}
+	
+	def edit = {
+		def group = ItemGroup.get(params.id)
+		if(belongsToProject(group)) {
+			return [group:group]
+		}
+		else {
+			redirect(controller:'project',action:'list')
+		}
+	}
+	
+	def save = {
+		def isNew = (params.id?.size() == 0)
+		if(isNew) {
+			new ItemGroup(name:params.name,project:session.project).save()
+		}
+		else
+		{
+			def group = ItemGroup.get(params.id)
+			if ( belongsToProject(group) ) {
+				group.name = params.name
+				group.save()
+			}
+			else
+			{
+				redirect(controller:'project',action:'list')
+				return
+			}	
+		}
+		redirect(controller:'item',action:'backlog')
+	}
+		
 	def delete = { 
 		def group = ItemGroup.get(Integer.parseInt(params.id))
-		if ( group) {
-			
-			group.items.collect{it}.each{ item ->			
-				item.iteration?.deleteItem(item.id)
-				item.group?.deleteItem(item.id)
-	    		item.delete()
-			}
-			
-			PointsSnapShot.list().each{ snapShot ->
-				def pointsForGroup = snapShot.getPointsForGroup(group)
-				
-				if (pointsForGroup) {
-	   		        pointsForGroup.snapShot.removeFromPointsForGroups(pointsForGroup)
-					pointsForGroup.delete()					
-				}
-			}
-			
-			group.delete(flush:true)
+		if ( belongsToProject(group) )
+		{
+			PointsSnapShot.deleteWholeGroup(group)
+			group.deleteWholeGroup()
+			redirect(action:'list')
 		}
-			
-		redirect(action:'list')
+		else
+		{
+			redirect(controller:'project',action:'list')
+		}
+	}
+		
+	def belongsToProject(def group)
+	{
+		return (group && (group.project.id == session.project.id) )
 	}
 }

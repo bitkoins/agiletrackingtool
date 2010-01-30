@@ -27,8 +27,11 @@ class Item {
 	String        criteria
 	Integer       uid
 	
+	Date          dateCreated
+    Date          lastUpdated
+   
 	static hasMany = [subItems:SubItem]
-	static belongsTo = [iteration:Iteration,group:ItemGroup]
+	static belongsTo = [iteration:Iteration,group:ItemGroup, project:Project]
 	static fetchMode = [subItems:"eager"]
 	
 	static constraints  = {
@@ -39,14 +42,17 @@ class Item {
 		criteria(nullable:true,maxSize:1024)
 		itemPoints(scale:1)	
 		uid(nullable:true)
+		project(nullable:false)
+		lastUpdated(nullable:true)
 	}
 
 	Item()  { subItems = [] }
 	
-	Item(def group)
+	Item(def project, def group)
 	{
 		stampUid()
-		group = group
+		this.project = project
+		this.group = group
 		description = "...."
 		points = 1
 		status = ItemStatus.Request
@@ -100,10 +106,10 @@ class Item {
 		this.itemPoints = points
 	}
 	
-	static def _getUnfinishedItemsGroupMapWithItemCheck(Closure itemCheck)
+	static def _getUnfinishedItemsGroupMapWithItemCheck(def project, Closure itemCheck)
 	{
 		def itemsByGroup = [:]		
-		def groups = ItemGroup.list()
+		def groups = ItemGroup.findAllByProject(project)
 						
 		groups.each{ group ->
 			itemsByGroup[group] = []
@@ -120,18 +126,18 @@ class Item {
 		return itemsByGroup
 	}
 	
-	static def getUnfinishedItemsGroupMap(List priorityList)
+	static def getUnfinishedItemsGroupMap(def project, List priorityList)
 	{
 		def itemCheck = { item ->
 			return priorityList.contains(item.priority)   
 		}
 		
-		return 	_getUnfinishedItemsGroupMapWithItemCheck(itemCheck)
+		return 	_getUnfinishedItemsGroupMapWithItemCheck(project,itemCheck)
 	}
 	
-	static def getUnfinishedItemsGroupMap()
+	static def getUnfinishedItemsGroupMap(def project)
 	{
-		return 	_getUnfinishedItemsGroupMapWithItemCheck({ item -> true})
+		return 	_getUnfinishedItemsGroupMapWithItemCheck(project, { item -> true})
 	} 
 	
 	static def maxUid()

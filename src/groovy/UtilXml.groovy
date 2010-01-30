@@ -20,15 +20,18 @@ along with Agile Tracking Tool.  If not, see <http://www.gnu.org/licenses/>.
 ------------------------------------------------------------------------------*/
 
 class UtilXml {
-	static def supportedVersions = [UtilXml_v0_4.docVersion, UtilXml_v0_3.docVersion]
-	static def currentDocVersion = UtilXml_v0_4.docVersion
+	static def supportedVersions = [UtilXml_v0_5.docVersion, UtilXml_v0_4.docVersion, UtilXml_v0_3.docVersion]
+	static def currentDocVersion = supportedVersions[0]
 		
-	static def exportToXmlString(def groups, def items, def iterations, def pointsSnapShots = [], def exportDate, 
+	static def exportToXmlString(def project, def groups, def items, def iterations, def pointsSnapShots = [], def exportDate, 
 			def docVersion = currentDocVersion )
 	{
 		def ret		
 		switch(docVersion)
 		{
+			case UtilXml_v0_5.docVersion:
+				ret = UtilXml_v0_5.exportToXmlString(project, groups, items, iterations, pointsSnapShots, exportDate)
+				break;
 			case UtilXml_v0_4.docVersion:
 				ret = UtilXml_v0_4.exportToXmlString(groups, items, iterations, pointsSnapShots, exportDate)
 				break;
@@ -50,6 +53,9 @@ class UtilXml {
 		
 		switch(docVersion)
 		{
+			case UtilXml_v0_5.docVersion:
+				ret = UtilXml_v0_5.importFromXmlDoc(doc)
+				break;
 			case UtilXml_v0_4.docVersion:
 				ret = UtilXml_v0_4.importFromXmlDoc(doc)
 				break;
@@ -72,6 +78,13 @@ class UtilXml {
 		map.itemsByGroup.each{ group, items ->
 			items.each{ item -> group.addItem(item) }
 		}
+		
+		def setProject = { it.project = map.project }
+		
+		map.groups.each{ setProject(it) }
+		map.items.each{ setProject(it) }
+		map.iterations.each{ setProject(it) }
+		map.snapShots.each{ setProject(it) }
 	}
 }
 

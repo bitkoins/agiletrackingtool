@@ -24,7 +24,7 @@ class UtilXml_v0_3 {
 	static def docVersion = "0.3"
 	static def seperator = ";"
 		
-	static def exportToXmlString(def groups, def items, def iterations, def pointsSnapShots = [], def exportDate )
+	static def exportToXmlString(def groups, def items, def iterations, def pointsSnapShots, def exportDate )
 	{
 		def builder = new groovy.xml.StreamingMarkupBuilder()
 		builder.encoding = "UTF-8"
@@ -136,10 +136,11 @@ class UtilXml_v0_3 {
 		def itemsByIteration = [:]
 		def itemsByGroup = [:]
 		
-		def exportDate = odf.parse( doc.ExportDate.text().toString() )
+		def exportDate = odf.parse( doc.ExportDate.text().toStdef project = new Project(name:"Project import at ${exportDate}")
 		
 		doc.Groups.Group.each{ 
 			def g = new ItemGroup()
+			g.project = projectItemGroup()
 			g.id = Integer.parseI.text()nt(it.'@id')
 			g.name = it.name.text()
 			g.description = it.description.text()			
@@ -241,8 +242,7 @@ class UtilXml_v0_3 {
 				else throw new Exception("GroupId (${groupId}) could not be found.")
 			}
 				
-			dateOverViewList.each{ 
-				def snapShot = new PointsSnapShot()
+			dateOveproject, it.date)hot = new PointsSnapShot()
 				snapShot.date =  it.date
 				snapShot.overView = it.overView
 				groups.each{ group ->
@@ -257,7 +257,12 @@ class UtilXml_v0_3 {
 			}
 		}
 		
-		return ['groups':groups,'items':items, 'iterations':iterations, 'snapShots':snapShots, 'itemsByIteration':itemsByIteration,'itemsByGroup':itemsByGroup, 'exportDate':exportDate]
+		return ['groups':groups,'items':items, 'iterations':iterations, 'snapShots':snapShots, 'itemsByIteration':itemsByIterati,'project':project]
+	}
+	
+	static void setRelationToDomainObjects(def map)
+	{
+		map.items.each{ item.project = map.project }
 	}
 	
 	static void setRelationToDomainObjects(def map)

@@ -31,34 +31,41 @@ class AdminController {
 	def index = { }
 
     def exportFile = {
+    		if(!session.project) {
+    			redirect(controller:'project',action:'list')
+    			return
+    		}
+    
 			def docVersion = params.docVersion ? params.docVersion : UtilXml.currentDocVersion
 			
-    		def xml = UtilXml.exportToXmlString(ItemGroup.list(), Item.list(), Iteration.list(), PointsSnapShot.list(), new Date(), docVersion )
+			def findAllForProject = { domain -> domain.findAllByProject(session.project) } 
+			
+    		def xml = UtilXml.exportToXmlString(session.project,
+    											findAllForProject(ItemGroup), 
+    		                                    findAllForProject(Item), 
+    		                                    findAllForProject(Iteration), 
+    		                                    findAllForProject(PointsSnapShot),
+    		                                    new Date(), docVersion )
     		render(contentType: "text/xml", text:xml ) 
     }
     		
     def importFile = {
-    		if ( Item.count() != 0) {
-    			render "DataBase must be empty!"
-    		}
-    		else
-    		{
-    			def xml = request.getFile("file").inputStream.text
-    			def map = UtilXml.importFromXmlString(xml)
+			def xml = request.getFile("file").inputStream.text
+			def map = UtilXml.importFromXmlString(xml)
 
-    			map.groups*.save()
-    			map.items*.save()
-    			map.iterations*.save()
-    			
-    			UtilXml.setRelationToDomainObjects(map)
-    			
-    			map.groups*.save()
-    			map.items*.save()
-    			map.iterations*.save()
-    			map.snapShots*.save()
-    			
-    			render "Imported ${map.items?.size()} items, ${map.groups?.size()} groups,${map.iterations?.size()} iterations and ${map.snapShots?.size()} snapShots."
-    		}
+			map.project.save()
+			map.groups*.save()
+			map.items*.save()
+			map.iterations*.save()
+			
+			UtilXml.setRelationToDomainObjects(map)
+			
+			map.groups*.save()
+			map.items*.save()
+			map.iterations*.save()
+			map.snapShots*.save()
+			
+			redirect(controller:'project', action:'list')
     }
     
     def deleteAll = {
@@ -67,42 +74,47 @@ class AdminController {
     }
     
     def loadDefaults = {
-    		def groups = Defaults.getGroups(5)
-    		groups*.save()
-    		def items = Defaults.getItems(25,groups)
-    		items*.save()
+    		3.times { projectId ->
+    			def project = new Project(name:"Example project ${projectId}")
+    			project.save()
+    
+    			def groups = Defaults.getGroups(5,[project])
+    			groups*.save()
+    			def items = Defaults.getItems(25,groups,project)
+    			items*.save()
     		
-    		Defaults.getSubItems(items.size(),items)*.save()    			
-    		def iters = Defaults.getIterations(3)
+    			Defaults.getSubItems(items.size(),items)*.save()    			
+    			def iters = Defaults.getIterations(3,project)
      		
-    		def snapShots = []
+    			def snapShots = []
     		
-     		def nowDate = new Date()
-    		def durationInDays = 10
-    		def startDate = nowDate - iters.size()*durationInDays
-    		iters.eachWithIndex{ iter, iterIndex ->
-    			iter.startTime = startDate + iterIndex*durationInDays
-    			iter.endTime = iter.startTime+ durationInDays
-    			iter.status = IterationStatus.Finished
+     			def nowDate = new Date()
+    			def durationInDays = 10
+    			def startTime = nowDate - iters.size()*durationInDays
+    			iters.eachWithIndex{ iter, iterIndex ->
+    				iter.startTime = startTime + iterIndex*durationInDays
+    				iter.endTime = iter.startTime+ durationInDays
+    				iter.status = IterationStatus.Finished
     			    			
-    			5.times{ itemIndex -> 
-    				def item = Util.random(items)
-    				if (item)
-    				{
-    					item.status = ItemStatus.Finished
-    					item.save()
-    					items = items - item
-    					iter.addItem(item)
-    				}
+    				5.times{ itemIndex -> 
+    					def item = Util.random(items)
+    					if (item)
+    					{
+	    					item.status = ItemStatus.Finished
+    						item.save()
+    						items = items - item
+    						iter.addItem(item)
+    					}
     				
-    				def snapShot = PointsSnapShot.takeSnapShot(groups,iter.startTime+itemIndex)    	
-    				snapShot.save()
+    					def snapShot = PointsSnapShot.takeSnapShot(project, groups,iter.startTime+itemIndex)    	
+    					snapShot.save()
+    				}
     			}
+    		
+    			iters[-1].status = IterationStatus.Ongoing 
+    			iters*.save()
     		}
     		
-    		iters[-1].status = IterationStatus.Ongoing 
-    		iters*.save()
-    		
-    		redirect(controller:"item", action:"list")
+    		redirect(controller:"project", action:"list")
     }
 }

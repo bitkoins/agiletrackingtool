@@ -46,14 +46,14 @@ along with Agile Tracking Tool.  If not, see <http://www.gnu.org/licenses/>.
 	    		<tr>
 		    		<td>StartDate</td>
 		    		<td>
-		    			<g:datePicker name="startDate" value="${startTime}" precision="day"/>
+		    			<g:datePicker name="startTime" value="${startTime}" precision="day" years="${Util.getDefaultYearRange()}"/>
 		    		</td>
 	    		</tr>
 	    
 	    		<tr>
 		    		<td>EndDate</td>
 		    		<td>
-		    			<g:datePicker name="endDate" value="${endTime}" precision="day"/>
+		    			<g:datePicker name="endTime" value="${endTime}" precision="day" years="${Util.getDefaultYearRange()}"/>
 		    		</td>
 	    		</table>
 	    		<button>Submit</button>

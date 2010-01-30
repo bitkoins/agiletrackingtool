@@ -26,7 +26,8 @@ class PointsSnapShotController {
 		group:'tags', 
 		order:60, 
 		title:'History',
-		action:'plot', 
+		action:'plot',
+		isVisible: { session.project != null }, 
 		subItems: [
 			[action:'plot', order:1, title:"Overall history"],
 			[action:'allPlots', order:10, title:'Group history'],			
@@ -46,19 +47,12 @@ class PointsSnapShotController {
 			endTime = now
 			startTime = endTime - dayRange
 		}
-		else if ( params['startDate_year'])
-		{
-			def startCal = Calendar.getInstance()
-			def endCal = Calendar.getInstance()
-		
-			startCal.set(Integer.parseInt(params['startDate_year']),Integer.parseInt(params['startDate_month'])-1,Integer.parseInt(params['startDate_day']))
-			endCal.set(Integer.parseInt(params['endDate_year']),Integer.parseInt(params['endDate_month'])-1,Integer.parseInt(params['endDate_day']))
-		
-			startTime = startCal.getTime()
-			endTime = endCal.getTime()
+		else if ( params.startTime) {
+			startTime = params.startTime
+			endTime = params.endTime
 		}
 		
-		[ PointsSnapShot.getSnapShotsBetween(startTime, endTime), startTime, endTime]
+		[ PointsSnapShot.getSnapShotsBetween(session.project,startTime, endTime), startTime, endTime]
 	}
 	
 	def plot = {
@@ -91,7 +85,7 @@ class PointsSnapShotController {
 
 		plots += _makePlots("for all items", snapShots.collect{it.overView}, snapShots.collect{it.date} )
 			
-		ItemGroup.list().each{ group ->
+		ItemGroup.findAllByProject(session.project).each{ group ->
 			def title = "for ${group}"
 			def overViews = []
 			def dates = []
@@ -128,8 +122,7 @@ class PointsSnapShotController {
 				if (true || (daysAgo <= 0) )  {
 					plotCurve.xValues << daysAgo
 					totalBugs += nrBugs
-					plotCurve.yValues << totalBugs
-					//plotCurve.yValues << nrBugs
+					plotCurve.yValues << totalBugs					
 				}
 			}
 			
@@ -189,6 +182,6 @@ class PointsSnapShotController {
 	}
 	
 	def burnUpGraph = {		    	
-			return [plotData:Iteration.getOngoingIteration()?.getBurnUpPlotData()]
+			return [plotData:Iteration.getOngoingIteration(session.project)?.getBurnUpPlotData()]
 	}
 }

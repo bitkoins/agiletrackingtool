@@ -71,7 +71,7 @@ class Util {
 		priorities.split(",").collect{ prio -> Priority.valueOf(prio) }
 	}
 	
-	static emptyDataBase()
+	static void emptyDataBase()
 	{
 		PointsSnapShot.list()*.delete()
 		def allitems = Item.list()
@@ -80,6 +80,13 @@ class Util {
 		alliterations*.delete()
 		ItemGroup.list()*.delete()
 		allitems*.delete()
+		Project.list()*.delete()
+	}
+	
+	static def getDefaultYearRange()
+	{
+		def year = new Date().year + 1900
+		return (year-3)..(year+3)
 	}
 }
 

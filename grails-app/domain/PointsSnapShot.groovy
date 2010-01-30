@@ -25,19 +25,25 @@ class PointsSnapShot
 	PointsOverView  overView
 	
 	static  hasMany = [ pointsForGroups: PointsForGroup ]
-
-	PointsSnapShot() { this(new Date()) }
+	static belongsTo = [project:Project]
 	
-	PointsSnapShot(def date)
+	static constraints = {
+		project(nullable:false)
+	}
+	
+	PointsSnapShot() { }
+
+	PointsSnapShot(def project, def date)
 	{
+		this.project = project
 		this.date = date
 		overView = new PointsOverView()
 		pointsForGroups = []
-	}
+	}	
 	
-	static def takeSnapShot(def groups, def date) 
+	static def takeSnapShot(def project, def groups, def date) 
 	{
-		def ret = new PointsSnapShot(date)
+		def ret = new PointsSnapShot(project, date)
 		def allItems = []
 		groups.each{ group -> group.items.each{ allItems << it } }
 		ret.overView = PointsOverView.createOverView(allItems)
@@ -56,17 +62,20 @@ class PointsSnapShot
 		return pointsForGroups.find{ it.group == group }		
 	}
 	
-	static def getSnapShotClosestTo(def date, def maximumDaysOffset)
+	static def getSnapShotClosestTo(def project, def date, def maximumDaysOffset)
     {
-        def snapShots = getSnapShotsBetween(date-maximumDaysOffset, date+maximumDaysOffset)
+        def snapShots = getSnapShotsBetween(project,date-maximumDaysOffset, date+maximumDaysOffset)
         if (!snapShots) return null
         return snapShots.sort{ Math.abs(Util.getDaysInBetween(it.date,date)) }[0]
     }
 	
-	static def getSnapShotsBetween(def date1, def date2)
+	static def getSnapShotsBetween(def myProject, def date1, def date2)
 	{
 		 return PointsSnapShot.createCriteria().list {
-			 between('date',date1,date2)
+		 	 and {
+		 	 	project { eq("id",myProject.id) } 		 	 
+			 	between('date',date1,date2)
+			 }
 		 }
 	}
 	

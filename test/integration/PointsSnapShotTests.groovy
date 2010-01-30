@@ -20,26 +20,46 @@ along with Agile Tracking Tool.  If not, see <http://www.gnu.org/licenses/>.
 ------------------------------------------------------------------------------*/
 
 class PointsSnapShotTests extends GroovyTestCase {
+	def project
 	def groups 
 	def items
 	def snapShot
+	def snapShots
 	def defaultItemPoint = 2
 	def date 
 		
 	void setUp() {
-		groups = Defaults.getGroups(3)
-		items = Defaults.getItems(3,groups)
+		project = Defaults.getProjects(1)[0]
+		groups = Defaults.getGroups(3,[project])
+		items = Defaults.getItems(3,groups,project)
 		items.each{ it.itemPoints = defaultItemPoint }
 		this.date = new Date()
 		takeSnapShot()
-	}
+		snapShots = []
+	}	
 	
 	void tearDown() {
 	}
 	
+	void saveInstances()
+	{
+		project.save()
+		groups*.save()
+		items*.save()
+	}
+	
+	void deleteInstances()
+	{
+		snapShots*.delete()
+		snapShot.delete()
+		items*.delete()
+		groups*.delete()
+		project.delete()
+	}
+	
 	void takeSnapShot()
 	{
-		snapShot = PointsSnapShot.takeSnapShot(groups,this.date)
+		snapShot = PointsSnapShot.takeSnapShot(project,groups,this.date)
 	}
 	
 	void testDateIsCorrect() 
@@ -71,8 +91,7 @@ class PointsSnapShotTests extends GroovyTestCase {
 	
 	void testSavingAndRetrievingSnapShot()
 	{
-		groups*.save()
-		items*.save()
+		saveInstances()
 		
 		if ( !snapShot.validate() )
 			snapShot.errors.allErrors.each { println it }
@@ -82,17 +101,15 @@ class PointsSnapShotTests extends GroovyTestCase {
 		def snapShotSaved = PointsSnapShot.get(snapShot.id)
 		assertTrue snapShotSaved.pointsForGroups.size() == snapShot.pointsForGroups.size()
 		
-		snapShot.delete()
-		items*.delete()
-		groups*.delete()
+		deleteInstances()		
 	}
 	
-	static List setUpSnapShotList(def nowDate, def groups)
+	static List setUpSnapShotList(def project, def nowDate, def groups)
 	{
         def snapShots = []
         10.times{
             def ps, pointsForGroupList
-    		ps = PointsSnapShot.takeSnapShot(groups,nowDate - it)
+    		ps = PointsSnapShot.takeSnapShot(project,groups,nowDate - it)
     		snapShots << ps
         }
         
@@ -101,55 +118,82 @@ class PointsSnapShotTests extends GroovyTestCase {
 	
 	void testRetrievingSnapShotClosestToDate()
     {
-        groups*.save()
-        items*.save()
+        saveInstances()
         
      	def nowDate = new Date()   
-        def snapShots = setUpSnapShotList(nowDate,groups)
+        def snapShots = setUpSnapShotList(project,nowDate,groups)
         snapShots*.save()
-     
-       
-        assertTrue PointsSnapShot.getSnapShotClosestTo(nowDate,1)?.id == snapShots[0].id
-        assertTrue PointsSnapShot.getSnapShotClosestTo(nowDate-5,1)?.id == snapShots[5].id
-   		assertTrue PointsSnapShot.getSnapShotClosestTo(nowDate-14,5)?.id == snapShots[9].id
-   		assertTrue PointsSnapShot.getSnapShotClosestTo(nowDate-15,5)?.id == null
-        				
-        snapShots*.delete()
-        items*.delete()
-        groups*.delete()
+            
+        assertTrue PointsSnapShot.getSnapShotClosestTo(project,nowDate,1)?.id == snapShots[0].id
+        assertTrue PointsSnapShot.getSnapShotClosestTo(project,nowDate-5,1)?.id == snapShots[5].id
+   		assertTrue PointsSnapShot.getSnapShotClosestTo(project,nowDate-14,5)?.id == snapShots[9].id
+   		assertTrue PointsSnapShot.getSnapShotClosestTo(project,nowDate-15,5)?.id == null
+        						
+        deleteInstances()
     }
 	
 	void testRetrieveSnapShotsWithinRange()
 	{
-		groups*.save()
-        items*.save()
+		saveInstances()
         
 		def nowDate = new Date()   
-        def snapShots = setUpSnapShotList(nowDate,groups)
+        def snapShots = setUpSnapShotList(project,nowDate,groups)
         snapShots*.save()
         
-        assertTrue PointsSnapShot.getSnapShotsBetween(nowDate-7,nowDate-5)?.size() == 3
-        assertTrue PointsSnapShot.getSnapShotsBetween(nowDate-1,nowDate)?.size() == 2
-        assertTrue PointsSnapShot.getSnapShotsBetween(nowDate+1,nowDate+4)?.size() == 0
+        assertTrue PointsSnapShot.getSnapShotsBetween(project,nowDate-7,nowDate-5)?.size() == 3
+        assertTrue PointsSnapShot.getSnapShotsBetween(project,nowDate-1,nowDate)?.size() == 2
+        assertTrue PointsSnapShot.getSnapShotsBetween(project,nowDate+1,nowDate+4)?.size() == 0
         
-        snapShots*.delete()
-        items*.delete()
-        groups*.delete()
+        deleteInstances()
+	}
+	
+	
+	void testRetrieveSnapShotsWithinRangeFiltersOutCorrect()
+	{
+		saveInstances()
+        
+		def nowDate = new Date()   
+        def snapShots = setUpSnapShotList(project,nowDate,groups)
+        snapShots*.save()
+        
+        def otherProject = Defaults.getProjects(1)[0]
+        otherProject.id = 123
+        
+        assertTrue PointsSnapShot.getSnapShotsBetween(otherProject,nowDate-10,nowDate)?.size() == 0
+                
+        deleteInstances()
 	}
 	
 	void testSnapShotGroupsAreSavedCorrectly()
 	{
-		groups*.save()
-		items*.save()
+		saveInstances()
+				
+		takeSnapShot()
+		snapShot.save()
 		
-		def ps = PointsSnapShot.takeSnapShot(groups,new Date())
-		ps.save()
-		
-		def reloaded = PointsSnapShot.get(ps.id)
+		def reloaded = PointsSnapShot.get(snapShot.id)
 		assertTrue reloaded.pointsForGroups?.size() == groups.size()
-		ps.delete()
-		items*.delete()
-		groups*.delete()
+		
+		deleteInstances()
+	}
+	
+
+	void testDeleteWholeGroup()
+	{
+		def nrSnapShots = 10
+		def snapShots = Defaults.getSnapShots(groups, date -(nrSnapShots-1), date, project)
+		assertTrue snapShots.size() == nrSnapShots
+		def deletedGroup = groups[0]
+		
+		saveInstances()
+		snapShots*.save()
+		
+		PointsForGroup.deleteWholeGroup(deletedGroup)
+			
+		assertTrue PointsForGroup.findAllByGroup(deletedGroup).size() == 0
+		snapShots.each{ assertTrue it.pointsForGroups.size() == (groups.size() -1) } 			
+		
+		deleteInstances()
 	}
 }
 
