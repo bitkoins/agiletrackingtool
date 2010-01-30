@@ -26,6 +26,7 @@ class IterationController {
 		order:40, 
 		title:'Iterations', 
 		action:'show',
+		isVisible: { session.project != null },
 		subItems: [
 			[action:'show', order:1, title:'Show current iteration'],
 			[action:'list', order:10, title:"Manage"],

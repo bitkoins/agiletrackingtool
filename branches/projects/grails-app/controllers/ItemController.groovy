@@ -23,10 +23,11 @@ class ItemController {
 	def scaffold = Item
 	
 	static navigation = [
-		group:'tags', 
+		group:'tags',
 		order:20, 
 		title:'Backlog', 
 		action:'backlog' ,
+		isVisible: { session.project != null },
 		subItems: [
 			[action:'backlog', order:1, title:'Backlog'],
 			[action:'showAll', order:10, title:'Show all items'],

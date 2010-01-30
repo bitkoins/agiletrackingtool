@@ -22,7 +22,8 @@ along with Agile Tracking Tool.  If not, see <http://www.gnu.org/licenses/>.
 class ItemGroupController {
 	
 	static navigation = [
-		group:'itemGroup', 
+		group:'itemGroup',
+		isVisible: { session.project != null }, 
 		subItems: [
 			[action:'list', order:1, title:'Show groups'],
 			[action:'create', order:10, title:'Create new group']			

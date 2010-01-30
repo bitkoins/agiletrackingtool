@@ -25,7 +25,8 @@ class ForecastController {
 		group:'tags', 
 		order:80, 
 		title:'Forecast', 
-		action:'forecast'
+		action:'forecast',
+		isVisible: { session.project != null }
 	]
 	
 	def forecast = {

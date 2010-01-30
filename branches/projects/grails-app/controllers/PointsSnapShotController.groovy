@@ -26,7 +26,8 @@ class PointsSnapShotController {
 		group:'tags', 
 		order:60, 
 		title:'History',
-		action:'plot', 
+		action:'plot',
+		isVisible: { session.project != null }, 
 		subItems: [
 			[action:'plot', order:1, title:"Overall history"],
 			[action:'allPlots', order:10, title:'Group history'],			
