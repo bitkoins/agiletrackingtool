@@ -46,16 +46,9 @@ class PointsSnapShotController {
 			endTime = now
 			startTime = endTime - dayRange
 		}
-		else if ( params['startDate_year'])
-		{
-			def startCal = Calendar.getInstance()
-			def endCal = Calendar.getInstance()
-		
-			startCal.set(Integer.parseInt(params['startDate_year']),Integer.parseInt(params['startDate_month'])-1,Integer.parseInt(params['startDate_day']))
-			endCal.set(Integer.parseInt(params['endDate_year']),Integer.parseInt(params['endDate_month'])-1,Integer.parseInt(params['endDate_day']))
-		
-			startTime = startCal.getTime()
-			endTime = endCal.getTime()
+		else if ( params.startTime) {
+			startTime = params.startTime
+			endTime = params.endTime
 		}
 		
 		[ PointsSnapShot.getSnapShotsBetween(session.project,startTime, endTime), startTime, endTime]

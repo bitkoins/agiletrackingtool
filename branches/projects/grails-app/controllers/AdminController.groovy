@@ -90,9 +90,9 @@ class AdminController {
     		
      			def nowDate = new Date()
     			def durationInDays = 10
-    			def startDate = nowDate - iters.size()*durationInDays
+    			def startTime = nowDate - iters.size()*durationInDays
     			iters.eachWithIndex{ iter, iterIndex ->
-    				iter.startTime = startDate + iterIndex*durationInDays
+    				iter.startTime = startTime + iterIndex*durationInDays
     				iter.endTime = iter.startTime+ durationInDays
     				iter.status = IterationStatus.Finished
     			    			

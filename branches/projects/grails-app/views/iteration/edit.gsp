@@ -43,7 +43,7 @@ along with Agile Tracking Tool.  If not, see <http://www.gnu.org/licenses/>.
         	
         	<tr>
         		<td>Start Date:</td>
-        		<td><g:datePicker name="startTime" value="${iteration.startTime}" precision="day"/></td>
+        		<td><g:datePicker name="startTime" value="${iteration.startTime}" precision="day" years="${Util.getDefaultYearRange()}"/></td>
 			</tr>
 			<tr>
         		<td>Duration in days:</td>
