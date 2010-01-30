@@ -26,23 +26,26 @@ class PointsSnapShotService {
     def exportDir = ConfigurationHolder.config.agile.exportDirectory
 
     def performDailyJob() {
-    	def groups = ItemGroup.list()
-	   	if ( groups?.size() > 0 )
-	    {
-	       	def snapShot = PointsSnapShot.takeSnapShot(groups,new Date())
-	       	snapShot.save()
-	       	println "Snapshot saved."
-	        	
-	       	def exportDate = new Date()
-	       	def dateTimeString = exportDate.toString().replace(" ","_").replace(":","_")
-	       	def fileName = exportDir + "AgilePlannerExport_${dateTimeString}.xml"
-	       	println "Writing to file: " + fileName
-	       	def file = new File(fileName)
-	       	file.write(UtilXml.exportToXmlString(groups, Item.list(), Iteration.list(), PointsSnapShot.list(), exportDate))
-	   }
-	   else
-	   {
-	     	println "No groups are present"
-	   }	
+    
+    	Project.list().each{ project ->
+	    	def groups = ItemGroup.list()
+		   	if ( groups?.size() > 0 )
+		    {
+		       	def snapShot = PointsSnapShot.takeSnapShot(project,groups,new Date())
+		       	snapShot.save()
+		       	println "Snapshot saved."
+		        	
+		       	def exportDate = new Date()
+		       	def dateTimeString = exportDate.toString().replace(" ","_").replace(":","_")
+		       	def fileName = exportDir + "${project.name}_${dateTimeString}.xml"
+		       	println "Writing to file: " + fileName
+		       	def file = new File(fileName)
+		       	file.write(UtilXml.exportToXmlString(project, groups, Item.list(), Iteration.list(), PointsSnapShot.list(), exportDate))
+		   }
+		   else
+		   {
+		     	println "No groups are present"
+		   }
+		}	
     }
 }

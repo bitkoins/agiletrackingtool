@@ -24,14 +24,16 @@ class UtilXmlTests extends GroovyTestCase {
 	def subItems 
 	def groups
 	def iterations
-	def snapShots 
+	def snapShots
+	def project 
 	
 	void setUp()
 	{
+		project = Defaults.getProjects(1)[0]
 		groups = Defaults.getGroups(5)
-    	items = Defaults.getItems(5,groups, null)
+    	items = Defaults.getItems(5,groups,project)
     	subItems = Defaults.getSubItems(20,items)
-    	iterations = Defaults.getIterations(3)
+    	iterations = Defaults.getIterations(3,project)
     	
     	[groups,items,subItems,iterations].each{ it.eachWithIndex{ element, index -> element.id = index } }
     	
@@ -71,15 +73,21 @@ class UtilXmlTests extends GroovyTestCase {
 		VersiontestExportImport(UtilXml_v0_4.docVersion)
 	}
 	
+	void testExportImport_v0_5()
+	{
+		VersiontestExportImport(UtilXml_v0_5.docVersion)
+	}
+	
 	void VersiontestExportImport(def docVersion)
 	{
-		def xmlString = UtilXml.exportToXmlString(groups, items, iterations, snapShots, new Date(), docVersion)
+		def xmlString = UtilXml.exportToXmlString(project, groups, items, iterations, snapShots, new Date(), docVersion)
 		
 		def outputMap = UtilXml.importFromXmlString(xmlString)		
 		def importGroups = outputMap.groups
 		def importItems = outputMap.items
 		def importIterations = outputMap.iterations
 		def importSnapShots = outputMap.snapShots
+		def importProject = outputMap.project
 				
 		UtilXml.setRelationToDomainObjects(outputMap)
 		
@@ -91,6 +99,9 @@ class UtilXmlTests extends GroovyTestCase {
 			items.each{ item -> group.addItem(item) }
 		}
 		
+		assertTrue importProject != null
+		if(docVersion ==  UtilXml_v0_5.docVersion) assertTrue importProject.name == project.name
+		
 		assertTrue groups.size() == importGroups.size()
 		assertTrue items.size() == importItems.size()
 		assertTrue iterations.size() == importIterations.size()
@@ -98,6 +109,7 @@ class UtilXmlTests extends GroovyTestCase {
 		groups.eachWithIndex{ group, index ->
 			assertTrue group.id == importGroups[index].id
 			assertTrue group.name == importGroups[index].name
+			assertTrue importProject == importGroups[index].project
 			assertTrue group.description == importGroups[index].description
 		}
 				
@@ -107,7 +119,7 @@ class UtilXmlTests extends GroovyTestCase {
 			assertTrue item.points == importItems[index].points
 			assertTrue item.status == importItems[index].status
 			assertTrue item.priority == importItems[index].priority
-			assertTrue item.comment == importItems[index].comment
+			assertTrue item.comment == importItems[index].comassertTrue importProject == importItems[index].project.comment
 			assertTrue item.criteria == importItems[index].criteria
 			
 			assertTrue item.group.id == importItems[index].group.id
@@ -126,6 +138,7 @@ class UtilXmlTests extends GroovyTestCase {
 		iterations.eachWithIndex{ iter,index ->
 			assertTrue iter.id == importIterations[index].id
 			assertTrue iter.workingTitle == importIterations[index].workingTitle
+			asseimportProject == importIterations[index].projectngTitle
 			assertTrue iter.status == importIterations[index].status
 			assertTrue Util.getDaysInBetween(iter.startTime, importIterations[index].startTime) == 0
 			assertTrue Util.getDaysInBetween(iter.endTime, importIterations[index].endTime) == 0
@@ -137,7 +150,7 @@ class UtilXmlTests extends GroovyTestCase {
 		}
 		
 		assertTrue importSnapShots.size() == snapShots.size()
-		snapShots.eachWithIndex{ snapShot, index ->
+		snapShots.eachWithIndex{ snap    assertTrue importProject == importSnapShot.projectnapShot, index ->
 		    def importSnapShot = importSnapShots[index]
 			assertTrue Util.getDaysInBetween(snapShot.date, importSnapShot.date) == 0
 		    
@@ -160,8 +173,4 @@ class UtilXmlTests extends GroovyTestCase {
 		    snapShot.pointsForGroups.eachWithIndex{ pointsForGroup, groupIndex ->
 		    	def importPointsForGroup = importSnapShot.pointsForGroups.find{ it.group.id == pointsForGroup.group.id }
 		    	assertTrue importPointsForGroup != null
-		    	assertTrue overViewsAreEqual(pointsForGroup.overView, importPointsForGroup.overView)
-		    }
-		}
-	}
-}
+		    	assertTrue overViewsAreEqual(point

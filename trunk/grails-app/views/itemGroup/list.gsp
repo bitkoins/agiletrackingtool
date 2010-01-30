@@ -29,7 +29,7 @@ along with Agile Tracking Tool.  If not, see <http://www.gnu.org/licenses/>.
 
     <body>
     	<g:javascript library="prototype" />
-    	<nav:renderSubItems group="itemGroup"/>
+    	<nav:renderSubItems group="tags"/>
         
     	<h2>Groups overview</h2>
 		<br/>

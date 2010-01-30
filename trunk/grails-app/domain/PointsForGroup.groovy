@@ -37,5 +37,13 @@ class PointsForGroup
 	{
 		return "${group}: ${overView}"
 	}
+	
+	static def deleteWholeGroup(def group)
+	{
+		findAllByGroup(group).each{ pointsForGroup ->
+			    pointsForGroup.snapShot.removeFromPointsForGroups(pointsForGroup)
+				pointsForGroup.delete()					
+		}
+	}
 }
 

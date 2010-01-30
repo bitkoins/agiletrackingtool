@@ -21,11 +21,11 @@ along with Agile Tracking Tool.  If not, see <http://www.gnu.org/licenses/>.
 
 class Defaults {
 	
-	static List<Iteration> getIterations(Integer nr)
+	static List<Iteration> getIterations(Integer nr, def project)
 	{
 		List<Iteration> ret = []
 		nr.times {
-			Iteration iter = new Iteration()
+			Iteration iter = new Iteration(project:project)
 			iter.workingTitle = "Iteration-${it}"
 			iter.status = IterationStatus.FutureWork
 			iter.startTime = new Date() - 10
@@ -38,13 +38,14 @@ class Defaults {
 		return ret
 	}
 	
-	static List<ItemGroup> getGroups(Integer nr)
+	static List<ItemGroup> getGroups(Integer nr, def projects = getProjects(1) )
 	{
 		List<ItemGroup> ret = []
 		nr.times {
-			def group = new ItemGroup()
+			def group = new ItemGroup()			
 			group.name = "Group-${it}"
 			group.items = []
+			group.project = Util.random(projects)
 			
 			ret << group
 		}
@@ -52,7 +53,7 @@ class Defaults {
 		return ret
 	}
 	
-	static List<Item> getItems(Integer nr, List<ItemGroup> groups, def maxUid = null)
+	static List<Item> getItems(Integer nr, List<ItemGroup> groups, def project = getProjects(1)[0], def maxUid = null)
 	{
 		maxUid = maxUid ? maxUid : Item.maxUid()				
 		List<Item> ret = []
@@ -62,10 +63,12 @@ class Defaults {
 		9.times{ points << it }
 		
 		nr.times{ index -> 
-			def item = new Item()
+			def item = new Item(project:project)
 			item.uid = index + (maxUid + 1) 
-			item.description = "Item  ${index}"			
+			item.description = "${project.name} + Item  ${index}"			
 			item.points = Util.random(points)
+			item.dateCreated = new Date() - 10
+			item.lastUpdated = new Date()
 			
 			if (groups)
 			{
@@ -120,12 +123,12 @@ class Defaults {
 		return overView	
 	}
 	
-	static def getSnapShots(def groups, def startDate, def endDate)
+	static def getSnapShots(def groups, def startTime, def endTime, def project = getProjects(1)[0])
 	{
 		def snapShots = []
 							
-		(startDate..endDate).eachWithIndex{ date, index ->
-			def snapShot = new PointsSnapShot(date)
+		(startTime..endTime).eachWithIndex{ date, index ->
+			def snapShot = new PointsSnapShot(project, date)
 			snapShot.id = index + 1
 			snapShot.overView = getPointsOverView()
 			
@@ -138,4 +141,14 @@ class Defaults {
 		}
 		return snapShots
 	}
+	
+	static def getProjects(Integer nr)
+	{
+		def projects = []
+		nr.times{
+			def name = "Project-${it}"
+			projects << new Project(name:"${name}" ) 
+		}
+		return projects 
+	} 
 }
