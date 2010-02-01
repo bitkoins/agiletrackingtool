@@ -23,16 +23,25 @@ along with Agile Tracking Tool.  If not, see <http://www.gnu.org/licenses/>.
     <head>
         <title><g:layoutTitle default="Grails" /></title>
         <link rel="stylesheet" href="${createLinkTo(dir:'css',file:'main.css')}" />
+        <link rel="stylesheet" href="${createLinkTo(dir:'css',file:'yui-custom.css')}" />
         <link rel="shortcut icon" href="${createLinkTo(dir:'images',file:'favicon.ico')}" type="image/x-icon" />
         
         <g:layoutHead />
         <g:javascript library="application" />
         <g:javascript library="item" />
 		
-        <nav:resources override="false"/>			
+        <nav:resources override="false"/>        
+        <gui:resources components="['toolTip']"/>
+        
+        <style type="text/css">
+		
+    
+    </style>
+        			
     </head>
  
     <body>
+    
     	<div style="margin-right:130px;">
  			<nav:render group="tags" />
  		</div>
@@ -45,6 +54,7 @@ along with Agile Tracking Tool.  If not, see <http://www.gnu.org/licenses/>.
         <div style="float:right;font-size:85%;font-weight:bold;margin-right:1px;margin-top:2px"><a href="http://sites.google.com/site/agiletrackingtool/">Powered by: Agile Tracking Tool</a></div>
         <div style="clear:both" />
         
-        <g:layoutBody />		
+        <g:layoutBody />
+        
     </body>	
 </html>
