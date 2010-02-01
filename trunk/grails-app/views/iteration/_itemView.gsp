@@ -23,9 +23,11 @@ along with Agile Tracking Tool.  If not, see <http://www.gnu.org/licenses/>.
 	<tr>
 		<td width="20"><g:link controller="item" action="edit" id="${item.id}">${item.uid}</g:link></td>
 		
-		<gui:toolTip text="${item.comment ? 'Comment: ' + item.comment : ''}">
-			<td>${item.description}</td>
-		</gui:toolTip>			
+		<td>
+			<gui:toolTip text="${item.comment ? 'Comment: ' + item.comment : '	'}">
+				${item.description}
+			</gui:toolTip>			
+		</td>
 		
 		<td width ="50">${item.points}</td>
 				
