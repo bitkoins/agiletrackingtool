@@ -106,46 +106,6 @@ class Item {
 		this.itemPoints = points
 	}
 	
-	static def _getUnfinishedItemsGroupMapWithItemCheck(def project, Closure itemCheck)
-	{
-		def itemsByGroup = [:]		
-		def groups = ItemGroup.findAllByProject(project)
-						
-		groups.each{ group ->
-			itemsByGroup[group] = []
-			group.items?.each{ item ->
-				if ( item.status != ItemStatus.Finished) {
-					if (itemCheck(item))
-					{
-						itemsByGroup[group] << item
-					}
-				} 
-			}
-		}
-		
-		return itemsByGroup
-	}
-	
-	static def getUnfinishedItemsGroupMap(def project, List priorityList)
-	{
-		def itemCheck = { item ->
-			return priorityList.contains(item.priority)   
-		}
-		
-		return 	_getUnfinishedItemsGroupMapWithItemCheck(project,itemCheck)
-	}
-	
-	static def getUnfinishedItemsGroupMap(def project)
-	{
-		return 	_getUnfinishedItemsGroupMapWithItemCheck(project, { item -> true})
-	} 
-	
-	static def maxUid()
-	{
-		def items = Item.list(max:1,sort:'uid',order:'desc')
-		return items ? (items[0].uid + 1) : 1
-	}
-	
 	def stampUid()
 	{		
 		this.uid = maxUid()				
@@ -161,4 +121,10 @@ class Item {
 		iteration?.deleteItem(id)
 		group?.deleteItem(id)
 	}
+	
+	static def maxUid()
+	{
+		def items = Item.list(max:1,sort:'uid',order:'desc')
+		return items ? (items[0].uid + 1) : 1
+	}	
 }

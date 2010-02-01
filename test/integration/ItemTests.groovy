@@ -57,50 +57,7 @@ class ItemTests extends GroovyTestCase {
     	assertNotNull item.save()
     }
     
-    void testGetUnfinishedItemsGroupMap()
-    {
-    	saveItemsAndGroups()
-    	def nr = 0
-    	    	
-    	items.each{ it.status = ItemStatus.Blocking; }
-    	def itemsGroupMap = Item.getUnfinishedItemsGroupMap(project)
-    	itemsGroupMap.each{group,itemList->
-    		nr += itemList.size() 
-    	}  
-    	
-    	assertTrue nr == items.size()
-    }
     
-    void testGetUnfinishedItemsGroupMapWhenAllItemsAreFinished()
-    {
-    	saveItemsAndGroups()
-    	def nr = 0
-    	items.each{ it.status = ItemStatus.Finished; }
-    	def itemsGroupMap = Item.getUnfinishedItemsGroupMap(project)
-    	itemsGroupMap.each{group,items-> nr += items.size() }    	   	
-    	assertTrue nr == 0
-    }
-    
-    void testGetUnfinishedItemsGroupMapForOnePriority()
-    {
-    	saveItemsAndGroups()
-    	def nr = 0
-    	def prios = [Priority.High]
-    	def itemsGroupMap = Item.getUnfinishedItemsGroupMap(project,prios)
-    	itemsGroupMap.each{group,items-> nr += items.size() }    	   	
-    	assertTrue nr == items.findAll{ it.priority == prios[0] }.size() 
-    }
-    
-    void testGetUnfinishedItemsGroupMapForMorePriorities()
-    {
-    	saveItemsAndGroups()
-    	def nr = 0
-    	items.each{ it.priority = Priority.Low }
-    	def prios = [Priority.High, Priority.Low]
-    	def itemsGroupMap = Item.getUnfinishedItemsGroupMap(project,prios)
-    	itemsGroupMap.each{group,items-> nr += items.size() }    	   	
-    	assertTrue nr == items.size() 
-    }
     
     void testSubItemSave()
     {

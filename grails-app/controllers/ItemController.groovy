@@ -21,6 +21,7 @@ along with Agile Tracking Tool.  If not, see <http://www.gnu.org/licenses/>.
 
 class ItemController {
 	def scaffold = Item
+	def itemService
 	
 	static navigation = [
 		group:'tags',
@@ -42,25 +43,18 @@ class ItemController {
 			def itemsByGroup
 			
 			if ( params.priorities ) {				
-				itemsByGroup = Item.getUnfinishedItemsGroupMap(session.project, Util.parsePriorities(params.priorities))
+				itemsByGroup = itemService.getUnfinishedItemsGroupMap(session.project, Util.parsePriorities(params.priorities))
 			}
 			else {
-				itemsByGroup = Item.getUnfinishedItemsGroupMap(session.project)
+				itemsByGroup = itemService.getUnfinishedItemsGroupMap(session.project)
 			}
 			
 			return [itemsByGroup:itemsByGroup,title:title]
 	}
 	
 	def notInIteration = {
-			def itemsByGroup = Item.getUnfinishedItemsGroupMap(session.project)
-			
-			def itemsByGroupFiltered = [:]
-			itemsByGroup.each{ group, items ->
-			itemsByGroupFiltered[group] = []
-			items.each{ item ->
-					if ( !item.iteration )itemsByGroupFiltered[group] << item
-				}
-			}
+			def itemsByGroup = itemService.getUnfinishedItemsGroupMap(session.project)
+			def itemsByGroupFiltered = itemService.removeItemsWithIteration(itemsByGroup)
 			
 			def title = "Backlog for items not in Iteration"
 			render(view:"backlog",model:[itemsByGroup:itemsByGroupFiltered,title:title])
@@ -177,7 +171,7 @@ class ItemController {
 	
 	def showSorted = {
 			def allItems = []
-			def groups = Item.getUnfinishedItemsGroupMap(session.project)
+			def groups = itemService.getUnfinishedItemsGroupMap(session.project)
 			groups.each{ group, items -> items.each{ item ->
 					allItems << item 
 				}
