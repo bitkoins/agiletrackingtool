@@ -60,4 +60,26 @@ class ItemServiceTests extends GrailsUnitTestCase {
     	itemsGroupMap.each{group,items-> nr += items.size() }    	   	
     	assertTrue nr == items.size() 
     }
+    
+    void testRemoveItemsWithIterationBenzie()
+    {
+    	def nrWithIteration = 2
+    
+        def groupA = groups[0]
+        def groupB = groups[1]
+        
+    	def itemsA = Defaults.getItems(nrWithIteration + 3, groups,project, 123)
+    	nrWithIteration.times{ itemsA[it].iteration = new Iteration() }
+    	
+    	def itemsB = Defaults.getItems(4, groups,project, 123)
+    	
+    	def itemsByGroup = [:]
+    	itemsByGroup[groupA] = itemsA
+    	itemsByGroup[groupB] = itemsB
+    	 
+    	def itemsByGroupFiltered = itemService.removeItemsWithIteration(itemsByGroup)
+    	
+    	assertEquals itemsA.size() - nrWithIteration, itemsByGroupFiltered[groupA].size()
+    	assertEquals itemsB.size(), itemsByGroupFiltered[groupB].size()
+    }
 }

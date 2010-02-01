@@ -40,9 +40,12 @@ class ItemService {
 	{
 		def itemsByGroupFiltered = [:]
 		itemsByGroup.each{ group, items ->
-		itemsByGroupFiltered[group] = []
-		items.each{ item ->
-				if (!item.iteration) itemsByGroupFiltered[group] << item
+		
+			println group
+		
+			itemsByGroupFiltered[group] = []
+			items.each{ item ->	
+					if (!item.iteration) itemsByGroupFiltered[group] << item
 			}
 		}
 		return itemsByGroupFiltered
