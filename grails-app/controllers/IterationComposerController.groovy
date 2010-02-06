@@ -20,6 +20,7 @@ along with Agile Tracking Tool.  If not, see <http://www.gnu.org/licenses/>.
 ------------------------------------------------------------------------------*/
 
 class IterationComposerController {
+	def itemService
 		
 	def compose = {
 		def iter
@@ -34,10 +35,10 @@ class IterationComposerController {
 				
 		def itemsByGroup
 		if ( params.priorities) {
-			itemsByGroup = Item.getUnfinishedItemsGroupMap(session.project,Util.parsePriorities(params.priorities))
+			itemsByGroup = itemService.getUnfinishedItemsGroupMap(session.project,Util.parsePriorities(params.priorities))
 		}
 		else {
-			itemsByGroup = Item.getUnfinishedItemsGroupMap(session.project)
+			itemsByGroup = itemService.getUnfinishedItemsGroupMap(session.project)
 		}
 		
 		itemsByGroup.each{ group, items ->
