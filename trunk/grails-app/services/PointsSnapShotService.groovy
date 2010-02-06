@@ -34,6 +34,8 @@ class PointsSnapShotService {
 		       	def snapShot = PointsSnapShot.takeSnapShot(project,groups,new Date())
 		       	snapShot.save()
 		       	println "Snapshot saved."
+		        
+		        if(!exportDir) return
 		        	
 		       	def exportDate = new Date()
 		       	def dateTimeString = exportDate.toString().replace(" ","_").replace(":","_")
