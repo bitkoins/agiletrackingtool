@@ -46,7 +46,7 @@ along with Agile Tracking Tool.  If not, see <http://www.gnu.org/licenses/>.
 <g:each var="iter" in="${iterations}">
 	<g:set var="dayRange" value="${planCalculator.p2dCalc.points2DaysRange(iter.getUnfinishedPoints())}"/>
 	<tr>
-		<td><g:link controller="iteration" action="compose" id="${iter.id}">${iter.workingTitle}</g:link></td>
+		<td><g:link controller="iterationComposer" action="compose" id="${iter.id}">${iter.workingTitle}</g:link></td>
 		<td>${dayRange.min()}..${dayRange.max()}</td>
 	</tr>
 </g:each>
@@ -84,7 +84,7 @@ along with Agile Tracking Tool.  If not, see <http://www.gnu.org/licenses/>.
 	</tr>
 	<g:each var="group" in="${planCalculator.getGroups().collect{it}.sort{ planCalculator.getWorkingDaysLeft(it,Priority.High)}.reverse() }">
 		<tr>
-			<td><g:link url="backlog#groupItems${group.id}">${group}</g:link></td>
+			<td><g:link controller="item" action="backlog">${group}</g:link></td>
 			<td>${planCalculator.getWorkingDaysRangeLeft(group,Priority.High).min()} .. ${planCalculator.getWorkingDaysRangeLeft(group,Priority.High).max()}</td>
 			<td> + ${planCalculator.getWorkingDaysRangeLeft(group,Priority.Medium).min()} .. ${planCalculator.getWorkingDaysRangeLeft(group,Priority.Medium).max()}</td>
 			<td> + ${planCalculator.getWorkingDaysRangeLeft(group,Priority.Low).min()} .. ${planCalculator.getWorkingDaysRangeLeft(group,Priority.Low).max()}</td>

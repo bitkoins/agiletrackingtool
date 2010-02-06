@@ -40,11 +40,12 @@ class ForecastController {
 		def pointsPerDayMax = params.pointsPerWeekMax ? Double.parseDouble(params.pointsPerWeekMax) / daysPerWeek : 1.0
 		def pointsUncertaintyPercentage = params.pointsUncertaintyPercentage ? Double.parseDouble(params.pointsUncertaintyPercentage) : 0
 	    def daysHoliday = params.weeksHolidays ? Math.round(Double.parseDouble(params.weeksHolidays) * daysPerWeek).toInteger() : 0
-	    	    		
-		def planCalculator = new PlanCalculator(Item.list().unique(),pointsPerDayMin,pointsPerDayMax, pointsUncertaintyPercentage)
+	    
+	    def items = Item.findAllByProject(session.project)
+		def planCalculator = new PlanCalculator(items,pointsPerDayMin,pointsPerDayMax, pointsUncertaintyPercentage)
 		def dateByPriority = planCalculator.getWorkingDaysRangeByPriority(daysHoliday)
 		
-		def iterations = Iteration.list().unique().findAll{ it.status != IterationStatus.Finished }.sort{it.startTime }
+		def iterations = Iteration.findAllByProject(session.project).findAll{ it.status != IterationStatus.Finished }.sort{ it.startTime }
 		
 		render(template:'forecastResult',model:[planCalculator:planCalculator, dateByPriority:dateByPriority, iterations:iterations] )
 	}
