@@ -61,14 +61,7 @@ class ItemController {
 	}
 	
 	def showIterationItems = {
-			def iter 
-			if (params.id) {
-				def id = Integer.parseInt(params.id)
-				iter = Iteration.get(id)
-			}
-			else {
-				iter = Iteration.getOngoingIteration()	
-			}
+			def iter = params.id ? Iteration.get(params.id) : Iteration.getOngoingIteration()
 			
 			if(!belongsToProject(iter))
 			{
@@ -77,9 +70,7 @@ class ItemController {
 			}
 			
 			def itemsByGroup = [:]
-			
-			def items = iter.items
-			items.each{ item ->
+			iter.items.each{ item ->
 				if ( !itemsByGroup.containsKey(item.group)) {
 					itemsByGroup[item.group] = []
 				}
@@ -94,7 +85,7 @@ class ItemController {
 	}
 		
 	def editItem = {
-		def item = Item.get(Integer.parseInt(params.id))
+		def item = Item.get(params.id)
 		
 		if(!belongsToProject(item))
 		{
@@ -106,7 +97,7 @@ class ItemController {
 	}
 	
 	def saveItem = {
-		def item = Item.get(Integer.parseInt(params.id))
+		def item = Item.get(params.id)
 		
 		if(!belongsToProject(item))
 		{
@@ -121,7 +112,7 @@ class ItemController {
 	}
 	
 	def deleteItem = {
-		def item = Item.get(Integer.parseInt(params.id))
+		def item = Item.get(params.id)
 		
 		if(!belongsToProject(item))
 		{
@@ -136,7 +127,7 @@ class ItemController {
 	}
 	
 	def addItemToGroup = {
-		def group = ItemGroup.get(Integer.parseInt(params.id))
+		def group = ItemGroup.get(params.id)
 		
 		if(!belongsToProject(group))
 		{
@@ -145,13 +136,11 @@ class ItemController {
 		}
 			
 		def item = new Item(session.project,group)
-		item.save()
-		
+		item.save()		
 		group.addItem(item)
 		group.save()
 
-		def newItemId = Integer.parseInt(params.newItemId)
-		newItemId = newItemId + 1
+		def newItemId = Integer.parseInt(params.newItemId) + 1
 		
 		render(template:'/shared/item/editNewItem',model:[item:item,groupId:item.group.id,newItemId:newItemId])
 	}
