@@ -21,6 +21,7 @@ along with Agile Tracking Tool.  If not, see <http://www.gnu.org/licenses/>.
 
 class IterationComposerController {
 	def itemService
+	def projectService
 		
 	def compose = {
 		def iter = Iteration.get(params.id)
@@ -29,6 +30,8 @@ class IterationComposerController {
 			redirect(action:"list")
 			return			
 		}
+		
+		flash.projectCheckFailed = projectService.executeWhenProjectIsCorrect(session.project,  iter)
 		
 		session.iterId = iter?.id
 				
@@ -45,18 +48,22 @@ class IterationComposerController {
 	
 	def addItemToIteration = {
 			def iter = Iteration.get(session.iterId)
-			def id = Integer.parseInt(params.id)
+			
 			def item = Item.get(params.id)
-			iter.addItem(item)
+			
+			flash.projectCheckFailed = projectService.executeWhenProjectIsCorrect(session.project,  item, 
+			 	 	                                                                {  iter.addItem(item) } ) 		
 			
 			render(template:'iterationOverview',model:[iteration:iter])
 	}
 	
 	def deleteItemFromIteration = {
 			def iter = Iteration.get(session.iterId)
-			def id = Integer.parseInt(params.id)
-			iter.deleteItem(id)
-				
+			
+			def item = Item.get(params.id)
+			flash.projectCheckFailed = projectService.executeWhenProjectIsCorrect(session.project,  item,
+																				 { iter.deleteItem(item.id) } ) 
+			
 			render(template:'iterationOverview',model:[iteration:iter])
 	}
 	
@@ -66,10 +73,5 @@ class IterationComposerController {
 	
 	def saveItem = {
 		redirect(controller:'item',action:'saveItem',params:params)
-	}
-	
-	def belongsToProject(def item)
-	{
-		return (item && (item.project.id == session.project.id))
 	}
 }

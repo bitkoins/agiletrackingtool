@@ -22,7 +22,9 @@ along with Agile Tracking Tool.  If not, see <http://www.gnu.org/licenses/>.
 import org.codehaus.groovy.grails.commons.*
 
 class PointsSnapShotService {
-    boolean transactional = true
+    static transactional = true
+	static scope = "session"
+	    
     def exportDir = ConfigurationHolder.config.agile.exportDirectory
 
     def performDailyJob() {

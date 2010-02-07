@@ -22,6 +22,7 @@ along with Agile Tracking Tool.  If not, see <http://www.gnu.org/licenses/>.
 class ItemGroupController {
 	def itemGroupService
 	def pointsSnapShotService
+	def projectService
 	
 	static navigation = [
 		group:'itemGroup',
@@ -40,51 +41,27 @@ class ItemGroupController {
 	
 	def edit = {
 		def group = ItemGroup.get(params.id)
-		if(belongsToProject(group)) {
-			return [group:group]
-		}
-		else {
-			redirect(controller:'project',action:'list')
-		}
+		flash.projectCheckFailed = projectService.executeWhenProjectIsCorrect(session.project, group)
+		return [group:group]
 	}
 	
 	def save = {
 		def isNew = (params.id?.size() == 0)
-		if(isNew) {
-			new ItemGroup(name:params.name,project:session.project).save()
-		}
-		else
-		{
-			def group = ItemGroup.get(params.id)
-			if ( belongsToProject(group) ) {
-				group.name = params.name
-				group.save()
-			}
-			else
-			{
-				redirect(controller:'project',action:'list')
-				return
-			}	
-		}
+		def group = isNew ? new ItemGroup(project:session.project) : ItemGroup.get(params.id) 
+		group.name = params.name
+		
+		flash.projectCheckFailed = projectService.executeWhenProjectIsCorrect(session.project, group, {group.save()} )
+			
 		redirect(controller:'item',action:'backlog')
 	}
 		
 	def delete = { 
 		def group = ItemGroup.get(Integer.parseInt(params.id))
-		if ( belongsToProject(group) )
-		{
-			pointsSnapShotService.deleteWholeGroup(group)
-			itemGroupService.deleteWholeGroup(group)
-			redirect(action:'list')
-		}
-		else
-		{
-			redirect(controller:'project',action:'list')
-		}
-	}
 		
-	def belongsToProject(def group)
-	{
-		return (group && (group.project.id == session.project.id) )
+		flash.projectCheckFailed = projectService.executeWhenProjectIsCorrect(session.project, group,	
+		        {  pointsSnapShotService.deleteWholeGroup(group)
+			       itemGroupService.deleteWholeGroup(group) } )
+		
+		redirect(action:'list')
 	}
 }
