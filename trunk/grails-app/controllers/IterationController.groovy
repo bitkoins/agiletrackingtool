@@ -37,41 +37,20 @@ class IterationController {
 	
 	def list = {
 			def iterations = Iteration.findAllByProject(session.project)?.sort{it.startTime }.reverse()
-			
-			def plotData = new PlotData("Iteration history")
-			plotData.xLabel = "Days ago from now"
-			plotData.yLabel = "Points/Week"
-			plotData.yMin = 0
-			
-			def plotCurve = new PlotCurve("PointsPerWeek")
-			def now = new Date()
-			
-			iterations?.each{ iteration ->
-				def daysFromNow = Util.getDaysInBetween(now, iteration.endTime)
-				if ( daysFromNow < 0 )
-				{
-					plotCurve.xValues << daysFromNow
-					plotCurve.yValues << iteration.getPointsPerDay()*7
-				}
-			}
-			plotData.curves << plotCurve
+			def plotData = plotService.createIterationHistoryPlot(iterations)
 			
 			return [ iterations:iterations, plotData:plotData ]
 	}
 	
 	def delete = {
-			if ( params.id ) {
-				def iteration = Iteration.get(Integer.parseInt(params.id))
-				
-				if(belongsToProject(iteration)) {
-				    iteration.unloadItemsAndDelete() 
-				}
-				else
-				{
-					redirect(controller:'project',action:'list')
-					return
-				}
+			def iteration = Iteration.get(params.id)
+			
+			if(!belongsToProject(iteration)) {
+				redirect(controller:'project',action:'list')
+				return
 			}
+
+			iteration.unloadItemsAndDelete()
 			redirect(action:"list")
 	}	
 	
@@ -83,11 +62,6 @@ class IterationController {
 	def show = {
 		def iteration = params.id ? Iteration.get(params.id) : Iteration.getOngoingIteration(session.project)
 		
-		if(!iteration) {
-			redirect(action:'list')
-			return
-		}
-				
 		if (!belongsToProject(iteration)) { 
 			redirect(controller:'project',action:'list')
 			return
@@ -120,6 +94,8 @@ class IterationController {
 	    	
 			redirect(action:nextAction,id:iterationNew.id)	    	
 	}
+	
+	
 	
 	def itemDone = {
 			updateItemStatus(params,ItemStatus.Finished)

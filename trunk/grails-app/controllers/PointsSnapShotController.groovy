@@ -22,6 +22,8 @@ along with Agile Tracking Tool.  If not, see <http://www.gnu.org/licenses/>.
 class PointsSnapShotController {
 	def scaffold = PointsSnapShot
 	
+	def plotService
+	
 	static navigation = [
 		group:'tags', 
 		order:60, 
@@ -37,151 +39,60 @@ class PointsSnapShotController {
 		]
 	]
 	
-	def __getSnapShots(def now, def params)
+	def __startAndEndTimes(def params)
 	{
-		def endTime = new Date()
-		def startTime = endTime - 90
+		def startTime, endTime
 		
-		if (params.dayRange) {
-			def dayRange = params.dayRange.toInteger()
-			endTime = now
-			startTime = endTime - dayRange
-		}
-		else if ( params.startTime) {
+		if(params.startTime && params.endTime) {
 			startTime = params.startTime
 			endTime = params.endTime
 		}
+		else {
+			endTime = new Date()
+			startTime = endTime - 90
+		}
 		
-		[ PointsSnapShot.getSnapShotsBetween(session.project,startTime, endTime), startTime, endTime]
+		return [startTime,endTime]
 	}
 	
 	def plot = {
-			def now = new Date()
-			def snapShots, startTime, endTime
-			(snapShots,startTime, endTime) = __getSnapShots(now, params)
+			def startTime, endTime
+			(startTime,endTime) = __startAndEndTimes(params)
+			def snapShots =  PointsSnapShot.getSnapShotsBetween(session.project,startTime, endTime)
 			
-			def overViews = snapShots.collect{ it.overView }
-			def dates = snapShots.collect{ it.date }
-			
-			def plotData = new PlotData("All points")
-			
-			plotData.yMin = plotData.curves.collect{ it.yValues?.min() }?.min()
-			plotData.xLabel = "Days ago from now"
-			plotData.yLabel = "Points"
-			
-			plotData.curves << PlotUtil.getPlotCurveForItemStatus(overViews,dates,now,"Finished",ItemStatus.Finished)
-			plotData.curves << PlotUtil.getTotalPlotCurveForPriority(overViews,dates,now,"Total High priority", Priority.High)
-			
-			def curveCombined = PlotUtil.getTotalPlotCurveForPriority(overViews,dates,now,"Total", Priority.High).add(PlotUtil.getTotalPlotCurveForPriority(overViews,dates,now,"Total", Priority.Medium), "Total High-Medium Priority")
-			plotData.curves << curveCombined
+			def plotData = plotService.createPointsHistoryPlot(snapShots)
 			
 			return [startTime:startTime, endTime:endTime, plots:[plotData], formAction:"plot"]
 	}
 	
 	def allPlots = {
-		def snapShots, startTime, endTime
-		(snapShots,startTime, endTime) = __getSnapShots(new Date(), params)
-		def plots = []
-
-		plots += _makePlots("for all items", snapShots.collect{it.overView}, snapShots.collect{it.date} )
-			
-		ItemGroup.findAllByProject(session.project).each{ group ->
-			def title = "for ${group}"
-			def overViews = []
-			def dates = []
-				
-			snapShots.each{ snapShot -> 
-				def pointsForGroup = snapShot.getPointsForGroup(group)
-				if (pointsForGroup)
-				{
-					overViews << pointsForGroup.overView
-					dates << snapShot.date
-				}
-			}
-	
-			plots += _makePlots(title, overViews,dates)
-		}	
+		def startTime, endTime
+		(startTime,endTime) = __startAndEndTimes(params)
+		def snapShots =  PointsSnapShot.getSnapShotsBetween(session.project,startTime, endTime)
+		def plots = plotService.createGroupPointsHistoryPlots(snapShots, ItemGroup.findAllByProject(session.project) )
 		
 		render(view:"plot", model:[startTime:startTime, endTime:endTime, plots:plots, formAction:"allPlots"])
 	}
 	
 	def showBugHistory = {
-			def iterations = Iteration.list()?.findAll{ it.status != IterationStatus.FutureWork }
-			def plotCurve = new PlotCurve("Number of bugs solved")
-			def now = new Date()
-			
-			def totalBugs = 0
-			iterations.sort{ it.endTime}.each{ iter ->
-				def nrBugs = 0
-				iter.items.each{ item ->
-					if( item.group.name.contains("Bug") && (item.status == ItemStatus.Finished) ) nrBugs++
-				}
-				
-				def daysAgo = Util.getDaysInBetween(now, iter.endTime)
-				
-				if (true || (daysAgo <= 0) )  {
-					plotCurve.xValues << daysAgo
-					totalBugs += nrBugs
-					plotCurve.yValues << totalBugs					
-				}
-			}
-			
-			def total = plotCurve.yValues.sum{ it }
-			def plotData = new PlotData("Bug history (${totalBugs} solved)")
-			plotData.curves << plotCurve
-			plotData.xLabel = "Days ago from now"
-			plotData.yLabel = "Number of bugs"
-			plotData.xMin = plotCurve.xValues.min()
-			plotData.xMax = plotCurve.xValues.max()
-			plotData.yMin = 0
-			plotData.yMax = plotCurve.yValues.max()
-			
-			render(view:"plot", model:[plots:[plotData]])
+		def iterations = Iteration.findAllByProject(session.project)?.findAll{ it.status != IterationStatus.FutureWork }
+		def plotData = plotService.createBugHistoryPlot(iterations)
+		render(view:"plot", model:[plots:[plotData]])
 	}
 	
 	def flowPlot = {
-			def now = new Date()
-			def snapShots, startTime, endTime
-			(snapShots,startTime, endTime) = __getSnapShots(now, params)
-			
-			def overViews = snapShots.collect{ it.overView }
-			def dates = snapShots.collect{ it.date }
-			
-			def plotData = new PlotData("Flow plots")
-			
-			plotData.yMin = plotData.curves.collect{ it.yValues?.min() }?.min()
-			plotData.xLabel = "Days ago from now"
-			plotData.yLabel = "Points"
-			
-			plotData.curves << PlotUtil.getPlotCurveForItemStatus(overViews,dates,now,"Blocked",ItemStatus.Blocking)
-			plotData.curves << PlotUtil.getPlotCurveForItemStatus(overViews,dates,now,"InProgress",ItemStatus.InProgress)
-			
-			render(view:"plot", model:[startTime:startTime, endTime:endTime, plots:[plotData], formAction:"flowPlot"])
-	}
+		def startTime, endTime
+		(startTime,endTime) = __startAndEndTimes(params)
+		def snapShots =  PointsSnapShot.getSnapShotsBetween(session.project,startTime, endTime)
 		
-	def _makePlots(def title, def overViews,def dates) 
-	{
-		def now = new Date()
+		def plotData = plotService.createFlowPlot(snapShots)
 		
-		def plotData = new PlotData("Finished points " + title)
-		plotData.xLabel = "Days ago from now"
-		plotData.yLabel = "Points"
-		
-		def plotDataTotal = new PlotData("Total points " + title)
-		plotDataTotal.xLabel = "Days ago from now"
-		plotDataTotal.yLabel = "Points"
-		
-		[Priority.High,Priority.Medium,Priority.Low].each{ prio ->
-			plotData.curves << PlotUtil.getPlotCurveForView(overViews,dates,now,"${prio}-priority",prio, ItemStatus.Finished)
-			plotDataTotal.curves << PlotUtil.getTotalPlotCurveForPriority(overViews,dates,now,"${prio}-priority",prio)
-		}
-		
-		def plots = []
-		plots << [plotData,plotDataTotal]		 
-		return plots
+		render(view:"plot", model:[startTime:startTime, endTime:endTime, plots:[plotData], formAction:"flowPlot"])
 	}
 	
-	def burnUpGraph = {		    	
-			return [plotData:Iteration.getOngoingIteration(session.project)?.getBurnUpPlotData()]
+	def burnUpGraph = {
+			def iteration = Iteration.getOngoingIteration(session.project) 		    
+			def plotData = plotService.createBurnUpPlotData(iteration)
+			return [plotData:plotData]
 	}
 }

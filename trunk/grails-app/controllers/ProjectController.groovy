@@ -21,6 +21,8 @@ along with Agile Tracking Tool.  If not, see <http://www.gnu.org/licenses/>.
 
 class ProjectController {
 	def scaffold = Project
+	
+	def projectService
 	 
 	static navigation = [
 		group:'tags', 
@@ -55,10 +57,7 @@ class ProjectController {
 				session.project = null
 			}	
 			
-			PointsSnapShot.findAllByProject(project).each{ it.delete() }
-			Iteration.findAllByProject(project).each{ it.unloadItemsAndDelete() }
-			ItemGroup.findAllByProject(project).each{ it.deleteWholeGroup() }
-			project.delete()		
+			projectService.delete(project)
 		}
 		
 		redirect(action:'list')
