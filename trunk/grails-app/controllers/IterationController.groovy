@@ -20,6 +20,11 @@ along with Agile Tracking Tool.  If not, see <http://www.gnu.org/licenses/>.
 ------------------------------------------------------------------------------*/
 
 class IterationController {
+
+	def itemService
+	def plotService
+	def iterationService
+	def projectService
 	
 	static navigation = [
 		group:'tags', 
@@ -42,18 +47,6 @@ class IterationController {
 			return [ iterations:iterations, plotData:plotData ]
 	}
 	
-	def delete = {
-			def iteration = Iteration.get(params.id)
-			
-			if(!belongsToProject(iteration)) {
-				redirect(controller:'project',action:'list')
-				return
-			}
-
-			iteration.unloadItemsAndDelete()
-			redirect(action:"list")
-	}	
-	
 	def history = {
 			def iterations = Iteration.findAllByProject(session.project)?.collect{it}.sort{it.startTime }.reverse()
 			return [ iterations:iterations ]			
@@ -61,16 +54,14 @@ class IterationController {
 	
 	def show = {
 		def iteration = params.id ? Iteration.get(params.id) : Iteration.getOngoingIteration(session.project)
-		
-		if (!belongsToProject(iteration)) { 
-			redirect(controller:'project',action:'list')
-			return
-		}
+
+		flash.projectCheckFailed = projectService.executeWhenProjectIsCorrect(session.project, iteration )
 		
 		def mlist = []
 		ItemStatus.each{ status -> mlist += iteration.items?.findAll{ it.status == status }.sort{ it.uid } }
+		def plotData = plotService.createBurnUpPlotData(iteration)
 		
-		return [iteration:iteration,items:mlist,plotData:iteration.getBurnUpPlotData()]
+		return [iteration:iteration,items:mlist,plotData:plotData]
 	}
 	
 	def closeCurrent = {
@@ -95,8 +86,6 @@ class IterationController {
 			redirect(action:nextAction,id:iterationNew.id)	    	
 	}
 	
-	
-	
 	def itemDone = {
 			updateItemStatus(params,ItemStatus.Finished)
 	}
@@ -114,66 +103,40 @@ class IterationController {
 		def id = Integer.parseInt(params.id)
 		def item = Item.get(id)
 		
-		if( !belongsToProject(item))
-		{
-			render "Item does not belong to project."
-			return
-		}
-		
 		item.status = newState
 		if ( item.status == ItemStatus.Finished ) {
 			item.subItems.each{ it.status = ItemStatus.Finished }
 		}
 		
-		item.save()		
-		render(template:'itemView',model:[item:item])
+		flash.projectCheckFailed = projectService.executeWhenProjectIsCorrect(session.project,  item,{ item.save() })
+		render(template:'itemView',model:[item:item] )
 	}
 	
 	def subItemFinished = {
 		def id = Integer.parseInt(params.id)
 		def subItem = SubItem.get(id)
-		
-		if( !belongsToProject(subItem.item))
-		{
-			render "Subitem does not belong to project."
-			return
-		}
-		
 		subItem.status = ItemStatus.Finished
-		subItem.save()
-			
 		if (subItem.item.status == ItemStatus.Request) {
-			subItem.item.status = ItemStatus.InProgress
-			subItem.save()
+				subItem.item.status = ItemStatus.InProgress
 		}
+		
+		flash.projectCheckFailed = projectService.executeWhenProjectIsCorrect(session.project,  subItem.item,{ subItem.save() })
 			
-		render(template:'itemView',model:[item:subItem.item])
+		render(template:'itemView',model:[item:subItem.item] )
 	}
 	
 	def editItem = {
 		def item = Item.get(params.id)
-		
-		if(!belongsToProject(item))
-		{
-			render "Item does not belong to project."
-			return
-		}
-		
+		flash.objectForProjectCheck = item
 		render(template:'/shared/item/edit',model:[item:item])
 	}
 	
 	def saveItem = {
 		def item = Item.get(Integer.parseInt(params.id))
-		
-		if(!belongsToProject(item))
-		{
-			redirect(controller:'project',action:'list')
-			return
-		}
-		
 		ItemParamsParser.updateItemWithParams(item,params, {param -> request.getParameterValues(param)} )
-		item.subItems*.save()
-		item.save()
+		
+		flash.projectCheckFailed = projectService.executeWhenProjectIsCorrect(session.project,  item,{ itemService.saveItem(item) }) 
+		
 		render(template:'itemView',model:[item:item])
 	}
 		
@@ -186,47 +149,30 @@ class IterationController {
 	
 	def edit = {
 		def iteration = Iteration.get(params.id)
-		if(belongsToProject(iteration)) {
-			return [iteration:iteration]
-		}
-		else {
-			redirect(controller:'project',action:'list')
-		}
-	}
+		flash.projectCheckFailed = projectService.executeWhenProjectIsCorrect(session.project,  iteration )
+		return [iteration:iteration]
+	}	
 	
-	def updateIterationWithParams(def iteration, def params)
-	{
+	def save = {
+		def isNew = (params.id?.size() == 0)
+		def iteration = isNew ? new Iteration(project:session.project) : Iteration.get(params.id)
+		
 		iteration.workingTitle = params.workingTitle
 		iteration.startTime = params.startTime
 		iteration.endTime = params.startTime + Integer.parseInt(params.duration)
 		iteration.status = IterationStatus.valueOf(params.status)
-	}
 	
-	def save = {
-		def isNew = (params.id?.size() == 0)
-		if(isNew) {
-			def iteration = new Iteration(project:session.project)
-			updateIterationWithParams(iteration,params)
-			iteration.save()
-		}
-		else
-		{
-			def iteration = Iteration.get(params.id)
-			if ( belongsToProject(iteration) ) {
-				updateIterationWithParams(iteration,params)
-				iteration.save()
-			}
-			else
-			{
-				redirect(controller:'project',action:'list')
-				return
-			}	
-		}
+		flash.projectCheckFailed = projectService.executeWhenProjectIsCorrect(session.project, iteration, { iteration.save() } )
+		
 		redirect(action:'list')
 	}
 	
-	def belongsToProject(def itemThatBelongsToProject)
-	{
-		return (itemThatBelongsToProject && (itemThatBelongsToProject.project.id == session.project.id) )
+	def delete = {
+			def iteration = Iteration.get(params.id)
+			
+			flash.projectCheckFailed = projectService.executeWhenProjectIsCorrect(session.project, iteration, 
+			      { iterationService.unloadItemsAndDelete(iteration) } )
+			
+			redirect(action:"list")
 	}
 }

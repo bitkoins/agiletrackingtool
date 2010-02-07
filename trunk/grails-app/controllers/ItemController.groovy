@@ -23,6 +23,7 @@ class ItemController {
 	def scaffold = Item
 	def itemService
 	def itemGroupService
+	def projectService
 	
 	static navigation = [
 		group:'tags',
@@ -57,74 +58,49 @@ class ItemController {
 	}
 	
 	def showIterationItems = {
-			def iter = params.id ? Iteration.get(params.id) : Iteration.getOngoingIteration()
+			def iteration = params.id ? Iteration.get(params.id) : Iteration.getOngoingIteration()
 			
-			if(!belongsToProject(iter))
-			{
-				redirect(controller:'project',action:'list')
-				return
-			}
+			flash.projectCheckFailed = projectService.executeWhenProjectIsCorrect(session.project, iteration)
 			
-			def unfinishedItems = iter.items.findAll{ item.checkUnfinished() } 
+			def unfinishedItems = iteration.items.findAll{ item.checkUnfinished() } 
 			def itemsByGroup = itemGroupService.transformToItemsByGroup( unfinishedItems )
 			
 			def title = "Items in ${iter.workingTitle}"
-			render(view:"backlog",model:[iteration:iter,itemsByGroup:itemsByGroup,title:title])
+			render(view:"backlog",model:[iteration:iteration,itemsByGroup:itemsByGroup,title:title])
 	}
 		
 	def editItem = {
 		def item = Item.get(params.id)
-		
-		if(!belongsToProject(item))
-		{
-			redirect(controller:'project',action:'list')
-			return
-		}
-		
+		flash.projectCheckFailed = projectService.executeWhenProjectIsCorrect(session.project, item)
 		render(template:'/shared/item/edit',model:[item:item])
 	}
 	
 	def saveItem = {
 		def item = Item.get(params.id)
 		
-		if(!belongsToProject(item))
-		{
-			redirect(controller:'project',action:'list')
-			return
-		}
-		
 		ItemParamsParser.updateItemWithParams(item,params, {param -> request.getParameterValues(param)} )
-		item.save()
-		render(template:'/shared/item/show',model:[item:item])
+		flash.projectCheckFailed = projectService.executeWhenProjectIsCorrect(session.project, item,
+		                                                                     { itemService.saveItem(item) }) 
+
+		render(template:'/shared/item/show',model:[item:item] )
 	}
 	
 	def deleteItem = {
 		def item = Item.get(params.id)
-		
-		if(!belongsToProject(item))
-		{
-			redirect(controller:'project',action:'list')
-			return
-		}
-		
-		itemService.deleteItem(item)
-		render ""
+		flash.projectCheckFailed = projectService.executeWhenProjectIsCorrect(session.project, item,
+																	{ itemService.deleteItem(item) } )
+		render(text:"")
 	}
 	
 	def addItemToGroup = {
 		def group = ItemGroup.get(params.id)
-		
-		if(!belongsToProject(group))
-		{
-			redirect(controller:'project',action:'list')
-			return	
-		}
-			
 		def item = new Item(session.project,group)
-		itemGroupService.addItem(group, item )
-		def newItemId = Integer.parseInt(params.newItemId) + 1
+		flash.projectCheckFailed = projectService.executeWhenProjectIsCorrect(session.project, group,
+																	{ itemGroupService.addItem(group, item) })
 		
-		render(template:'/shared/item/editNewItem',model:[item:item,groupId:item.group.id,newItemId:newItemId])
+	    def newItemId = Integer.parseInt(params.newItemId) + 1
+		render(template:'/shared/item/editNewItem',
+		       model:[item:item,groupId:item.group.id,newItemId:newItemId]) 
 	}
 	
 	def showAll = {
@@ -148,10 +124,5 @@ class ItemController {
 	
 	def listGroups = {
 		redirect(controller:'itemGroup', action:'list')
-	}
-	
-	def belongsToProject(def item)
-	{
-		return (item && (item.project.id == session.project.id))
 	}
 }

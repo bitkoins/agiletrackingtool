@@ -35,7 +35,7 @@ class ProjectFilters {
         	}
         }
         
-        projectCheck(controller:"(project|admin)", action:"*",invert:true) {
+        useProjectFromCookie(controller:"(project|admin)", action:"*",invert:true) {
             
             before = {
             	if(controllerName && !session.project) {
@@ -51,6 +51,16 @@ class ProjectFilters {
             		}	
             	}
             }
+        }
+        
+        checkObjectForCorrectProject(controller:"*", action:"*") {
+        	after = { model -> 
+        		if(flash.projectCheckFailed)
+        		{
+        			redirect(controller:'project',action:'list ')
+            		return false
+        		}
+        	}	 
         }
     }
 }

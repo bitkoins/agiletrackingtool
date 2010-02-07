@@ -35,7 +35,6 @@ class IterationTests extends GroovyTestCase {
 		iter = Defaults.getIterations(1,project)[0]
 		iter.endTime = iter.startTime + 10
 		iter.save()
-	
 			
 		groups = Defaults.getGroups(5,projects)
     	groups*.save()
@@ -112,13 +111,6 @@ class IterationTests extends GroovyTestCase {
     	iter.deleteItem(items[0].id)
     	assertFalse iter.hasItem(items[0].id)
     	assertNull items[0].iteration
-    }
-    
-    void testDeleteIteration()
-    {
-    	def id = iter.id
-    	iter.unloadItemsAndDelete()
-    	assertNull Iteration.get(id)
     }
     
     void testGroupListing()

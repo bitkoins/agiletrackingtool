@@ -163,12 +163,6 @@ class Iteration extends ItemContainer {
 		super.addItem(item)
 		item.iteration = this
 	}
-	
-	void unloadItemsAndDelete()
-	{
-	    items.collect{ it }.each{ item -> this.deleteItem(item.id) } 
-	   	this.delete()
-	}	
 }
 
 

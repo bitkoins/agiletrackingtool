@@ -19,31 +19,13 @@ You should have received a copy of the GNU General Public License
 along with Agile Tracking Tool.  If not, see <http://www.gnu.org/licenses/>.
 ------------------------------------------------------------------------------*/
 
-class ProjectService {
+class IterationService {
     static transactional = true
     static scope = "session"
-    
-    def itemGroupService
-    def iterationService
-    
-    def delete(def project) {
-    	PointsSnapShot.findAllByProject(project).each{ it.delete() }
-		Iteration.findAllByProject(project).each{ iteration -> iterationService.unloadItemsAndDelete(iteration) }
-		ItemGroup.findAllByProject(project).each{ group -> itemGroupService.deleteWholeGroup(group) }
-		project.delete()
-    }
-    
-    def executeWhenProjectIsCorrect(def project, def objectForProjectCheck, def closureWhenProjectIsValid = {})
+
+	def unloadItemsAndDelete(def iteration)
 	{
-		def projectCheckFailed = false
-		 
-        if( objectForProjectCheck && 
-            objectForProjectCheck.project.id != project.id ) {
-        	projectCheckFailed = true
-        }
-        
-        if(!projectCheckFailed) closureWhenProjectIsValid()
-        
-        return projectCheckFailed
-	}
+	    iteration.items.collect{ it }?.each{ item -> iteration.deleteItem(item.id) } 
+	   	iteration.delete()
+	}	
 }
