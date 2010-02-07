@@ -94,32 +94,4 @@ class ItemGroupTests extends GroovyTestCase {
     	
     	groups.collect{ it.project }.unique()*.delete()
     }
-    
-    void testDeleteWholeGroup()
-    {
-    	def project = Defaults.getProjects(1)[0]
-		def groups = Defaults.getGroups(2,[project])    
-    	def (groupA, groupB) = groups
-    	
-    	def itemsA = Defaults.getItems(2,[groupA],project)
-    	def itemsB = Defaults.getItems(3,[groupB],project)
-    	items = (itemsA + itemsB)
-    	
-    	def iteration = Defaults.getIterations(1,project)[0]
-    	
-		project.save()    	    	
-    	groups*.save()
-    	iteration.save()    	
-    	items.each{ it.save(); iteration.addItem(it) }
-    	
-    	groupA.deleteWholeGroup()
-    	
-    	assertTrue ItemGroup.count() == 1
-    	assertTrue Item.count() == itemsB.size()
-    	assertTrue iteration.items.size() == itemsB.size()
-
-		iteration.delete()
-		groupB.deleteWholeGroup()
-		project.delete()
-    }
 }

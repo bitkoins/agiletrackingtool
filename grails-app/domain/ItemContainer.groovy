@@ -43,7 +43,7 @@ class ItemContainer {
 	{
 		if ( hasItem(id) ) {
 			def item = getItem(id)
-			this.removeFromItems(item)	
+			this.removeFromItems(item)
 		}
 	}
 	

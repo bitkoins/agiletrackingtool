@@ -50,4 +50,15 @@ class PointsSnapShotService {
 		   }
 		}	
     }
+    
+    def deleteWholeGroup(def group)		
+	{		
+		PointsSnapShot.findAllByProject(group.project).each{ snapShot ->		
+			def pointsForGroup = snapShot.getPointsForGroup(group)		
+			if (pointsForGroup) {		
+	   		    pointsForGroup.snapShot.removeFromPointsForGroups(pointsForGroup)		
+				pointsForGroup.delete()
+			}		
+		}		
+	}	
 }

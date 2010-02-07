@@ -23,24 +23,19 @@ class IterationComposerController {
 	def itemService
 		
 	def compose = {
-		def iter
-		if ( !params.id ) {
-			redirect(action:"list")			
-		}
-		else {
-			iter = Iteration.get(params.id)
+		def iter = Iteration.get(params.id)
+		
+		if ( !iter ) {
+			redirect(action:"list")
+			return			
 		}
 		
 		session.iterId = iter?.id
 				
-		def itemsByGroup
-		if ( params.priorities) {
-			itemsByGroup = itemService.getUnfinishedItemsGroupMap(session.project,Util.parsePriorities(params.priorities))
-		}
-		else {
-			itemsByGroup = itemService.getUnfinishedItemsGroupMap(session.project)
-		}
-		
+		def itemsByGroup = params.priorities ?  
+			itemService.getUnfinishedItemsGroupMap(session.project,Util.parsePriorities(params.priorities)) : 
+			itemService.getUnfinishedItemsGroupMap(session.project)
+				
 		itemsByGroup.each{ group, items ->
 				iter.items.each{ items.remove(it) } 
 		}

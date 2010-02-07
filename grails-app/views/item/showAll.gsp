@@ -32,8 +32,6 @@ along with Agile Tracking Tool.  If not, see <http://www.gnu.org/licenses/>.
     	<nav:renderSubItems group="tags" />
     	
     		<h2>Work items overview:</h2>
-        	<g:formatDate format="dd-MMM yyyy" date="${new Date()}"/>        	
-        	<p>Total points: ${totalPoints} / Unfinished points: ${unFinishedPoints}</p>
 			<br/><br/>
 			
 			<g:each var="group" in="${groups}">

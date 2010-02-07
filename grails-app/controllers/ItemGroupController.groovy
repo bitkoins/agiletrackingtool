@@ -20,6 +20,8 @@ along with Agile Tracking Tool.  If not, see <http://www.gnu.org/licenses/>.
 ------------------------------------------------------------------------------*/
 
 class ItemGroupController {
+	def itemGroupService
+	def pointsSnapShotService
 	
 	static navigation = [
 		group:'itemGroup',
@@ -71,8 +73,8 @@ class ItemGroupController {
 		def group = ItemGroup.get(Integer.parseInt(params.id))
 		if ( belongsToProject(group) )
 		{
-			PointsSnapShot.deleteWholeGroup(group)
-			group.deleteWholeGroup()
+			pointsSnapShotService.deleteWholeGroup(group)
+			itemGroupService.deleteWholeGroup(group)
 			redirect(action:'list')
 		}
 		else

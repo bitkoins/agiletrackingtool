@@ -32,15 +32,4 @@ class ItemGroup extends ItemContainer {
 	
 	def totalPoints() { return items.sum{ it.points } }
 	def finishedPoints() { return items.sum{ (it.status == ItemStatus.Finished) ? it.points : 0 } }
-	
-	def deleteWholeGroup()
-	{
-		items.collect{it}.each{ item ->
-			item.iteration?.deleteItem(item.id)
-			item.group?.deleteItem(item.id)
-	    	item.delete()
-		}
-		
-		delete()
-	}
 }

@@ -22,6 +22,7 @@ along with Agile Tracking Tool.  If not, see <http://www.gnu.org/licenses/>.
 class ItemController {
 	def scaffold = Item
 	def itemService
+	def itemGroupService
 	
 	static navigation = [
 		group:'tags',
@@ -40,14 +41,9 @@ class ItemController {
 	
 	def backlog = {
 			def title = "Backlog"
-			def itemsByGroup
-			
-			if ( params.priorities ) {				
-				itemsByGroup = itemService.getUnfinishedItemsGroupMap(session.project, Util.parsePriorities(params.priorities))
-			}
-			else {
-				itemsByGroup = itemService.getUnfinishedItemsGroupMap(session.project)
-			}
+			def itemsByGroup =  params.priorities ? 
+						itemService.getUnfinishedItemsGroupMap(session.project, Util.parsePriorities(params.priorities)) :
+			            itemService.getUnfinishedItemsGroupMap(session.project)
 			
 			return [itemsByGroup:itemsByGroup,title:title]
 	}
@@ -69,16 +65,8 @@ class ItemController {
 				return
 			}
 			
-			def itemsByGroup = [:]
-			iter.items.each{ item ->
-				if ( !itemsByGroup.containsKey(item.group)) {
-					itemsByGroup[item.group] = []
-				}
-				
-				if ( item.checkUnfinished() ) {
-					itemsByGroup[item.group] << item
-				}
-			}
+			def unfinishedItems = iter.items.findAll{ item.checkUnfinished() } 
+			def itemsByGroup = itemGroupService.transformToItemsByGroup( unfinishedItems )
 			
 			def title = "Items in ${iter.workingTitle}"
 			render(view:"backlog",model:[iteration:iter,itemsByGroup:itemsByGroup,title:title])
@@ -106,7 +94,6 @@ class ItemController {
 		}
 		
 		ItemParamsParser.updateItemWithParams(item,params, {param -> request.getParameterValues(param)} )
-		item.subItems*.save()
 		item.save()
 		render(template:'/shared/item/show',model:[item:item])
 	}
@@ -120,9 +107,7 @@ class ItemController {
 			return
 		}
 		
-		item.iteration?.deleteItem(item.id)
-		item.group?.deleteItem(item.id)
-		item.delete()
+		itemService.deleteItem(item)
 		render ""
 	}
 	
@@ -136,31 +121,20 @@ class ItemController {
 		}
 			
 		def item = new Item(session.project,group)
-		item.save()		
-		group.addItem(item)
-		group.save()
-
+		itemGroupService.addItem(group, item )
 		def newItemId = Integer.parseInt(params.newItemId) + 1
 		
 		render(template:'/shared/item/editNewItem',model:[item:item,groupId:item.group.id,newItemId:newItemId])
 	}
 	
 	def showAll = {
-			def groups = ItemGroup.findAllByProject(session.project)
-			
-			def totalPoints = 0
-			def unFinishedPoints = 0
-			groups.each{ group -> group.items.each{ 
-				totalPoints += it.points
-					if ( it.checkUnfinished() ) unFinishedPoints += it.points
-				}
-			}
-			return [groups:groups, totalPoints:totalPoints, unFinishedPoints:unFinishedPoints ] 
+			return [groups:ItemGroup.findAllByProject(session.project)] 
 	}
 	
 	def showSorted = {
 			def allItems = []
 			def groups = itemService.getUnfinishedItemsGroupMap(session.project)
+			
 			groups.each{ group, items -> items.each{ item ->
 					allItems << item 
 				}

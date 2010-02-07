@@ -12,6 +12,7 @@ class ItemServiceTests extends GrailsUnitTestCase {
     protected void setUp() {
         super.setUp()
         itemService = new ItemService()
+        itemService.itemGroupService = new ItemGroupService()
         nr = 0
         
         projects = Defaults.getProjects(1)

@@ -1,25 +1,14 @@
 class ItemService {
-
     boolean transactional = true
+    def itemGroupService
 
     def _getUnfinishedItemsGroupMapWithItemCheck(def project, Closure itemCheck)
 	{
 		def itemsByGroup = [:]		
-		def groups = ItemGroup.findAllByProject(project)
-						
-		groups.each{ group ->
-			itemsByGroup[group] = []
-			group.items?.each{ item ->
-				if ( item.status != ItemStatus.Finished) {
-					if (itemCheck(item))
-					{
-						itemsByGroup[group] << item
-					}
-				} 
-			}
-		}
+		def items = Item.findAllByProject(project)
+		def selectedItems = items.findAll{ item -> (item.status != ItemStatus.Finished) && itemCheck(item) }  
 		
-		return itemsByGroup
+		return itemGroupService.transformToItemsByGroup(selectedItems)
 	}
 	
 	def getUnfinishedItemsGroupMap(def project, List priorityList)
@@ -41,8 +30,6 @@ class ItemService {
 		def itemsByGroupFiltered = [:]
 		itemsByGroup.each{ group, items ->
 		
-			println group
-		
 			itemsByGroupFiltered[group] = []
 			items.each{ item ->	
 					if (!item.iteration) itemsByGroupFiltered[group] << item
@@ -50,4 +37,12 @@ class ItemService {
 		}
 		return itemsByGroupFiltered
 	}
+	
+	def deleteItem(def item)
+	{
+		item.iteration?.deleteItem(item.id)
+		item.group?.deleteItem(item.id)
+		item.delete()
+	}
+	
 }

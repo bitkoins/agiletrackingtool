@@ -161,45 +161,14 @@ class Iteration extends ItemContainer {
 			}
 		}
 		super.addItem(item)
+		item.iteration = this
 	}
 	
 	void unloadItemsAndDelete()
 	{
 	    items.collect{ it }.each{ item -> this.deleteItem(item.id) } 
 	   	this.delete()
-	}
-
-	def getBurnUpPlotData()
-    {
-        def plotData = new PlotData("Burnup chart") 
-        plotData.xLabel = "Days since iteration start"
-        plotData.yLabel = "Points"
-        
-        def iter = this
-        def now = new Date()
-		def snapShots = PointsSnapShot.getSnapShotsBetween(iter.project,iter.startTime,iter.endTime)
-		def dates = snapShots.collect{it.date}
-		def overViews = snapShots.collect{it.overView}
-				
-		dates = dates.collect{it + (now-iter.startTime)}
-		def iterationCurve = PlotUtil.getPlotCurveForItemStatus(overViews,dates, now,"Finished", ItemStatus.Finished)
-		if ( iterationCurve.yValues.size() > 0 ) {
-			iterationCurve.yValues = iterationCurve.yValues.collect{ it - iterationCurve.yValues[0] }
-		} 
-		plotData.curves << iterationCurve
-				
-		def totalCurve = new PlotCurve("Total points")
-		totalCurve.xValues = [0, iter.endTime-iter.startTime]
-		totalCurve.yValues = [iter.totalPoints(),iter.totalPoints()]
-		plotData.curves << totalCurve
-			
-		def nominalCurve = new PlotCurve("Steady Pace")
-		nominalCurve.xValues = totalCurve.xValues
-		nominalCurve.yValues = [0,iter.totalPoints()]
-		plotData.curves << nominalCurve  
-	
-        return plotData
-   }	
+	}	
 }
 
 
