@@ -42,6 +42,7 @@ along with Agile Tracking Tool.  If not, see <http://www.gnu.org/licenses/>.
 		        	</g:each>
 		        	</ul>
 		        </li>
+		        <br/>
 		        <li>Import all data from xml file:
 		        	<g:form method="post" action="importFile" enctype="multipart/form-data">
     					<input size="60" type="file" name="file"/>
@@ -49,9 +50,7 @@ along with Agile Tracking Tool.  If not, see <http://www.gnu.org/licenses/>.
 	        		</g:form>
 		        </li>
 		        <br/>
-		        <li><g:link style=";"  action="loadDefaults">Load default data</g:link></li>
-		      	<br/>
-		      	<li><g:link style=";"  action="deleteAll" onclick="return confirm('All data will be destroyed!!! Are you sure?');">Delete all data</g:link></li>
+		        <li><g:link style=";"  action="loadDefaults">Load example project data</g:link></li>
 	        </ul>
 	        
 	        <br/>

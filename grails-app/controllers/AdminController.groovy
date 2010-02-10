@@ -68,11 +68,6 @@ class AdminController {
 			redirect(controller:'project', action:'list')
     }
     
-    def deleteAll = {
-			Util.emptyDataBase()
-    		redirect(controller:"item", action:"list")
-    }
-    
     def loadDefaults = {
     		3.times { projectId ->
     			def project = new Project(name:"Example project ${projectId}")

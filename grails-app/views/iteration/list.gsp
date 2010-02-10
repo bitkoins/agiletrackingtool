@@ -64,7 +64,7 @@ along with Agile Tracking Tool.  If not, see <http://www.gnu.org/licenses/>.
 		
 		<g:each var="iter" in="${iterations.findAll{it.status == IterationStatus.Ongoing} }">
 			<tr class="status${iter.status}">
-				<td><g:link action="show" id="${iter.id}">${iter.workingTitle}</g:link></td>
+				<td><g:link controller="iterationCurrent" action="show" id="${iter.id}">${iter.workingTitle}</g:link></td>
 				<td>${iter.finishedPoints}</td>
 				<td><g:formatDate format="dd-MMM yyyy" date="${iter.endTime}"/></td>
 				<td><g:link action="edit" id="${iter.id}">Edit</g:link></td>
@@ -93,7 +93,7 @@ along with Agile Tracking Tool.  If not, see <http://www.gnu.org/licenses/>.
 		
 		<g:each var="iter" in="${iterations.findAll{it.status == IterationStatus.FutureWork} }">
 			<tr class="status${iter.status}">
-				<td><g:link action="show" id="${iter.id}">${iter.workingTitle}</g:link></td>
+				<td><g:link controller="iterationCurrent" action="show" id="${iter.id}">${iter.workingTitle}</g:link></td>
 				<td>${iter.totalPoints()}</td>
 				<td><g:formatDate format="dd-MMM yyyy" date="${iter.endTime}"/></td>
 				<td><g:link action="edit" id="${iter.id}">Edit</g:link></td>
@@ -121,7 +121,7 @@ along with Agile Tracking Tool.  If not, see <http://www.gnu.org/licenses/>.
 		
 		<g:each var="iter" in="${iterations.findAll{it.status == IterationStatus.Finished} }">
 			<tr class="status${iter.status}">
-				<td><g:link action="show" id="${iter.id}">${iter.workingTitle}</g:link></td>
+				<td><g:link controller="iterationCurrent" action="show" id="${iter.id}">${iter.workingTitle}</g:link></td>
 				<td>${iter.finishedPoints}</td>
 				<td><g:formatDate format="dd-MMM yyyy" date="${iter.endTime}"/></td>
 				<td>${iter.durationInDays}</td>

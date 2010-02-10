@@ -30,13 +30,12 @@ class IterationController {
 		group:'tags', 
 		order:40, 
 		title:'Iterations', 
-		action:'show',
+		action:'list',
 		isVisible: { session.project != null },
 		subItems: [
-			[action:'show', order:1, title:'Show current iteration'],
 			[action:'list', order:10, title:"Manage"],
-			[action:'create', order:20, title:'New iteration'],
-			[action:'history', order:50, title:'List all iterations']
+			[action:'history', order:20, title:'List all iterations'],
+			[action:'create', order:40, title:'New iteration']
 		] 
 	]
 	
@@ -51,95 +50,7 @@ class IterationController {
 			def iterations = Iteration.findAllByProject(session.project)?.collect{it}.sort{it.startTime }.reverse()
 			return [ iterations:iterations ]			
 	}
-	
-	def show = {
-		def iteration = params.id ? Iteration.get(params.id) : Iteration.getOngoingIteration(session.project)
 
-		flash.projectCheckFailed = projectService.executeWhenProjectIsCorrect(session.project, iteration )
-		
-		def mlist = []
-		ItemStatus.each{ status -> mlist += iteration.items?.findAll{ it.status == status }.sort{ it.uid } }
-		def plotData = plotService.createBurnUpPlotData(iteration)
-		
-		return [iteration:iteration,items:mlist,plotData:plotData]
-	}
-	
-	def closeCurrent = {
-			def nextAction
-			def iteration = Iteration.getOngoingIteration(session.project)
-	    	def iterationNew = iteration.retrieveNextIteration()
-			
-	    	if (iterationNew) {
-	    		iteration.copyUnfinishedItems(iterNew)
-	    		nextAction = "list"
-	    	} 
-	    	else {
-	    		iterationNew = iteration.createTheNextIteration()
-	    		nextAction = "edit"
-	    	}
-
-	    	iteration.closeIteration()
-	    	iterationNew.openIteration()
-	    	iterationNew.save()
-			iteration.save()
-	    	
-			redirect(action:nextAction,id:iterationNew.id)	    	
-	}
-	
-	def itemDone = {
-			updateItemStatus(params,ItemStatus.Finished)
-	}
-	
-	def itemInProgress = {
-			updateItemStatus(params,ItemStatus.InProgress)
-	}
-		
-	def itemBlocking = {
-			updateItemStatus(params,ItemStatus.Blocking)
-	}
-	
-	private void updateItemStatus(def params, def newState)
-	{
-		def id = Integer.parseInt(params.id)
-		def item = Item.get(id)
-		
-		item.status = newState
-		if ( item.status == ItemStatus.Finished ) {
-			item.subItems.each{ it.status = ItemStatus.Finished }
-		}
-		
-		flash.projectCheckFailed = projectService.executeWhenProjectIsCorrect(session.project,  item,{ item.save() })
-		render(template:'itemView',model:[item:item] )
-	}
-	
-	def subItemFinished = {
-		def id = Integer.parseInt(params.id)
-		def subItem = SubItem.get(id)
-		subItem.status = ItemStatus.Finished
-		if (subItem.item.status == ItemStatus.Request) {
-				subItem.item.status = ItemStatus.InProgress
-		}
-		
-		flash.projectCheckFailed = projectService.executeWhenProjectIsCorrect(session.project,  subItem.item,{ subItem.save() })
-			
-		render(template:'itemView',model:[item:subItem.item] )
-	}
-	
-	def editItem = {
-		def item = Item.get(params.id)
-		flash.objectForProjectCheck = item
-		render(template:'/shared/item/edit',model:[item:item])
-	}
-	
-	def saveItem = {
-		def item = Item.get(Integer.parseInt(params.id))
-		ItemParamsParser.updateItemWithParams(item,params, {param -> request.getParameterValues(param)} )
-		
-		flash.projectCheckFailed = projectService.executeWhenProjectIsCorrect(session.project,  item,{ itemService.saveItem(item) }) 
-		
-		render(template:'itemView',model:[item:item])
-	}
-		
 	def create = {
 		def iteration = new Iteration()
 		iteration.startTime = new Date()
