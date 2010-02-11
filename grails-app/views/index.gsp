@@ -31,13 +31,13 @@ along with Agile Tracking Tool.  If not, see <http://www.gnu.org/licenses/>.
 		<div class="dialog" style="margin-left:20px;width:60%;">
           <h1>What would you like to do?</h1>
 	        <ul>
-		        <li class="controller"><g:link controller="iteration">Manage the Iterations</g:link></li>
+		        <li class="controller"><g:link controller="iteration" action="list">Manage the Iterations</g:link></li>
 		        <br/>
 				<li><g:link style=";" controller="item" action="backlog">Work on the Backlog</g:link></li>						        
 				<br/>
 		        <li><g:link controller="pointsSnapShot" action="plot">Look at the History</g:link></li>
-		        <li><g:link style=";" controller="item" action="planning">Look at the Planning</g:link></li>
-		        <li><g:link style=";" controller="iteration" action="show">See the Current Iteration</g:link></li>
+		        <li><g:link style=";" controller="forecast" action="forecast">Look at the Planning</g:link></li>
+		        <li><g:link style=";" controller="iterationCurrent" action="show">See the Current Iteration</g:link></li>
 	        </ul>
 	    </div>
 	    
