@@ -36,6 +36,11 @@ class IterationCurrentController {
 	
 	def show = {
 		def iteration = params.id ? Iteration.get(params.id) : Iteration.getOngoingIteration(session.project)
+		
+		if(!iteration) {
+			redirect(controller:'iteration', action:'list')
+			return
+		}
 
 		flash.projectCheckFailed = projectService.executeWhenProjectIsCorrect(session.project, iteration )
 		

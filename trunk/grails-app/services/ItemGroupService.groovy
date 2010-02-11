@@ -23,12 +23,11 @@ class ItemGroupService {
     static transactional = true
     static scope = "session"
 
-    def transformToItemsByGroup(def items)
+    def transformToItemsByGroup(def groups, def items)
     {
     	def itemsByGroup = [:]
-    	def groups = items.collect{ it.group }.unique()
     	groups.each{ group -> itemsByGroup[group] = [] }
-    	items.each{ item -> itemsByGroup[item.group] << item }
+    	items.each{ item -> itemsByGroup[ groups.find{ item.group.id == it.id} ] << item }
     	return itemsByGroup 
     }
     
