@@ -30,8 +30,9 @@ class ItemService {
 		def itemsByGroup = [:]		
 		def items = Item.findAllByProject(project)
 		def selectedItems = items.findAll{ item -> (item.status != ItemStatus.Finished) && itemCheck(item) }  
+		def groups = ItemGroup.findAllByProject(project)
 		
-		return itemGroupService.transformToItemsByGroup(selectedItems)
+		return itemGroupService.transformToItemsByGroup(groups, selectedItems)
 	}
 	
 	def getUnfinishedItemsGroupMap(def project, List priorityList)
