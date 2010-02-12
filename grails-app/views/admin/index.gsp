@@ -58,7 +58,6 @@ along with Agile Tracking Tool.  If not, see <http://www.gnu.org/licenses/>.
         	<h1>Access to the underlying domain model:</h1>
             <ul>
                 <li class="controller"><g:link controller="item">Work Items</g:link></li>
-                <li class="controller"><g:link controller="itemGroup">Work groups</g:link></li>                
                 <li class="controller"><g:link controller="pointsSnapShot">PointsSnapShots</g:link></li>
             </ul>
     </body>
