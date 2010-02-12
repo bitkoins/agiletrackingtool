@@ -23,7 +23,6 @@ import org.codehaus.groovy.grails.commons.*
 
 class PointsSnapShotService {
     static transactional = true
-	static scope = "session"
 	    
     def exportDir = ConfigurationHolder.config.agile.exportDirectory
 
