@@ -44,6 +44,7 @@ class Defaults {
 		nr.times {
 			def group = new ItemGroup()			
 			group.name = "Group-${it}"
+			group.id = it + 1
 			group.items = []
 			group.project = Util.random(projects)
 			
@@ -64,7 +65,8 @@ class Defaults {
 		
 		nr.times{ index -> 
 			def item = new Item(project:project)
-			item.uid = index + (maxUid + 1) 
+			item.uid = index + (maxUid + 1)
+			item.id = item.uid + 1 
 			item.description = "${project.name} + Item  ${index}"			
 			item.points = Util.random(points)
 			item.dateCreated = new Date() - 10

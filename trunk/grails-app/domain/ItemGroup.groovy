@@ -32,4 +32,9 @@ class ItemGroup extends ItemContainer {
 	
 	def totalPoints() { return items.sum{ it.points } }
 	def finishedPoints() { return items.sum{ (it.status == ItemStatus.Finished) ? it.points : 0 } }
+	
+	void addItem(Item item)
+	{
+		super.addItem(item,"group")
+	}
 }
