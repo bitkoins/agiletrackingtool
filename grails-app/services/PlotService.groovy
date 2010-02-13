@@ -132,7 +132,7 @@ class PlotService {
 	
 	def createBurnUpPlotData(def iteration)
     {
-        def plotData = new PlotData("Burnup chart") 
+        def plotData = new PlotData("BurnDown chart") 
         plotData.xLabel = "Days since iteration start"
         plotData.yLabel = "Points"
         
@@ -144,18 +144,13 @@ class PlotService {
 		dates = dates.collect{it + (now-iteration.startTime)}
 		def iterationCurve = PlotUtil.getPlotCurveForItemStatus(overViews,dates, now,"Finished", ItemStatus.Finished)
 		if ( iterationCurve.yValues.size() > 0 ) {
-			iterationCurve.yValues = iterationCurve.yValues.collect{ it - iterationCurve.yValues[0] }
+			iterationCurve.yValues = iterationCurve.yValues.collect{ iteration.totalPoints() - (it - iterationCurve.yValues[0]) }
 		} 
 		plotData.curves << iterationCurve
 				
-		def totalCurve = new PlotCurve("Total points")
-		totalCurve.xValues = [0, iteration.endTime-iteration.startTime]
-		totalCurve.yValues = [iteration.totalPoints(),iteration.totalPoints()]
-		plotData.curves << totalCurve
-			
 		def nominalCurve = new PlotCurve("Steady Pace")
-		nominalCurve.xValues = totalCurve.xValues
-		nominalCurve.yValues = [0,iteration.totalPoints()]
+		nominalCurve.xValues = [0, iteration.endTime-iteration.startTime]
+		nominalCurve.yValues = [iteration.totalPoints(), 0]
 		plotData.curves << nominalCurve  
 	
         return plotData

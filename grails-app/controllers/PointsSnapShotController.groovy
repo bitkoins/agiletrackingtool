@@ -33,7 +33,7 @@ class PointsSnapShotController {
 		subItems: [
 			[action:'plot', order:1, title:"Overall history"],
 			[action:'allPlots', order:10, title:'Group history'],			
-			[action:'burnUpGraph', order:100, title:'Burn up graph'],
+			[action:'burnUpGraph', order:100, title:'BurnDown'],
 			[action:'flowPlot', order:80, title:'Flow history'],
 			[action:'showBugHistory', order:50, title:'Bug history']
 		]

@@ -34,8 +34,6 @@ class ItemController {
 		subItems: [
 			[action:'backlog', order:1, title:'Backlog'],
 			[action:'showAll', order:10, title:'Show all items'],
-			[action:'showSorted', order:50, title:'Show items sorted by points'],
-			[action:'notInIteration', order:70, title:'Show items without iteration'],
 			[action:'listGroups', order:90, title:'Show groups']
 		] 
 	]
@@ -49,26 +47,10 @@ class ItemController {
 			return [itemsByGroup:itemsByGroup,title:title]
 	}
 	
-	def notInIteration = {
-			def itemsByGroup = itemService.getUnfinishedItemsGroupMap(session.project)
-			def itemsByGroupFiltered = itemService.removeItemsWithIteration(itemsByGroup)
-			
-			def title = "Backlog for items not in Iteration"
-			render(view:"backlog",model:[itemsByGroup:itemsByGroupFiltered,title:title])
+	def showAll = {
+			return [groups:ItemGroup.findAllByProject(session.project)] 
 	}
 	
-	def showIterationItems = {
-			def iteration = params.id ? Iteration.get(params.id) : Iteration.getOngoingIteration()
-			
-			flash.projectCheckFailed = projectService.executeWhenProjectIsCorrect(session.project, iteration)
-			
-			def unfinishedItems = iteration.items.findAll{ item.checkUnfinished() } 
-			def itemsByGroup = itemGroupService.transformToItemsByGroup( unfinishedItems )
-			
-			def title = "Items in ${iter.workingTitle}"
-			render(view:"backlog",model:[iteration:iteration,itemsByGroup:itemsByGroup,title:title])
-	}
-		
 	def editItem = {
 		def item = Item.get(params.id)
 		flash.projectCheckFailed = projectService.executeWhenProjectIsCorrect(session.project, item)
@@ -102,25 +84,6 @@ class ItemController {
 		render(template:'/shared/item/editNewItem',
 		       model:[item:item,groupId:item.group.id,newItemId:newItemId]) 
 	}
-	
-	def showAll = {
-			return [groups:ItemGroup.findAllByProject(session.project)] 
-	}
-	
-	def showSorted = {
-			def allItems = []
-			def groups = itemService.getUnfinishedItemsGroupMap(session.project)
-			
-			groups.each{ group, items -> items.each{ item ->
-					allItems << item 
-				}
-			}
-			
-			def sum = allItems.sum{it.points}
-			def average = allItems.size() ? sum/ allItems.size() : 0 
-						
-			return [ items: allItems.collect{it}.sort{it.points}, sum:sum, average:average]
-	}	
 	
 	def listGroups = {
 		redirect(controller:'itemGroup', action:'list')
