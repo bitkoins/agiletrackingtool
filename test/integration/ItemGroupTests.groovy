@@ -48,15 +48,21 @@ class ItemGroupTests extends GroovyTestCase {
     void testAddingAndDeletingItem()
     {
     	def item = items[0]
-    	group.addItem(item)
+    	def otherGroup = Defaults.getGroups(1,[project])[0]
+    	otherGroup.id = group.id + 1
+    	
+    	otherGroup.addItem(item)
+    	
     	project.save()
     	group.save()
-    	assertTrue group.hasItem(item.id)
-    	assertTrue item.group == group
+    	assertTrue otherGroup.hasItem(item.id)
+    	assertEquals item.group , otherGroup
     	
-    	group.deleteItem(item.id)
-    	group.save()
     	assertFalse group.hasItem(item.id)
+    	
+    	otherGroup.deleteItem(item.id)
+    	otherGroup.save()
+    	assertFalse otherGroup.hasItem(item.id)
     	assertTrue item.group == null
     	project.delete()
     }

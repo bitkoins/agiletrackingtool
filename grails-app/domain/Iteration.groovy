@@ -154,14 +154,7 @@ class Iteration extends ItemContainer {
 	
 	void addItem(Item item)
 	{
-		if(item?.iteration)
-		{
-			if ( this != item.iteration) {
-				item.iteration.deleteItem(item?.id)
-			}
-		}
-		super.addItem(item)
-		item.iteration = this
+		super.addItem(item,"iteration")
 	}
 }
 

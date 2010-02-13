@@ -32,12 +32,24 @@ class ItemContainer {
         items = []
     }
 
-	void addItem(Item item)
+	void addItem(Item item, def belongsToFieldAsString)
 	{
+		def belongsToInstance = item[belongsToFieldAsString]
+	
+		if(belongsToInstance)
+		{
+			if ( this.id != belongsToInstance.id ) {
+				belongsToInstance.deleteItem(item?.id)
+			}
+		}
+		
 		if ( !this.items?.find{ it == item } ) {
 			this.addToItems(item)
 		}
+		
+		item[belongsToFieldAsString] = this
 	}
+	
 	
 	void deleteItem(def id)
 	{
@@ -49,9 +61,7 @@ class ItemContainer {
 	
 	Item getItem(def id) 
 	{
-		Item ret = null
-		this.items.each{ if(it.id == id) ret = it }
-		return ret
+		return items.find{ it.id == id }
 	}
 	
 	boolean hasItem(def id)
