@@ -34,7 +34,7 @@ along with Agile Tracking Tool.  If not, see <http://www.gnu.org/licenses/>.
 				
 			<td width ="50">	
 				<g:if test="${item.status != ItemStatus.InProgress}">
-					<g:remoteLink action="itemInProgress" id="${item.id}" update="item${item.id}">Set 'In Progress'</g:remoteLink>
+					<g:remoteLink action="itemInProgress" id="${item.id}" update="item${item.id}">${item.status == ItemStatus.Finished ? 'Back' : 'Set'} 'In Progress'</g:remoteLink>
 				</g:if>
 			</td>
 			

@@ -32,7 +32,7 @@ class ItemContainer {
         items = []
     }
 
-	void addItem(Item item, def belongsToFieldAsString)
+	void _addItem(Item item, String belongsToFieldAsString)
 	{
 		def belongsToInstance = item[belongsToFieldAsString]
 	

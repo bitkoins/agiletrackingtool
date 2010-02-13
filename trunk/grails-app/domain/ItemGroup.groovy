@@ -35,6 +35,6 @@ class ItemGroup extends ItemContainer {
 	
 	void addItem(Item item)
 	{
-		super.addItem(item,"group")
+		super._addItem(item,"group")
 	}
 }

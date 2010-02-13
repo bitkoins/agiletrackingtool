@@ -31,7 +31,7 @@ along with Agile Tracking Tool.  If not, see <http://www.gnu.org/licenses/>.
     	<nav:renderSubItems group="tags" />
     	
     	<div class="iteration">
-			<h2>Iteration: <g:link action="edit" id="${iteration.id}">${iteration.workingTitle}</g:link></h2>
+			<h2>${iteration.workingTitle}</h2>
 			
 			<g:if test="${plotData}">
 			<div style="float:right">		

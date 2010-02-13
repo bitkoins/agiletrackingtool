@@ -49,19 +49,6 @@ class ItemService {
 		return 	_getUnfinishedItemsGroupMapWithItemCheck(project, { item -> true})
 	}
 	
-	def removeItemsWithIteration(def itemsByGroup)
-	{
-		def itemsByGroupFiltered = [:]
-		itemsByGroup.each{ group, items ->
-		
-			itemsByGroupFiltered[group] = []
-			items.each{ item ->	
-					if (!item.iteration) itemsByGroupFiltered[group] << item
-			}
-		}
-		return itemsByGroupFiltered
-	}
-	
 	def deleteItem(def item)
 	{
 		item.iteration?.deleteItem(item.id)

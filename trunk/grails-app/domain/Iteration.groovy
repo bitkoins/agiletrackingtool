@@ -154,7 +154,7 @@ class Iteration extends ItemContainer {
 	
 	void addItem(Item item)
 	{
-		super.addItem(item,"iteration")
+		super._addItem(item,"iteration")
 	}
 }
 
