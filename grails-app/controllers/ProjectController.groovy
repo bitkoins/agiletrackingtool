@@ -48,17 +48,20 @@ class ProjectController {
 	}
 	
 	def delete = {
+		
 		def project = Project.get(params.id)
 		
-		if(project) {
-		
+		def deleteClosure = {
 			if (session.project?.id == project.id)
 			{
 				session.project = null
-			}	
-			
+			}			
 			projectService.delete(project)
 		}
+		
+		def objectThatHoldsProject = new Expando(project:project)
+		
+		flash.projectCheckFailed = projectService.executeWhenProjectIsCorrect(session.project, objectThatHoldsProject, deleteClosure )
 		
 		redirect(action:'list')
 	}

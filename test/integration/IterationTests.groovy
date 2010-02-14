@@ -119,7 +119,6 @@ class IterationTests extends GroovyTestCase {
     	items[1].group = groups[1]
     	items[2].group = groups[2]
     	
-    	assertTrue iter.listGroups()?.size() == 3 
     	assertTrue iter.listUnfinishedItemsForGroup(groups[0])?.size() == (items.size()-2)
     	assertTrue iter.listUnfinishedItemsForGroup(groups[1])?.size() == 1    			
     	assertTrue iter.listUnfinishedItemsForGroup(groups[1])[0] == items[1]
@@ -128,17 +127,6 @@ class IterationTests extends GroovyTestCase {
     	
     	items[2].status = ItemStatus.Finished
     	assertTrue iter.listUnfinishedItemsForGroup(groups[2])?.size() == 0
-    }
-    
-    void testGetOngoingIteration()
-    {
-    	def iters = Defaults.getIterations(10,project)
-    	iters.each{ it.status = IterationStatus.Finished ; it.save() }    	
-    	def current = iters[5]
-    	current.status = IterationStatus.Ongoing  	
-    	def retrievedCurrent = Iteration.getOngoingIteration(project)
-    	
-    	assertTrue current.id == retrievedCurrent.id
     }
     
     void testGetNextIteration_WithNoFutureIterations()
