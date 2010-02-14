@@ -100,4 +100,22 @@ class ItemGroupTests extends GroovyTestCase {
     	
     	groups.collect{ it.project }.unique()*.delete()
     }
+    
+    void testSavingGroupCascadesToItem()
+    {
+    	project.save()
+    	def groupA = Defaults.getGroups(1,[project])[0]
+    	def groupB = Defaults.getGroups(1,[project])[0]
+    	[groupA,groupB]*.save()
+    	
+    	def itemA = Defaults.getItems(1,[groupA],project)[0]
+    	itemA.save()
+    	
+    	groupB.addItem(itemA)
+    	groupB.save()
+    	
+    	def savedItemA = Item.get(itemA.id)
+    	assertEquals groupB.id, savedItemA.group.id   	
+    }
+    
 }

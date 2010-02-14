@@ -78,7 +78,7 @@ class ItemController {
 		def group = ItemGroup.get(params.id)
 		def item = new Item(session.project,group)
 		flash.projectCheckFailed = projectService.executeWhenProjectIsCorrect(session.project, group,
-																	{ itemGroupService.addItem(group, item) })
+																	{ group.addItem(item); group.save() })
 		
 	    def newItemId = Integer.parseInt(params.newItemId) + 1
 		render(template:'/shared/item/editNewItem',
