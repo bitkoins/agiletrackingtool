@@ -37,7 +37,7 @@ class ProjectService {
 	{
 		def projectCheckFailed = false
 		 
-        if( objectForProjectCheck && 
+        if( project && objectForProjectCheck && 
             objectForProjectCheck.project.id != project.id ) {
         	projectCheckFailed = true
         }
