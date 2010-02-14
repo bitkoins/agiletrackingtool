@@ -27,17 +27,13 @@ class ItemGroupService {
     {
     	def itemsByGroup = [:]
     	groups.each{ group -> itemsByGroup[group] = [] }
-    	items.each{ item -> itemsByGroup[ groups.find{ item.group.id == it.id} ] << item }
+    	items.each{ item ->
+    		def foundGroup = groups.find{ item.group.id == it.id}  
+    		if(foundGroup) itemsByGroup[foundGroup] << item 
+    	}
     	return itemsByGroup 
     }
     
-    def addItem(def group, def item)
-    {
-    	item.save()		
-		group.addItem(item)
-		group.save()
-	}
-	
 	def deleteWholeGroup(def group)
 	{
 		group.items.collect{it}.each{ item ->
