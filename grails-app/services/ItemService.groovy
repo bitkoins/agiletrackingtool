@@ -55,11 +55,4 @@ class ItemService {
 		item.group?.deleteItem(item.id)
 		item.delete()
 	}
-	
-	def saveItem(def item)
-	{
-		item.subItems*.save()
-		item.save()
-	}
-	
 }

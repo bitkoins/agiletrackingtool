@@ -115,7 +115,7 @@ class IterationCurrentController {
 		def item = Item.get(Integer.parseInt(params.id))
 		ItemParamsParser.updateItemWithParams(item,params, {param -> request.getParameterValues(param)} )
 		
-		flash.projectCheckFailed = projectService.executeWhenProjectIsCorrect(session.project,  item,{ itemService.saveItem(item) }) 
+		flash.projectCheckFailed = projectService.executeWhenProjectIsCorrect(session.project,  item,{ item.save() }) 
 		
 		render(template:'itemView',model:[item:item])
 	}

@@ -62,7 +62,7 @@ class ItemController {
 		
 		ItemParamsParser.updateItemWithParams(item,params, {param -> request.getParameterValues(param)} )
 		flash.projectCheckFailed = projectService.executeWhenProjectIsCorrect(session.project, item,
-		                                                                     { itemService.saveItem(item) }) 
+		                                                                     { item.save() }) 
 
 		render(template:'/shared/item/show',model:[item:item] )
 	}
