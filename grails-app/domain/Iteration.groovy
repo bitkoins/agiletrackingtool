@@ -36,25 +36,8 @@ class Iteration extends ItemContainer {
 		project(nullable:false)
 	}
 	
-	static def getOngoingIteration(def project)
-	{
-		return Iteration.findAllByProject(project)?.find{ it.status == IterationStatus.Ongoing }
-	}
-	
-	Iteration retrieveNextIteration()
-	{
-		return Iteration.findAllByProject(project)?.findAll{ (it.endTime > this.endTime) && (it.status != IterationStatus.Finished) }?.sort{it.endTime }[0]
-	}
-	
 	String toString() { return workingTitle }
 
-	List listGroups()
-	{
-		def ret = new HashSet()
-		items.each{ ret << it.group }
-		return ret.collect{ it }
-	}
-	
 	List listUnfinishedItemsForGroup(def group)
 	{
 		def unItems = []
@@ -76,27 +59,6 @@ class Iteration extends ItemContainer {
 		status = IterationStatus.Ongoing
 	}
 
-	Iteration createTheNextIteration()
-	{
-		Iteration newIter = new Iteration(project:this.project)
-		newIter.status = IterationStatus.Ongoing
-		newIter.startTime = new Date()
-		newIter.endTime = newIter.startTime + Util.getDaysInBetween(startTime,endTime)
-		newIter.workingTitle = "<<Please fill in>>"
-		newIter.items = []
-		this.copyUnfinishedItems(newIter)
-		
-		return newIter
-	}
-	
-	void copyUnfinishedItems(Iteration iterDest)
-	{
-		def unItems = getUnfinishedItems()
-		unItems.each{ item -> 
-			iterDest.addItem(item) 
-		}
-	}
-	
 	def getDurationInDays()
 	{
 		return Util.getDaysInBetween(startTime,endTime)
@@ -155,6 +117,32 @@ class Iteration extends ItemContainer {
 	void addItem(Item item)
 	{
 		super._addItem(item,"iteration")
+	}
+	
+	Iteration retrieveNextIteration()
+	{
+		return Iteration.findAllByProject(project)?.findAll{ (it.endTime > this.endTime) && (it.status != IterationStatus.Finished) }?.sort{it.endTime }[0]
+	}
+	
+	Iteration createTheNextIteration()
+	{
+		Iteration newIter = new Iteration(project:this.project)
+		newIter.status = IterationStatus.Ongoing
+		newIter.startTime = new Date()
+		newIter.endTime = newIter.startTime + Util.getDaysInBetween(startTime,endTime)
+		newIter.workingTitle = "<<Please fill in>>"
+		newIter.items = []
+		this.copyUnfinishedItems(newIter)
+		
+		return newIter
+	}
+	
+	void copyUnfinishedItems(Iteration iterDest)
+	{
+		def unItems = getUnfinishedItems()
+		unItems.each{ item -> 
+			iterDest.addItem(item) 
+		}
 	}
 }
 

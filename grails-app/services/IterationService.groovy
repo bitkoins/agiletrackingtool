@@ -28,4 +28,20 @@ class IterationService {
 	    iteration.items.collect{ it }?.each{ item -> iteration.deleteItem(item.id) } 
 	   	iteration.delete()
 	}	
+	
+	def getOngoingIteration(def project)
+	{
+		return Iteration.findAllByProject(project)?.find{ it.status == IterationStatus.Ongoing }
+	}
+	
+	def transferUnfinishedItems(def iteractionCurrent, def iterationNext)
+	{
+		iteractionCurrent.copyUnfinishedItems(iterationNext)
+	    
+	    iteractionCurrent.closeIteration()
+	    iterationNext.openIteration()
+	    
+	    iterationNext.save()
+		iteractionCurrent.save()
+	}
 }
