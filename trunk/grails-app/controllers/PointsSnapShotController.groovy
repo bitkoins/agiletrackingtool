@@ -23,6 +23,7 @@ class PointsSnapShotController {
 	def scaffold = PointsSnapShot
 	
 	def plotService
+	def iterationService
 	
 	static navigation = [
 		group:'tags', 
@@ -91,7 +92,7 @@ class PointsSnapShotController {
 	}
 	
 	def burnUpGraph = {
-			def iteration = Iteration.getOngoingIteration(session.project) 		    
+			def iteration = iterationService.getOngoingIteration(session.project) 		    
 			def plotData = plotService.createBurnUpPlotData(iteration)
 			return [plotData:plotData]
 	}

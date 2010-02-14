@@ -35,7 +35,7 @@ class IterationCurrentController {
 	]
 	
 	def show = {
-		def iteration = params.id ? Iteration.get(params.id) : Iteration.getOngoingIteration(session.project)
+		def iteration = params.id ? Iteration.get(params.id) : iterationService.getOngoingIteration(session.project)
 		
 		if(!iteration) {
 			redirect(controller:'iteration', action:'list')
@@ -52,25 +52,18 @@ class IterationCurrentController {
 	}
 	
 	def closeCurrent = {
-			def nextAction
-			def iteration = Iteration.getOngoingIteration(session.project)
-	    	def iterationNew = iteration.retrieveNextIteration()
+			def nextAction = "list"
+			def iteration = iterationService.getOngoingIteration(session.project)			
+	    	def iterationNext = iteration.retrieveNextIteration()
 	    	
-	    	if (iterationNew) {
-	    		iteration.copyUnfinishedItems(iterNew)
-	    		nextAction = "list"
-	    	} 
-	    	else {
-	    		iterationNew = iteration.createTheNextIteration()
+	    	if (!iterationNext) {
+	    		iterationNext = iteration.createTheNextIteration()
 	    		nextAction = "edit"
 	    	}
-
-	    	iteration.closeIteration()
-	    	iterationNew.openIteration()
-	    	iterationNew.save()
-			iteration.save()
 	    	
-			redirect(controller:'iteration', action:nextAction,id:iterationNew.id)	    	
+	    	iterationService.transferUnfinishedItems(iteration, iterationNext)
+	    	
+			redirect(controller:'iteration', action:nextAction, id:iterationNext.id)	    	
 	}
 	
 	def itemDone = {
