@@ -38,4 +38,33 @@ class IterationServiceTests extends GrailsUnitTestCase {
     	
     	assertTrue current.id == retrievedCurrent.id
     }
+    
+    void testTransferItems()
+    {
+		def iterCurrent, iterNext
+		def iters = Defaults.getIterations(2,project)
+		(iterCurrent, iterNext) = iters
+		
+		mockDomain(Iteration, iters)
+		
+		def groups = Defaults.getGroups(1,[project])
+		mockDomain(ItemGroup, groups)		
+		def itemsUnfinished = Defaults.getItems(3,groups, project, 10)
+		def itemsFinished = Defaults.getItems(4, groups, project, 100)
+		
+		itemsUnfinished.each{ it.status = ItemStatus.Request }
+		itemsFinished.each{ it.status = ItemStatus.Finished }
+		
+		def items = (itemsUnfinished + itemsFinished)
+		mockDomain(Item, items)
+		items.each{ iterCurrent.addItem(it) }
+		
+		iterationService.transferUnfinishedItems(iterCurrent, iterNext)
+		
+		assertEquals itemsFinished.size(), iterCurrent.items.size() 
+		itemsFinished.each{ assertNotNull iterCurrent.items.find{ it } }
+		
+		assertEquals itemsUnfinished.size(), iterNext.items.size()
+		itemsUnfinished.each{ assertNotNull iterNext.items.find{ it } }
+    }
 }
