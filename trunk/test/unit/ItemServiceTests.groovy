@@ -61,4 +61,21 @@ class ItemServiceTests extends GrailsUnitTestCase {
     	itemsGroupMap.each{group,items-> nr += items.size() }    	   	
     	assertEquals nr , items.size() 
     }
+    
+    void testDeleteItemRemovesFromIterationAndGroup()
+    {
+    	def item = items[0]
+    	def group = item.group
+    	
+    	def iteration = Defaults.getIterations(1,project)[0]
+    	mockDomain(Iteration, [iteration])
+    	
+    	iteration.addItem(item)
+    	itemService.deleteItem(item)
+    	
+    	assertNull Iteration.get(item.id)
+    	assertFalse group.hasItem(item.id)
+    	assertFalse iteration.hasItem(item.id)
+    	
+    }
 }
