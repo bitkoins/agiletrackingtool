@@ -23,43 +23,51 @@ import org.codehaus.groovy.grails.commons.*
 
 class PointsSnapShotService {
     static transactional = true
-	    
+        
     def exportDir = ConfigurationHolder.config.agile.exportDirectory
 
     def performDailyJob() {
     
-    	Project.list().each{ project ->
-	    	def groups = ItemGroup.list()
-		   	if ( groups?.size() > 0 )
-		    {
-		       	def snapShot = PointsSnapShot.takeSnapShot(project,groups,new Date())
-		       	snapShot.save()
-		       	println "Snapshot saved."
-		        
-		        if(!exportDir) return
-		        	
-		       	def exportDate = new Date()
-		       	def dateTimeString = exportDate.toString().replace(" ","_").replace(":","_")
-		       	def fileName = exportDir + "${project.name}_${dateTimeString}.xml"
-		       	println "Writing to file: " + fileName
-		       	def file = new File(fileName)
-		       	file.write(UtilXml.exportToXmlString(project, groups, Item.list(), Iteration.list(), PointsSnapShot.list(), exportDate))
-		   }
-		   else
-		   {
-		     	println "No groups are present"
-		   }
-		}	
+        Project.list().each{ project ->
+            def groups = ItemGroup.findAllByProject(project)
+               if ( groups?.size() > 0 )
+            {
+                   def snapShot = PointsSnapShot.takeSnapShot(project,groups,new Date())
+                   snapShot.save()
+                   println "Snapshot saved."
+                
+                if(!exportDir) return
+                    
+                   def exportDate = new Date()
+                   def dateTimeString = exportDate.toString().replace(" ","_").replace(":","_")
+                   def fileName = exportDir + "${project.name.replace(" ", "_")}_${dateTimeString}.xml"
+                   println "Writing to file: " + fileName
+                   def file = new File(fileName)
+                
+                def findAllForProject = { domain -> domain.findAllByProject(project) } 
+                def xml = UtilXml.exportToXmlString(project,
+                                                    findAllForProject(ItemGroup), 
+                                                    findAllForProject(Item), 
+                                                    findAllForProject(Iteration), 
+                                                    findAllForProject(PointsSnapShot),
+                                                    exportDate)
+                   file.write(xml)
+           }
+           else
+           {
+                 println "No groups are present"
+           }
+        }    
     }
     
-    def deleteWholeGroup(def group)		
-	{		
-		PointsSnapShot.findAllByProject(group.project).each{ snapShot ->		
-			def pointsForGroup = snapShot.getPointsForGroup(group)		
-			if (pointsForGroup) {		
-	   		    pointsForGroup.snapShot.removeFromPointsForGroups(pointsForGroup)		
-				pointsForGroup.delete()
-			}		
-		}		
-	}	
+    def deleteWholeGroup(def group)        
+    {        
+        PointsSnapShot.findAllByProject(group.project).each{ snapShot ->        
+            def pointsForGroup = snapShot.getPointsForGroup(group)        
+            if (pointsForGroup) {        
+                   pointsForGroup.snapShot.removeFromPointsForGroups(pointsForGroup)        
+                pointsForGroup.delete()
+            }        
+        }        
+    }    
 }
