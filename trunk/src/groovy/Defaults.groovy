@@ -149,7 +149,9 @@ class Defaults {
 		def projects = []
 		nr.times{
 			def name = "Project-${it}"
-			projects << new Project(name:"${name}" ) 
+			def project = new Project(name:"${name}" )
+			project.id = it 
+			projects << project
 		}
 		return projects 
 	} 
