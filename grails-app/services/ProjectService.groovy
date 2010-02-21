@@ -46,4 +46,26 @@ class ProjectService {
         
         return projectCheckFailed
 	}
+	
+	def exportToXmlString(def project, def docVersion = UtilXml.currentDocVersion)
+	{
+		def findAllForProject = { domain -> domain.findAllByProject(project) }
+				 
+    	return UtilXml.exportToXmlString(project,
+    			  						 findAllForProject(ItemGroup), 
+    	                                 findAllForProject(Item), 
+    	                                 findAllForProject(Iteration), 
+    	                                 findAllForProject(PointsSnapShot),
+    	                                 new Date(), docVersion )
+	
+	}
+	
+	
+	def callRandom(def nr)
+	{
+		def list = []
+		nr.times { list << it }
+		return Util.random(list)
+	}		
+		 
 }

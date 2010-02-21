@@ -47,7 +47,7 @@ class IterationServiceTests extends GrailsUnitTestCase {
 		
 		mockDomain(Iteration, iters)
 		
-		def groups = Defaults.getGroups(1,[project])
+		def groups = Defaults.getGroups(1,project)
 		mockDomain(ItemGroup, groups)		
 		def itemsUnfinished = Defaults.getItems(3,groups, project, 10)
 		def itemsFinished = Defaults.getItems(4, groups, project, 100)

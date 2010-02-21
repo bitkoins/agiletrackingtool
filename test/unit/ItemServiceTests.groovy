@@ -5,7 +5,6 @@ class ItemServiceTests extends GrailsUnitTestCase {
 	def nr 
 	
 	def project 
-	def projects
 	def groups
 	def items
 
@@ -15,9 +14,8 @@ class ItemServiceTests extends GrailsUnitTestCase {
         itemService.itemGroupService = new ItemGroupService()
         nr = 0
         
-        projects = Defaults.getProjects(1)
-		project = projects[0]
-		groups = Defaults.getGroups(2,projects)
+        project = Defaults.getProjects(1)[0]
+		groups = Defaults.getGroups(2,project)
 		mockDomain(ItemGroup, groups)
 		items = Defaults.getItems(5,groups,project, 123)
 		mockDomain(Item, items)

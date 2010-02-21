@@ -21,7 +21,7 @@ class ItemGroupServiceTests extends GrailsUnitTestCase {
         project = Defaults.getProjects(1)[0]
     	mockDomain(Project, [project] )
     	
-        groups = Defaults.getGroups(2,[project])
+        groups = Defaults.getGroups(2,project)
         (groupA, groupB) = groups
 		mockDomain(ItemGroup, groups)
 		

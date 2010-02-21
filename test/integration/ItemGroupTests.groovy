@@ -28,7 +28,7 @@ class ItemGroupTests extends GroovyTestCase {
 	void setUp()
 	{
 		project = Defaults.getProjects(1)[0]
-		group = Defaults.getGroups(1,[project])[0]
+		group = Defaults.getGroups(1,project)[0]
 		items = Defaults.getItems(5,[group],project)
 	}
 	
@@ -48,7 +48,7 @@ class ItemGroupTests extends GroovyTestCase {
     void testAddingAndDeletingItem()
     {
     	def item = items[0]
-    	def otherGroup = Defaults.getGroups(1,[project])[0]
+    	def otherGroup = Defaults.getGroups(1,project)[0]
     	otherGroup.id = group.id + 1
     	
     	otherGroup.addItem(item)
@@ -88,8 +88,9 @@ class ItemGroupTests extends GroovyTestCase {
     void testFindByProject()
     {
     	def projectA = Defaults.getProjects(1)[0]
-    	def groupsA = Defaults.getGroups(2,[projectA])
-    	def groupsB = Defaults.getGroups(3,Defaults.getProjects(3))
+    	
+    	def groupsA = Defaults.getGroups(2,projectA)
+    	def groupsB = Defaults.getGroups(3, Defaults.getProjects(1)[0])
     	
     	def groups = groupsA + groupsB    	
     	groups.each{ it.project.save(); it.save() }
@@ -104,8 +105,8 @@ class ItemGroupTests extends GroovyTestCase {
     void testSavingGroupCascadesToItem()
     {
     	project.save()
-    	def groupA = Defaults.getGroups(1,[project])[0]
-    	def groupB = Defaults.getGroups(1,[project])[0]
+    	def groupA = Defaults.getGroups(1,project)[0]
+    	def groupB = Defaults.getGroups(1,project)[0]
     	[groupA,groupB]*.save()
     	
     	def itemA = Defaults.getItems(1,[groupA],project)[0]
