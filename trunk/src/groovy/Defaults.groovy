@@ -38,7 +38,7 @@ class Defaults {
 		return ret
 	}
 	
-	static List<ItemGroup> getGroups(Integer nr, def projects = getProjects(1) )
+	static List<ItemGroup> getGroups(Integer nr, def project = getProjects(1)[0] )
 	{
 		List<ItemGroup> ret = []
 		nr.times {
@@ -46,7 +46,7 @@ class Defaults {
 			group.name = "Group-${it}"
 			group.id = it + 1
 			group.items = []
-			group.project = Util.random(projects)
+			group.project = project
 			
 			ret << group
 		}
@@ -54,7 +54,7 @@ class Defaults {
 		return ret
 	}
 	
-	static List<Item> getItems(Integer nr, List<ItemGroup> groups, def project = getProjects(1)[0], def maxUid = null)
+	static List<Item> getItems(Integer nr, List<ItemGroup> groups, def project = getProjects(1)[0], def maxUid = 0)
 	{
 		maxUid = maxUid ? maxUid : Item.maxUid()				
 		List<Item> ret = []
@@ -154,5 +154,18 @@ class Defaults {
 			projects << project
 		}
 		return projects 
+	}
+	
+	static def getProjectDataSet(def mockDomainClosure, def projectId = 1, def itemMaxUid = 0)
+	{	
+		def now = new Date()
+	
+		def project = Defaults.getProjects(1)[0]
+		def groups = Defaults.getGroups(Util.random(3..8), project)
+		def items = Defaults.getItems(Util.random(5..10), groups, project, itemMaxUid )
+		def iterations = Defaults.getIterations(Util.random(2..5), project)
+		def snapShots = Defaults.getSnapShots(groups, now-10, now-5, project) 
+		
+		return [project, groups, items, iterations, snapShots] 
 	} 
 }

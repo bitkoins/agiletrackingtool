@@ -24,19 +24,18 @@ class IterationTests extends GroovyTestCase {
 	Iteration iter
 	def items
 	def groups
-	def projects 
+	 
 	def project
 	
 	void setUp() {
-		projects = Defaults.getProjects(1)
-		projects*.save()
-		project = projects[0]
+		project = Defaults.getProjects(1)[0]
+		project.save()
 	
 		iter = Defaults.getIterations(1,project)[0]
 		iter.endTime = iter.startTime + 10
 		iter.save()
 			
-		groups = Defaults.getGroups(5,projects)
+		groups = Defaults.getGroups(5,project)
     	groups*.save()
     	items = Defaults.getItems(5,groups,project)
     	items*.save()    		
