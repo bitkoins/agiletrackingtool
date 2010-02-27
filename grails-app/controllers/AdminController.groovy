@@ -20,6 +20,7 @@ along with Agile Tracking Tool.  If not, see <http://www.gnu.org/licenses/>.
 ------------------------------------------------------------------------------*/
 
 class AdminController {
+	def projectService
 	
 	static navigation = [
 		group:'tags', 
@@ -35,18 +36,11 @@ class AdminController {
     			redirect(controller:'project',action:'list')
     			return
     		}
+    		
+    		def docVersion = params.docVersion ? params.docVersion : UtilXml.currentDocVersion
+    		def xmlString = projectService.exportToXmlString(session.project)
     
-			def docVersion = params.docVersion ? params.docVersion : UtilXml.currentDocVersion
-			
-			def findAllForProject = { domain -> domain.findAllByProject(session.project) } 
-			
-    		def xml = UtilXml.exportToXmlString(session.project,
-    											findAllForProject(ItemGroup), 
-    		                                    findAllForProject(Item), 
-    		                                    findAllForProject(Iteration), 
-    		                                    findAllForProject(PointsSnapShot),
-    		                                    new Date(), docVersion )
-    		render(contentType: "text/xml", text:xml ) 
+    		render(contentType: "text/xml", text:xmlString ) 
     }
     		
     def importFile = {
@@ -73,7 +67,7 @@ class AdminController {
     			def project = new Project(name:"Example project ${projectId}")
     			project.save()
     
-    			def groups = Defaults.getGroups(5,[project])
+    			def groups = Defaults.getGroups(5,project)
     			groups*.save()
     			def items = Defaults.getItems(25,groups,project)
     			items*.save()

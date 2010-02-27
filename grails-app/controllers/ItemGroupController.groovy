@@ -41,7 +41,7 @@ class ItemGroupController {
 	
 	def edit = {
 		def group = ItemGroup.get(params.id)
-		flash.projectCheckFailed = projectService.executeWhenProjectIsCorrect(session.project, group)
+		flash.projectCheckPassed = projectService.executeWhenProjectIsCorrect(session.project, group)
 		return [group:group]
 	}
 	
@@ -50,7 +50,7 @@ class ItemGroupController {
 		def group = isNew ? new ItemGroup(project:session.project) : ItemGroup.get(params.id) 
 		group.name = params.name
 		
-		flash.projectCheckFailed = projectService.executeWhenProjectIsCorrect(session.project, group, {group.save()} )
+		flash.projectCheckPassed = projectService.executeWhenProjectIsCorrect(session.project, group, {group.save()} )
 			
 		redirect(controller:'item',action:'backlog')
 	}
@@ -58,7 +58,7 @@ class ItemGroupController {
 	def delete = { 
 		def group = ItemGroup.get(Integer.parseInt(params.id))
 		
-		flash.projectCheckFailed = projectService.executeWhenProjectIsCorrect(session.project, group,	
+		flash.projectCheckPassed = projectService.executeWhenProjectIsCorrect(session.project, group,	
 		        {  pointsSnapShotService.deleteWholeGroup(group)
 			       itemGroupService.deleteWholeGroup(group) } )
 		

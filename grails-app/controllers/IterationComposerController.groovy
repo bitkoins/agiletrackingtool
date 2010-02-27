@@ -31,7 +31,7 @@ class IterationComposerController {
 			return			
 		}
 		
-		flash.projectCheckFailed = projectService.executeWhenProjectIsCorrect(session.project,  iter)
+		flash.projectCheckPassed = projectService.executeWhenProjectIsCorrect(session.project,  iter)
 		
 		session.iterId = iter?.id
 				
@@ -51,7 +51,7 @@ class IterationComposerController {
 			
 			def item = Item.get(params.id)
 			
-			flash.projectCheckFailed = projectService.executeWhenProjectIsCorrect(session.project,  item, 
+			flash.projectCheckPassed = projectService.executeWhenProjectIsCorrect(session.project,  item, 
 			 	 	                                                                {  iter.addItem(item) } ) 		
 			
 			render(template:'iterationOverview',model:[iteration:iter])
@@ -61,7 +61,7 @@ class IterationComposerController {
 			def iter = Iteration.get(session.iterId)
 			
 			def item = Item.get(params.id)
-			flash.projectCheckFailed = projectService.executeWhenProjectIsCorrect(session.project,  item,
+			flash.projectCheckPassed = projectService.executeWhenProjectIsCorrect(session.project,  item,
 																				 { iter.deleteItem(item.id) } ) 
 			
 			render(template:'iterationOverview',model:[iteration:iter])

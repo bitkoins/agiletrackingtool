@@ -21,7 +21,6 @@ along with Agile Tracking Tool.  If not, see <http://www.gnu.org/licenses/>.
 
 class ProjectService {
     static transactional = true
-    static scope = "session"
     
     def itemGroupService
     def iterationService
@@ -35,16 +34,16 @@ class ProjectService {
     
     def executeWhenProjectIsCorrect(def project, def objectForProjectCheck, def closureWhenProjectIsValid = {})
 	{
-		def projectCheckFailed = false
+		def projectCheckPassed = false
 		 
         if( project && objectForProjectCheck && 
-            objectForProjectCheck.project.id != project.id ) {
-        	projectCheckFailed = true
+            objectForProjectCheck.project.id == project.id ) {
+        	projectCheckPassed = true
         }
         
-        if(!projectCheckFailed) closureWhenProjectIsValid()
+        if(projectCheckPassed) closureWhenProjectIsValid()
         
-        return projectCheckFailed
+        return projectCheckPassed
 	}
 	
 	def exportToXmlString(def project, def docVersion = UtilXml.currentDocVersion)

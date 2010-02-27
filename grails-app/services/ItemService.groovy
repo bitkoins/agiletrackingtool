@@ -21,7 +21,6 @@ along with Agile Tracking Tool.  If not, see <http://www.gnu.org/licenses/>.
 
 class ItemService {
     static transactional = true
-	static scope = "session"
 	    
     def itemGroupService
 

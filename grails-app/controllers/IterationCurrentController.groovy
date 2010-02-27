@@ -42,7 +42,7 @@ class IterationCurrentController {
 			return
 		}
 
-		flash.projectCheckFailed = projectService.executeWhenProjectIsCorrect(session.project, iteration )
+		flash.projectCheckPassed = projectService.executeWhenProjectIsCorrect(session.project, iteration )
 		
 		def mlist = []
 		ItemStatus.each{ status -> mlist += iteration.items?.findAll{ it.status == status }.sort{ it.uid } }
@@ -88,7 +88,7 @@ class IterationCurrentController {
 			item.subItems.each{ it.status = ItemStatus.Finished }
 		}
 		
-		flash.projectCheckFailed = projectService.executeWhenProjectIsCorrect(session.project,  item,{ item.save() })
+		flash.projectCheckPassed = projectService.executeWhenProjectIsCorrect(session.project,  item,{ item.save() })
 		render(template:'itemView',model:[item:item] )
 	}
 	
@@ -100,7 +100,7 @@ class IterationCurrentController {
 				subItem.item.status = ItemStatus.InProgress
 		}
 		
-		flash.projectCheckFailed = projectService.executeWhenProjectIsCorrect(session.project,  subItem.item,{ subItem.save() })
+		flash.projectCheckPassed = projectService.executeWhenProjectIsCorrect(session.project,  subItem.item,{ subItem.save() })
 			
 		render(template:'itemView',model:[item:subItem.item] )
 	}
@@ -115,7 +115,7 @@ class IterationCurrentController {
 		def item = Item.get(Integer.parseInt(params.id))
 		ItemParamsParser.updateItemWithParams(item,params, {param -> request.getParameterValues(param)} )
 		
-		flash.projectCheckFailed = projectService.executeWhenProjectIsCorrect(session.project,  item,{ item.save() }) 
+		flash.projectCheckPassed = projectService.executeWhenProjectIsCorrect(session.project,  item,{ item.save() }) 
 		
 		render(template:'itemView',model:[item:item])
 	}

@@ -55,7 +55,7 @@ class ProjectFilters {
         
         checkObjectForCorrectProject(controller:"*", action:"*") {
         	after = { model -> 
-        		if(flash.projectCheckFailed)
+        		if(flash.projectCheckPassed == false)
         		{
         			redirect(controller:'project',action:'list ')
             		return false

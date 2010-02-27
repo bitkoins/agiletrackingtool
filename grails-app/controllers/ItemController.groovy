@@ -53,7 +53,7 @@ class ItemController {
 	
 	def editItem = {
 		def item = Item.get(params.id)
-		flash.projectCheckFailed = projectService.executeWhenProjectIsCorrect(session.project, item)
+		flash.projectCheckPassed = projectService.executeWhenProjectIsCorrect(session.project, item)
 		render(template:'/shared/item/edit',model:[item:item])
 	}
 	
@@ -61,7 +61,7 @@ class ItemController {
 		def item = Item.get(params.id)
 		
 		ItemParamsParser.updateItemWithParams(item,params, {param -> request.getParameterValues(param)} )
-		flash.projectCheckFailed = projectService.executeWhenProjectIsCorrect(session.project, item,
+		flash.projectCheckPassed = projectService.executeWhenProjectIsCorrect(session.project, item,
 		                                                                     { item.save() }) 
 
 		render(template:'/shared/item/show',model:[item:item] )
@@ -69,7 +69,7 @@ class ItemController {
 	
 	def deleteItem = {
 		def item = Item.get(params.id)
-		flash.projectCheckFailed = projectService.executeWhenProjectIsCorrect(session.project, item,
+		flash.projectCheckPassed = projectService.executeWhenProjectIsCorrect(session.project, item,
 																	{ itemService.deleteItem(item) } )
 		render(text:"")
 	}
@@ -77,7 +77,7 @@ class ItemController {
 	def addItemToGroup = {
 		def group = ItemGroup.get(params.id)
 		def item = new Item(session.project,group)
-		flash.projectCheckFailed = projectService.executeWhenProjectIsCorrect(session.project, group,
+		flash.projectCheckPassed = projectService.executeWhenProjectIsCorrect(session.project, group,
 																	{ group.addItem(item); group.save() })
 		
 	    def newItemId = Integer.parseInt(params.newItemId) + 1
