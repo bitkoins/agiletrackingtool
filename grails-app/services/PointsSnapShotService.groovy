@@ -19,7 +19,6 @@ You should have received a copy of the GNU General Public License
 along with Agile Tracking Tool.  If not, see <http://www.gnu.org/licenses/>.
 ------------------------------------------------------------------------------*/
 class PointsSnapShotService {
-	def projectService
     static transactional = true
         
     def deleteWholeGroup(def group)        
@@ -27,8 +26,9 @@ class PointsSnapShotService {
         PointsSnapShot.findAllByProject(group.project).each{ snapShot ->        
             def pointsForGroup = snapShot.getPointsForGroup(group)        
             if (pointsForGroup) {        
-                   pointsForGroup.snapShot.removeFromPointsForGroups(pointsForGroup)        
+                pointsForGroup.snapShot.removeFromPointsForGroups(pointsForGroup)        
                 pointsForGroup.delete()
+                println "Deleted the group!"
             }        
         }        
     }
