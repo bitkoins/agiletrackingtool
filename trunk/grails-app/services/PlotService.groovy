@@ -21,7 +21,6 @@ along with Agile Tracking Tool.  If not, see <http://www.gnu.org/licenses/>.
 
 class PlotService {
     static transactional = true
-    static scope = "session"
         
     def createIterationHistoryPlot(def iterations)
     {
@@ -189,5 +188,4 @@ class PlotService {
 		   		
 		return plotData
    }
-	
 }

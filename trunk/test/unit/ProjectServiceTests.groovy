@@ -20,7 +20,7 @@ class ProjectServiceTests extends GrailsUnitTestCase {
         
         def objectToCheck = new Expando(project: projectIsCorrect ? project : otherProject)
         
-        assertEquals !projectIsCorrect, projectService.executeWhenProjectIsCorrect(project, objectToCheck, { called = true; } )
+        assertEquals projectIsCorrect, projectService.executeWhenProjectIsCorrect(project, objectToCheck, { called = true; } )
         assertEquals projectIsCorrect, called
     }
     
@@ -32,6 +32,15 @@ class ProjectServiceTests extends GrailsUnitTestCase {
     void testDontExecuteWhenProjectIsNotCorrect()
     {
         performTestExecutionWithProjectCheck(false)
+    }
+    
+    void testDontExecuteWhenOneIsNull()
+    {
+    	def called = []
+    	def project = Defaults.getProjects(1)[0]
+    	assertTrue !projectService.executeWhenProjectIsCorrect(null, null, { called << true } )
+    	assertTrue !projectService.executeWhenProjectIsCorrect(project, null, { called << true } )
+    	assertEquals 0, called.size()
     }
     
     void testExportProjectToXmlString()

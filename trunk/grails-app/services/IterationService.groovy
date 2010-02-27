@@ -21,7 +21,6 @@ along with Agile Tracking Tool.  If not, see <http://www.gnu.org/licenses/>.
 
 class IterationService {
     static transactional = true
-    static scope = "session"
 
 	def unloadItemsAndDelete(def iteration)
 	{

@@ -61,7 +61,7 @@ class ProjectController {
 		
 		def objectThatHoldsProject = new Expando(project:project)
 		
-		flash.projectCheckFailed = projectService.executeWhenProjectIsCorrect(session.project, objectThatHoldsProject, deleteClosure )
+		flash.projectCheckPassed = projectService.executeWhenProjectIsCorrect(session.project, objectThatHoldsProject, deleteClosure )
 		
 		redirect(action:'list')
 	}

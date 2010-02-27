@@ -22,6 +22,7 @@ along with Agile Tracking Tool.  If not, see <http://www.gnu.org/licenses/>.
 import org.codehaus.groovy.grails.commons.*
 
 class PointsSnapShotService {
+	def projectService
     static transactional = true
         
     def exportDir = ConfigurationHolder.config.agile.exportDirectory
@@ -30,28 +31,18 @@ class PointsSnapShotService {
     
         Project.list().each{ project ->
             def groups = ItemGroup.findAllByProject(project)
-               if ( groups?.size() > 0 )
+            if ( groups?.size() > 0 )
             {
                    def snapShot = PointsSnapShot.takeSnapShot(project,groups,new Date())
                    snapShot.save()
                    println "Snapshot saved."
                 
-                if(!exportDir) return
-                    
-                   def exportDate = new Date()
-                   def dateTimeString = exportDate.toString().replace(" ","_").replace(":","_")
+                   if(!exportDir) return
+                   def dateTimeString = (new Date()).toString().replace(" ","_").replace(":","_")
                    def fileName = exportDir + "${project.name.replace(" ", "_")}_${dateTimeString}.xml"
-                   println "Writing to file: " + fileName
                    def file = new File(fileName)
-                
-                def findAllForProject = { domain -> domain.findAllByProject(project) } 
-                def xml = UtilXml.exportToXmlString(project,
-                                                    findAllForProject(ItemGroup), 
-                                                    findAllForProject(Item), 
-                                                    findAllForProject(Iteration), 
-                                                    findAllForProject(PointsSnapShot),
-                                                    exportDate)
-                   file.write(xml)
+                    
+                   file.write(projectService.exportToXmlString(project))
            }
            else
            {

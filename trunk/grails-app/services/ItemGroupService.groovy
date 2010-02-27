@@ -21,7 +21,6 @@ along with Agile Tracking Tool.  If not, see <http://www.gnu.org/licenses/>.
 
 class ItemGroupService {
     static transactional = true
-    static scope = "session"
 
     def transformToItemsByGroup(def groups, def items)
     {

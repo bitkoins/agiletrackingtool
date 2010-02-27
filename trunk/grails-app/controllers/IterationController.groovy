@@ -60,7 +60,7 @@ class IterationController {
 	
 	def edit = {
 		def iteration = Iteration.get(params.id)
-		flash.projectCheckFailed = projectService.executeWhenProjectIsCorrect(session.project,  iteration )
+		flash.projectCheckPassed = projectService.executeWhenProjectIsCorrect(session.project,  iteration )
 		return [iteration:iteration]
 	}	
 	
@@ -73,7 +73,7 @@ class IterationController {
 		iteration.endTime = params.startTime + Integer.parseInt(params.duration)
 		iteration.status = IterationStatus.valueOf(params.status)
 	
-		flash.projectCheckFailed = projectService.executeWhenProjectIsCorrect(session.project, iteration, { iteration.save() } )
+		flash.projectCheckPassed = projectService.executeWhenProjectIsCorrect(session.project, iteration, { iteration.save() } )
 		
 		redirect(action:'list')
 	}
@@ -81,7 +81,7 @@ class IterationController {
 	def delete = {
 			def iteration = Iteration.get(params.id)
 			
-			flash.projectCheckFailed = projectService.executeWhenProjectIsCorrect(session.project, iteration, 
+			flash.projectCheckPassed = projectService.executeWhenProjectIsCorrect(session.project, iteration, 
 			      { iterationService.unloadItemsAndDelete(iteration) } )
 			
 			redirect(action:"list")
