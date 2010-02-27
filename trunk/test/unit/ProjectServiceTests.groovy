@@ -1,4 +1,5 @@
 import grails.test.*
+import org.codehaus.groovy.grails.commons.*
 
 class ProjectServiceTests extends GrailsUnitTestCase {
     def projectService
@@ -102,5 +103,19 @@ class ProjectServiceTests extends GrailsUnitTestCase {
         
         [iterationServiceControl, iterationServiceControl]*.verify()
         assertEquals 0, Project.count()
+    }
+    
+    void testFileNameCreation()
+    {
+    	def exportDir = "/tmp/hello world/"
+    	mockConfig "agile.exportDirectory = \"${exportDir}\""
+    	def fileName = projectService.getProjectExportFileName("a word", "4:12")
+    	assertEquals exportDir + "a_word" + "_4_12" + ".xml", fileName
+    }
+    
+    void testFileNameCreationWithNoConfig()
+    {
+    	def exportDir = "/tmp/hello world/"
+    	assertNull projectService.getProjectExportFileName("a word", "4:12")
     }
 }

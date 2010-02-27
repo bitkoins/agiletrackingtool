@@ -18,6 +18,7 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with Agile Tracking Tool.  If not, see <http://www.gnu.org/licenses/>.
 ------------------------------------------------------------------------------*/
+import org.codehaus.groovy.grails.commons.*
 
 class ProjectService {
     static transactional = true
@@ -56,15 +57,12 @@ class ProjectService {
     	                                 findAllForProject(Iteration), 
     	                                 findAllForProject(PointsSnapShot),
     	                                 new Date(), docVersion )
-	
 	}
-	
-	
-	def callRandom(def nr)
+		
+	def getProjectExportFileName(def projectName, def date)
 	{
-		def list = []
-		nr.times { list << it }
-		return Util.random(list)
-	}		
-		 
+		def exportDir = ConfigurationHolder.config?.agile?.exportDirectory
+			def dateTimeString = date.toString().replace(" ","_").replace(":","_")
+    	return exportDir ? exportDir + "${projectName.replace(" ", "_")}_${dateTimeString}.xml" : null
+	}
 }

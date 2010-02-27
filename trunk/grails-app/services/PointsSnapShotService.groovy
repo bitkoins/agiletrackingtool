@@ -18,39 +18,10 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with Agile Tracking Tool.  If not, see <http://www.gnu.org/licenses/>.
 ------------------------------------------------------------------------------*/
-
-import org.codehaus.groovy.grails.commons.*
-
 class PointsSnapShotService {
 	def projectService
     static transactional = true
         
-    def exportDir = ConfigurationHolder.config.agile.exportDirectory
-
-    def performDailyJob() {
-    
-        Project.list().each{ project ->
-            def groups = ItemGroup.findAllByProject(project)
-            if ( groups?.size() > 0 )
-            {
-                   def snapShot = PointsSnapShot.takeSnapShot(project,groups,new Date())
-                   snapShot.save()
-                   println "Snapshot saved."
-                
-                   if(!exportDir) return
-                   def dateTimeString = (new Date()).toString().replace(" ","_").replace(":","_")
-                   def fileName = exportDir + "${project.name.replace(" ", "_")}_${dateTimeString}.xml"
-                   def file = new File(fileName)
-                    
-                   file.write(projectService.exportToXmlString(project))
-           }
-           else
-           {
-                 println "No groups are present"
-           }
-        }    
-    }
-    
     def deleteWholeGroup(def group)        
     {        
         PointsSnapShot.findAllByProject(group.project).each{ snapShot ->        
@@ -60,5 +31,5 @@ class PointsSnapShotService {
                 pointsForGroup.delete()
             }        
         }        
-    }    
+    }
 }
