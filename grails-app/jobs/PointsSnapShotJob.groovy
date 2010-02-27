@@ -23,20 +23,26 @@ class PointsSnapShotJob {
 	def cronExpression = "0 15 18 ? * MON-FRI"  // Run every working day at 18.15
 	//def timeout = 5*1000l // execute job once in n seconds
 
-	def pointsSnapShotService 
+	def projectService  
 	
     def execute() {
-		println "Time to create a snapshot"
 		try
-		{	    
-			pointsSnapShotService.performDailyJob()
+		{	
+  		    Project.list().each{ project ->
+  		    	 def now = new Date()
+  		    	 PointsSnapShot.takeSnapShot(project,now).save()
+			     def fileName = projectService.getProjectExportFileName(project.name, now)
+			  	 if(fileName) { 
+			      	def file = new File(fileName)
+			      	file.write( projectService.exportToXmlString(project) )
+			     }
+			 }
 		}
 		catch(Exception e)
 		{
 			println "Exception occured when taking snapShot: " + e
 			println "Exception ignored."
 		}	
-		println "Done taking snapShot"
     }
 }
 

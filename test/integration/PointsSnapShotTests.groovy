@@ -59,7 +59,8 @@ class PointsSnapShotTests extends GroovyTestCase {
 	
 	void takeSnapShot()
 	{
-		snapShot = PointsSnapShot.takeSnapShot(project,groups,this.date)
+		saveInstances()
+		snapShot = PointsSnapShot.takeSnapShot(project, this.date)
 	}
 	
 	void testDateIsCorrect() 
@@ -109,7 +110,7 @@ class PointsSnapShotTests extends GroovyTestCase {
         def snapShots = []
         10.times{
             def ps, pointsForGroupList
-    		ps = PointsSnapShot.takeSnapShot(project,groups,nowDate - it)
+    		ps = PointsSnapShot.takeSnapShot(project,nowDate - it)
     		snapShots << ps
         }
         

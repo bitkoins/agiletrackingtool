@@ -40,22 +40,6 @@ class PointsSnapShot
 		overView = new PointsOverView()
 		pointsForGroups = []
 	}	
-	
-	static def takeSnapShot(def project, def groups, def date) 
-	{
-		def ret = new PointsSnapShot(project, date)
-		def allItems = []
-		groups.each{ group -> group.items.each{ allItems << it } }
-		ret.overView = PointsOverView.createOverView(allItems)
-		
-		groups.each{ group ->
-			def pointsForGroup = new PointsForGroup(group, ret)
-			pointsForGroup.overView = PointsOverView.createOverView(group.items)
-			ret.pointsForGroups << pointsForGroup
-		}
-		
-		return ret
-	}
 		
 	def getPointsForGroup(def group)
 	{
@@ -88,5 +72,22 @@ class PointsSnapShot
 			it.save()
 			it.snapShot = this
 		}
+	}
+	
+	static def takeSnapShot(def project, def date) 
+	{
+		def ret = new PointsSnapShot(project, date)
+		def groups = ItemGroup.findAllByProject(project)
+		def allItems = []
+		groups.each{ group -> group.items.each{ allItems << it } }
+		ret.overView = PointsOverView.createOverView(allItems)
+		
+		groups.each{ group ->
+			def pointsForGroup = new PointsForGroup(group, ret)
+			pointsForGroup.overView = PointsOverView.createOverView(group.items)
+			ret.pointsForGroups << pointsForGroup
+		}
+		
+		return ret
 	}
 }

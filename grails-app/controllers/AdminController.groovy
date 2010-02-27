@@ -95,7 +95,7 @@ class AdminController {
     						iter.addItem(item)
     					}
     				
-    					def snapShot = PointsSnapShot.takeSnapShot(project, groups,iter.startTime+itemIndex)    	
+    					def snapShot = PointsSnapShot.takeSnapShot(project, iter.startTime+itemIndex)    	
     					snapShot.save()
     				}
     			}
