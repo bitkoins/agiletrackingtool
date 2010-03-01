@@ -21,8 +21,6 @@ along with Agile Tracking Tool.  If not, see <http://www.gnu.org/licenses/>.
 package org.agiletracking
 
 class ProjectController {
-	def scaffold = Project
-	
 	def projectService
 	def authenticateService
 	 
