@@ -18,6 +18,7 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with Agile Tracking Tool.  If not, see <http://www.gnu.org/licenses/>.
 ------------------------------------------------------------------------------*/
+import org.agiletracking.*
 
 class ProjectFilters {
 	def cookieService
@@ -35,7 +36,7 @@ class ProjectFilters {
         	}
         }
         
-        useProjectFromCookie(controller:"(project|admin)", action:"*",invert:true) {
+        useProjectFromCookie(controller:"(project|admin|login|logout|register)", action:"*",invert:true) {
             
             before = {
             	if(controllerName && !session.project) {

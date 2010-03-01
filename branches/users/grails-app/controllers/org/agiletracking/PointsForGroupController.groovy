@@ -18,30 +18,8 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with Agile Tracking Tool.  If not, see <http://www.gnu.org/licenses/>.
 ------------------------------------------------------------------------------*/
+package org.agiletracking
 
-import org.agiletracking.*
-
-class BootStrap {
-	
-     def authenticateService
-
-     def init = { servletContext ->
-	def md5pass = authenticateService.passwordEncoder("agile")
-	def userAgile = new User(username:"agile",userRealName:"agile", passwd:md5pass, 
-                            enabled:true,email:"agiletracking@gmail.com",
-                            emailShow:true,description:"None")
-
-        md5pass = authenticateService.passwordEncoder("scrum")
-	def userScrum = new User(username:"scrum",userRealName:"scrum", passwd:md5pass, 
-                            enabled:true,email:"agiletracking@gmail.com",
-                            emailShow:true,description:"None")
-	def userRole = new Role(description:"userRole", authority:"ROLE_USER")
-        userRole.addToPeople(userAgile)
-        userRole.addToPeople(userScrum)
- 	userRole.save()
-     }
-     
-     def destroy = {
-    		 
-     }
-} 
+class PointsForGroupController {
+    def scaffold = PointsForGroup
+}

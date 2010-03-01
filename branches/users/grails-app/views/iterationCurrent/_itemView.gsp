@@ -7,7 +7,7 @@ This file is part of Agile Tracking Tool.
 
 Agile Tracking Tool is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
-the Free Software Foundation, either version 3 of the License, or
+the Free Software Foundation, either version 3 of the License, or:
 (at your option) any later version.
 
 Agile Tracking Tool is distributed in the hope that it will be useful,
@@ -33,14 +33,14 @@ along with Agile Tracking Tool.  If not, see <http://www.gnu.org/licenses/>.
 				
 				
 			<td width ="50">	
-				<g:if test="${item.status != ItemStatus.InProgress}">
-					<g:remoteLink action="itemInProgress" id="${item.id}" update="item${item.id}">${item.status == ItemStatus.Finished ? 'Back' : 'Set'} 'In Progress'</g:remoteLink>
+				<g:if test="${item.status != org.agiletracking.ItemStatus.InProgress}">
+					<g:remoteLink action="itemInProgress" id="${item.id}" update="item${item.id}">${item.status == org.agiletracking.ItemStatus.Finished ? 'Back' : 'Set'} 'In Progress'</g:remoteLink>
 				</g:if>
 			</td>
 			
-		<g:if test="${item.status != ItemStatus.Finished}">		
+		<g:if test="${item.status != org.agiletracking.ItemStatus.Finished}">		
 			<td width ="50">			
-				<g:if test="${ item.status != ItemStatus.Finished && item.status != ItemStatus.Request}">
+				<g:if test="${ item.status != org.agiletracking.ItemStatus.Finished && item.status != org.agiletracking.ItemStatus.Request}">
 					<gui:toolTip text="Done: ${item.hasCriteria() ? item.criteria : ' ? '}">
    						<g:remoteLink action="itemDone" id="${item.id}" update="item${item.id}">Set 'Finished'</g:remoteLink>
 					</gui:toolTip>
@@ -48,7 +48,7 @@ along with Agile Tracking Tool.  If not, see <http://www.gnu.org/licenses/>.
 			</td>	
 			
 			<td width ="50">
-			 	<g:if test="${item.status != ItemStatus.Blocking}">	
+			 	<g:if test="${item.status != org.agiletracking.ItemStatus.Blocking}">	
 			 		<g:remoteLink action="itemBlocking" id="${item.id}" update="item${item.id}">Set 'Blocking'</g:remoteLink>
 			 	</g:if>	 		
 			</td>
@@ -76,7 +76,7 @@ along with Agile Tracking Tool.  If not, see <http://www.gnu.org/licenses/>.
 			<td>${subItem.description}</td>
 			<td width="20">${subItem.points}</td>
 			
-			<g:if test="${subItem.status != ItemStatus.Finished}">	
+			<g:if test="${subItem.status != org.agiletracking.ItemStatus.Finished}">	
 					<td width="60">
 			 		<g:remoteLink action="subItemFinished" id="${subItem.id}" update="item${item.id}">Set Finished</g:remoteLink>
 			 		</td>

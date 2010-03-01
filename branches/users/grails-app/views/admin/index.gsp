@@ -37,7 +37,7 @@ along with Agile Tracking Tool.  If not, see <http://www.gnu.org/licenses/>.
 		        <li>
 		        	<g:link style=";"  action="exportFile">Export all data to xml</g:link>
 		        	<ul>
-		        	<g:each var="docVersion" in="${UtilXml.supportedVersions}">
+		        	<g:each var="docVersion" in="${org.agiletracking.UtilXml.supportedVersions}">
 		        		<li><g:link action="exportFile" params="['docVersion':docVersion]">version ${docVersion}</g:link></li>
 		        	</g:each>
 		        	</ul>

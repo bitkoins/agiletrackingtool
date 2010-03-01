@@ -18,30 +18,30 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with Agile Tracking Tool.  If not, see <http://www.gnu.org/licenses/>.
 ------------------------------------------------------------------------------*/
+package org.agiletracking
 
-import org.agiletracking.*
+class ItemGroupService {
+    static transactional = true
 
-class BootStrap {
-	
-     def authenticateService
-
-     def init = { servletContext ->
-	def md5pass = authenticateService.passwordEncoder("agile")
-	def userAgile = new User(username:"agile",userRealName:"agile", passwd:md5pass, 
-                            enabled:true,email:"agiletracking@gmail.com",
-                            emailShow:true,description:"None")
-
-        md5pass = authenticateService.passwordEncoder("scrum")
-	def userScrum = new User(username:"scrum",userRealName:"scrum", passwd:md5pass, 
-                            enabled:true,email:"agiletracking@gmail.com",
-                            emailShow:true,description:"None")
-	def userRole = new Role(description:"userRole", authority:"ROLE_USER")
-        userRole.addToPeople(userAgile)
-        userRole.addToPeople(userScrum)
- 	userRole.save()
-     }
-     
-     def destroy = {
-    		 
-     }
-} 
+    def transformToItemsByGroup(def groups, def items)
+    {
+    	def itemsByGroup = [:]
+    	groups.each{ group -> itemsByGroup[group] = [] }
+    	items.each{ item ->
+    		def foundGroup = groups.find{ item.group.id == it.id}  
+    		if(foundGroup) itemsByGroup[foundGroup] << item 
+    	}
+    	return itemsByGroup 
+    }
+    
+	def deleteWholeGroup(def group)
+	{
+		group.items.collect{it}.each{ item ->
+			item.iteration?.deleteItem(item.id)
+			item.group?.deleteItem(item.id)
+	    	item.delete()
+		}
+		
+		group.delete()
+	}
+}

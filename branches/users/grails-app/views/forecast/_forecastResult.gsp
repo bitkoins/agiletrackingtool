@@ -62,16 +62,16 @@ along with Agile Tracking Tool.  If not, see <http://www.gnu.org/licenses/>.
 	
 	<tr style="background:lightgrey">
 		<td>Total days:</td>
-		<td>${planCalculator.getWorkingDaysRangeLeft(Priority.High).min()} .. ${planCalculator.getWorkingDaysRangeLeft(Priority.High).max()}</td>
-		<td> + ${planCalculator.getWorkingDaysRangeLeft(Priority.Medium).min()} .. ${planCalculator.getWorkingDaysRangeLeft(Priority.Medium).max()}</td>
-		<td> + ${planCalculator.getWorkingDaysRangeLeft(Priority.Low).min()} .. ${planCalculator.getWorkingDaysRangeLeft(Priority.Low).max()}</td>
+		<td>${planCalculator.getWorkingDaysRangeLeft(org.agiletracking.Priority.High).min()} .. ${planCalculator.getWorkingDaysRangeLeft(org.agiletracking.Priority.High).max()}</td>
+		<td> + ${planCalculator.getWorkingDaysRangeLeft(org.agiletracking.Priority.Medium).min()} .. ${planCalculator.getWorkingDaysRangeLeft(org.agiletracking.Priority.Medium).max()}</td>
+		<td> + ${planCalculator.getWorkingDaysRangeLeft(org.agiletracking.Priority.Low).min()} .. ${planCalculator.getWorkingDaysRangeLeft(org.agiletracking.Priority.Low).max()}</td>
 	</tr>
 	
 	<tr style="background:yellow">
 		<td>Estimated date range:</td>
-		<td><g:formatDate format="dd-MMM " date="${dateByPriority[Priority.High].min()}"/> .. <g:formatDate format="dd-MMM  (yyyy)" date="${dateByPriority[Priority.High].max()}"/></td>
-		<td><g:formatDate format="dd-MMM " date="${dateByPriority[Priority.Medium].min()}"/> .. <g:formatDate format="dd-MMM  (yyyy)" date="${dateByPriority[Priority.Medium].max()}"/></td>
-		<td><g:formatDate format="dd-MMM " date="${dateByPriority[Priority.Low].min()}"/> .. <g:formatDate format="dd-MMM  (yyyy)" date="${dateByPriority[Priority.Low].max()}"/></td>
+		<td><g:formatDate format="dd-MMM " date="${dateByPriority[org.agiletracking.Priority.High].min()}"/> .. <g:formatDate format="dd-MMM  (yyyy)" date="${dateByPriority[org.agiletracking.Priority.High].max()}"/></td>
+		<td><g:formatDate format="dd-MMM " date="${dateByPriority[org.agiletracking.Priority.Medium].min()}"/> .. <g:formatDate format="dd-MMM  (yyyy)" date="${dateByPriority[org.agiletracking.Priority.Medium].max()}"/></td>
+		<td><g:formatDate format="dd-MMM " date="${dateByPriority[org.agiletracking.Priority.Low].min()}"/> .. <g:formatDate format="dd-MMM  (yyyy)" date="${dateByPriority[org.agiletracking.Priority.Low].max()}"/></td>
 	<tr>
 	
 	<tr><td></td></tr>
@@ -82,12 +82,12 @@ along with Agile Tracking Tool.  If not, see <http://www.gnu.org/licenses/>.
 		<td width="180">+ Could Haves [days]</td>
 		<td width="180">+ Nice to Haves [days]</td>
 	</tr>
-	<g:each var="group" in="${planCalculator.getGroups().collect{it}.sort{ planCalculator.getWorkingDaysLeft(it,Priority.High)}.reverse() }">
+	<g:each var="group" in="${planCalculator.getGroups().collect{it}.sort{ planCalculator.getWorkingDaysLeft(it,org.agiletracking.Priority.High)}.reverse() }">
 		<tr>
 			<td><g:link controller="item" action="backlog">${group}</g:link></td>
-			<td>${planCalculator.getWorkingDaysRangeLeft(group,Priority.High).min()} .. ${planCalculator.getWorkingDaysRangeLeft(group,Priority.High).max()}</td>
-			<td> + ${planCalculator.getWorkingDaysRangeLeft(group,Priority.Medium).min()} .. ${planCalculator.getWorkingDaysRangeLeft(group,Priority.Medium).max()}</td>
-			<td> + ${planCalculator.getWorkingDaysRangeLeft(group,Priority.Low).min()} .. ${planCalculator.getWorkingDaysRangeLeft(group,Priority.Low).max()}</td>
+			<td>${planCalculator.getWorkingDaysRangeLeft(group,org.agiletracking.Priority.High).min()} .. ${planCalculator.getWorkingDaysRangeLeft(group,org.agiletracking.Priority.High).max()}</td>
+			<td> + ${planCalculator.getWorkingDaysRangeLeft(group,org.agiletracking.Priority.Medium).min()} .. ${planCalculator.getWorkingDaysRangeLeft(group,org.agiletracking.Priority.Medium).max()}</td>
+			<td> + ${planCalculator.getWorkingDaysRangeLeft(group,org.agiletracking.Priority.Low).min()} .. ${planCalculator.getWorkingDaysRangeLeft(group,org.agiletracking.Priority.Low).max()}</td>
 		</tr>
 	</g:each>
 	

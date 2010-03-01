@@ -84,7 +84,7 @@ log4j = {
 
 //Note: exportDirectory string must end with / or \ depending on OS.
 //      Un-comment when daily updates must me enabled
-//agile.exportDirectory="/tmp/"
+agile.exportDirectory="/tmp/"
 
 
 

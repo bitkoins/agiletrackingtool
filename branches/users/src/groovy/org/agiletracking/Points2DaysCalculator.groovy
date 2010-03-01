@@ -18,30 +18,34 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with Agile Tracking Tool.  If not, see <http://www.gnu.org/licenses/>.
 ------------------------------------------------------------------------------*/
+package org.agiletracking
 
-import org.agiletracking.*
-
-class BootStrap {
+class Points2DaysCalculator
+{
+	def pointsPerDayMin
+	def pointsPerDayMax
+	def pointsUncertaintyPercentage
 	
-     def authenticateService
-
-     def init = { servletContext ->
-	def md5pass = authenticateService.passwordEncoder("agile")
-	def userAgile = new User(username:"agile",userRealName:"agile", passwd:md5pass, 
-                            enabled:true,email:"agiletracking@gmail.com",
-                            emailShow:true,description:"None")
-
-        md5pass = authenticateService.passwordEncoder("scrum")
-	def userScrum = new User(username:"scrum",userRealName:"scrum", passwd:md5pass, 
-                            enabled:true,email:"agiletracking@gmail.com",
-                            emailShow:true,description:"None")
-	def userRole = new Role(description:"userRole", authority:"ROLE_USER")
-        userRole.addToPeople(userAgile)
-        userRole.addToPeople(userScrum)
- 	userRole.save()
-     }
-     
-     def destroy = {
-    		 
-     }
-} 
+	def points2DaysRange(def points)
+	{
+		def minDays = this.pointsPerDayMin ? (points/this.pointsPerDayMax ) : 0
+		def maxDays = this.pointsPerDayMax ? (points/this.pointsPerDayMin ) : 0
+				
+		if (pointsUncertaintyPercentage > 0)
+		{
+			maxDays = maxDays*(1.0+this.pointsUncertaintyPercentage/100.0)
+		}
+		else
+		{
+			minDays = minDays*(1.0+this.pointsUncertaintyPercentage/100.0)			
+		}
+		
+		return minDays.toInteger()..maxDays.toInteger()
+	}
+	
+	def points2Days(def points)
+	{
+		def range = points2DaysRange(points)				
+		return Math.round((range.min()+range.max())/2.0).toInteger()
+	}
+}

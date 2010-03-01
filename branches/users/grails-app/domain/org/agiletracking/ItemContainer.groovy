@@ -18,30 +18,55 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with Agile Tracking Tool.  If not, see <http://www.gnu.org/licenses/>.
 ------------------------------------------------------------------------------*/
+package org.agiletracking
 
-import org.agiletracking.*
-
-class BootStrap {
+class ItemContainer {
+	static hasMany = [items:Item]
+	static fetchMode = [items:"eager"]
 	
-     def authenticateService
+	/* Cannot define project-releation in ItemContainer as for grails-1.2.0.
+	 * Therefore project relation is defined twice in Iteration and ItemGroup. 
+	 */
+					
+    ItemContainer()
+    {
+        items = []
+    }
 
-     def init = { servletContext ->
-	def md5pass = authenticateService.passwordEncoder("agile")
-	def userAgile = new User(username:"agile",userRealName:"agile", passwd:md5pass, 
-                            enabled:true,email:"agiletracking@gmail.com",
-                            emailShow:true,description:"None")
-
-        md5pass = authenticateService.passwordEncoder("scrum")
-	def userScrum = new User(username:"scrum",userRealName:"scrum", passwd:md5pass, 
-                            enabled:true,email:"agiletracking@gmail.com",
-                            emailShow:true,description:"None")
-	def userRole = new Role(description:"userRole", authority:"ROLE_USER")
-        userRole.addToPeople(userAgile)
-        userRole.addToPeople(userScrum)
- 	userRole.save()
-     }
-     
-     def destroy = {
-    		 
-     }
-} 
+	void _addItem(Item item, String belongsToFieldAsString)
+	{
+		def belongsToInstance = item[belongsToFieldAsString]
+	
+		if(belongsToInstance)
+		{
+			if ( this.id != belongsToInstance.id ) {
+				belongsToInstance.deleteItem(item?.id)
+			}
+		}
+		
+		if ( !this.items?.find{ it == item } ) {
+			this.addToItems(item)
+		}
+		
+		item[belongsToFieldAsString] = this
+	}
+	
+	
+	void deleteItem(def id)
+	{
+		if ( hasItem(id) ) {
+			def item = getItem(id)
+			this.removeFromItems(item)
+		}
+	}
+	
+	Item getItem(def id) 
+	{
+		return items.find{ it.id == id }
+	}
+	
+	boolean hasItem(def id)
+	{
+		return getItem(id) != null
+	}
+}	
