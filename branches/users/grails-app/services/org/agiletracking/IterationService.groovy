@@ -36,12 +36,12 @@ class IterationService {
 	
 	def transferUnfinishedItems(def iteractionCurrent, def iterationNext)
 	{
-		iteractionCurrent.copyUnfinishedItems(iterationNext)
+	    iteractionCurrent.copyUnfinishedItems(iterationNext)
 	    
 	    iteractionCurrent.closeIteration()
 	    iterationNext.openIteration()
 	    
 	    iterationNext.save()
-		iteractionCurrent.save()
+	    iteractionCurrent.save()
 	}
 }

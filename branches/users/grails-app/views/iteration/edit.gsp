@@ -52,7 +52,7 @@ along with Agile Tracking Tool.  If not, see <http://www.gnu.org/licenses/>.
 			
 			<tr>
 				<td>Status:</td>
-				<td><g:select name="status" from="${IterationStatus}" value="${iteration.status}"/></td>
+				<td><g:select name="status" from="${org.agiletracking.IterationStatus}" value="${iteration.status}"/></td>
 			</tr>
 			
         	</table>
