@@ -21,7 +21,6 @@ along with Agile Tracking Tool.  If not, see <http://www.gnu.org/licenses/>.
 package org.agiletracking
 
 class ItemController {
-	def scaffold = Item
 	def itemService
 	def itemGroupService
 	def projectService
@@ -40,12 +39,11 @@ class ItemController {
 	]
 	
 	def backlog = {
-			def title = "Backlog"
 			def itemsByGroup =  params.priorities ? 
 						itemService.getUnfinishedItemsGroupMap(session.project, Util.parsePriorities(params.priorities)) :
 			            itemService.getUnfinishedItemsGroupMap(session.project)
 			
-			return [itemsByGroup:itemsByGroup,title:title]
+			return [itemsByGroup:itemsByGroup]
 	}
 	
 	def showAll = {

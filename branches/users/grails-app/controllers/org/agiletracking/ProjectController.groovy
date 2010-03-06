@@ -31,12 +31,15 @@ class ProjectController {
 		action:'list' ,
 		isVisible: { authenticateService.userDomain() != null },
 		subItems: [
-			[action:'list', order:1, title:'Overview'],
+			[action:'list', order:1, title:'Select'],
 			[action:'create', order:10, title:'Create new project'],
 		] 
 	]
 	
-	def select = {		
+	def select = {	
+		def project = Project.get(params.id)
+                flash.projectCheckPassed = checkProjectForUser(project) 
+	        if(flash.projectCheckPassed) session.project = project
 		redirect(controller:'item',action:'backlog')
 	}
 	

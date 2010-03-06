@@ -46,10 +46,6 @@ along with Agile Tracking Tool.  If not, see <http://www.gnu.org/licenses/>.
     	
     	<g:render template="/shared/plots/linePlot" model="[plotData:plotData, plotSize:[540,240] "/>
 	
-		<br/>
-		<h1>Iterations:</h1>
-		<br/>
-		
 		<div class="iteration">
 		<h1>Current iteration:</h1>
 		<table border="1">

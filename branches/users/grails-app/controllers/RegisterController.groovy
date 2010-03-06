@@ -43,7 +43,7 @@ class RegisterController {
 		// get user id from session's domain class.
 		def user = authenticateService.userDomain()
 		if (user) {
-			render view: 'show', model: [person: User.get(user.id)]
+			redirect controller:'project', action:'list'
 		}
 		else {
 			redirect action: index

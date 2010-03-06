@@ -21,7 +21,7 @@ along with Agile Tracking Tool.  If not, see <http://www.gnu.org/licenses/>.
 
 <table class="status${item.status}">
 	<tr>
-		<td width="20"><g:link controller="item" action="edit" id="${item.id}">${item.uid}</g:link></td>
+		<td width="20">${item.uid}</td>
 		
 		<td>
 			<gui:toolTip text="${item.comment ? 'Comment: ' + item.comment : '	'}">

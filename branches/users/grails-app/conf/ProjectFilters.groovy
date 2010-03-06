@@ -26,34 +26,6 @@ class ProjectFilters {
 	
     def filters = {
         
-        setProjectCookie(controller:"project", action:"select") {
-        	before = {
-        		session.project = Project.get(params.id)
-        		def cookie = new javax.servlet.http.Cookie(projectIdCookieString, "${session.project?.id}")
-        		cookie.path = "/" 
-        		cookie.maxAge = 60*60*24*365  
-        		response.addCookie( cookie) 
-        	}
-        }
-        
-        useProjectFromCookie(controller:"(project|admin|login|logout|register)", action:"*",invert:true) {
-            
-            before = {
-            	if(controllerName && !session.project) {
-            		def projectId = cookieService.get(projectIdCookieString)
-            		def project = projectId ? Project.get(projectId) : null
-            		
-            		if ( project) {
-            			session.project = project
-            		}          		
-            		else {
-            			redirect(controller:'project',action:'list ')
-            			return false
-            		}	
-            	}
-            }
-        }
-        
         checkObjectForCorrectProject(controller:"*", action:"*") {
         	after = { model -> 
         		if(flash.projectCheckPassed == false)

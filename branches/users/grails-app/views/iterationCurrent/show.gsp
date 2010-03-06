@@ -18,7 +18,6 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with Agile Tracking Tool.  If not, see <http://www.gnu.org/licenses/>.
 ------------------------------------------------------------------------------>
-
 <html>
     <head>
         <title>View current iteration</title>
@@ -31,47 +30,43 @@ along with Agile Tracking Tool.  If not, see <http://www.gnu.org/licenses/>.
     	<nav:renderSubItems group="tags" />
     	
     	<div class="iteration">
-			<h2>${iteration.workingTitle}</h2>
-			
-			<g:if test="${plotData}">
+		<h2>${iteration.workingTitle}</h2>
+		<g:if test="${iteration.status == org.agiletracking.IterationStatus.Ongoing}">
+			<g:link action="closeCurrent">Close and copy unfinished items to the next iteration</g:link>
+		</g:if>
+
+		<g:if test="${plotData}">
 			<div style="float:right">		
 				<g:render template="/shared/plots/linePlot" model="[plotData:plotData, plotSize:[250,140] ]"/>
 			</div>
 			<div style="clear:both"></div>
-			</g:if>
+		</g:if>
 			
-			<br/><br/>
-			
-			<table>
-			<tr>
-				<td>Total Points</td>
-				<td>Finished Points</td>
-				<td>Remaining Points</td>				
-			<tr/>
-			<tr>
-				<td>${iteration.totalPoints()}</td>
-				<td>${iteration.getFinishedPoints()}</td>
-				<td>${iteration.totalPoints()-iteration.getFinishedPoints()}</td>
-			<tr/>
-			</table>
-			<br/><br/>
-			
-			<g:each var="item" in="${items.collect{it}}">
-				<div id="itemBox${item.id}" class="itemBox">
-					<div id="item${item.id}">
-					<g:render template="itemView" model="[item:item]"/>
-					</div>
+		<br/><br/>
+		
+		<table>
+		<tr>
+			<td>Total Points</td>
+			<td>Finished Points</td>
+			<td>Remaining Points</td>				
+		<tr/>
+		<tr>
+			<td>${iteration.totalPoints()}</td>
+			<td>${iteration.getFinishedPoints()}</td>
+			<td>${iteration.totalPoints()-iteration.getFinishedPoints()}</td>
+		<tr/>
+		</table>
+		<br/><br/>
+		
+		<g:each var="item" in="${items.collect{it}}">
+			<div id="itemBox${item.id}" class="itemBox">
+				<div id="item${item.id}">
+				<g:render template="itemView" model="[item:item]"/>
 				</div>
-			</g:each>
+			</div>
+		</g:each>
 			
 		</div>
 		<br/>
-		
-		<h2><g:link action="closeCurrent">Close iteration and copy items to the next iteration</g:link></h2>
-		
-			
     </body>
 </html>
-
-
-

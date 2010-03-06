@@ -30,7 +30,6 @@ class PointsSnapShotService {
             if (pointsForGroup) {        
                 pointsForGroup.snapShot.removeFromPointsForGroups(pointsForGroup)        
                 pointsForGroup.delete()
-                println "Deleted the group!"
             }        
         }        
     }

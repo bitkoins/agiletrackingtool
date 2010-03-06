@@ -30,9 +30,6 @@ along with Agile Tracking Tool.  If not, see <http://www.gnu.org/licenses/>.
     	<g:javascript library="prototype" />
     	<nav:renderSubItems group="tags" />
     	
-    		<h1>Administration tasks: </h1>
-			<br/>
-			
 	        <ul>
 		        <li>
 		        	<g:link style=";"  action="exportFile">Export all data to xml</g:link>
@@ -51,15 +48,10 @@ along with Agile Tracking Tool.  If not, see <http://www.gnu.org/licenses/>.
 		        </li>
 		        <br/>
 		        <li><g:link style=";"  action="loadDefaults">Load example project data</g:link></li>
+			<br/>
+       		        <li><g:link controller="register" action="edit">Edit User Profile</g:link></li>
+       		        <li><g:link controller="logout">Logout</g:link></li>
 	        </ul>
-	        
-	        <br/>
-	    
-        	<h1>Access to the underlying domain model:</h1>
-            <ul>
-                <li class="controller"><g:link controller="item">Work Items</g:link></li>
-                <li class="controller"><g:link controller="pointsSnapShot">PointsSnapShots</g:link></li>
-            </ul>
     </body>
 </html>
 

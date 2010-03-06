@@ -27,17 +27,13 @@ class BootStrap {
 
      def init = { servletContext ->
 	def md5pass = authenticateService.passwordEncoder("agile")
-	def userAgile = new User(username:"agile",userRealName:"agile", passwd:md5pass, 
+	def userAgile = new User(username:"agile",userRealName:"Agile Tracker", passwd:md5pass, 
                             enabled:true,email:"agiletracking@gmail.com",
                             emailShow:true,description:"None")
 
         md5pass = authenticateService.passwordEncoder("scrum")
-	def userScrum = new User(username:"scrum",userRealName:"scrum", passwd:md5pass, 
-                            enabled:true,email:"agiletracking@gmail.com",
-                            emailShow:true,description:"None")
 	def userRole = new Role(description:"userRole", authority:"ROLE_USER")
         userRole.addToPeople(userAgile)
-        userRole.addToPeople(userScrum)
  	userRole.save()
      }
      

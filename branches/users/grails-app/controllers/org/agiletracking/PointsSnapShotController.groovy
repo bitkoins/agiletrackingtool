@@ -21,8 +21,6 @@ along with Agile Tracking Tool.  If not, see <http://www.gnu.org/licenses/>.
 package org.agiletracking
 
 class PointsSnapShotController {
-	def scaffold = PointsSnapShot
-	
 	def plotService
 	def iterationService
 	

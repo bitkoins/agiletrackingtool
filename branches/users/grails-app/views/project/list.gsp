@@ -18,7 +18,6 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with Agile Tracking Tool.  If not, see <http://www.gnu.org/licenses/>.
 ------------------------------------------------------------------------------>
-
 <html>
     <head>
         <title>Iteration listing</title>
@@ -30,21 +29,21 @@ along with Agile Tracking Tool.  If not, see <http://www.gnu.org/licenses/>.
     <body>
     	<g:javascript library="prototype" />
     	<nav:renderSubItems group="tags" />
-		
-		
-		<br/>
-		
-		<div class="itemGroup">
+
+	<div class="itemGroup" style="width:50%;padding:10px">
+	<g:each var="project" in="${projects}">
+		<div class="item" style="margin:2px">
 		<table>				
-		<g:each var="project" in="${projects}">
-			<tr>
-				<td><g:link action="select" id="${project.id}">${project.name}</g:link></td>			
-				<td width="80"><g:link action="edit" id="${project.id}">edit</g:link></td>
-				<td width="80"><g:link action="delete" id="${project.id}" onclick="return confirm('The whole project will be destroyed!!! Are you sure?');">delete</g:link></td>
-			</tr>
-		</g:each>		
+		<tr>
+			<td><g:link action="select" id="${project.id}">${project.name}</g:link></td>			
+			<td width="80"><g:link action="edit" id="${project.id}">edit</g:link></td>
+			<td width="80"><g:link action="delete" id="${project.id}" onclick="return confirm('The whole project will be destroyed!!! Are you sure?');">delete</g:link></td>
+		</tr>
 		</table>
 		</div>
+	        <div class="itemSeperator"></div>
+	</g:each>		
+	</div>
 			
 	</body>
 </html>
