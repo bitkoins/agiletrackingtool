@@ -30,9 +30,8 @@ along with Agile Tracking Tool.  If not, see <http://www.gnu.org/licenses/>.
     	<g:javascript library="prototype" />
     	<nav:renderSubItems group="tags"/>
     	
-    	<h2>Project edit</h2>
+    	<h2>Project</h2>
     	<br/>
-        
         <g:form name="ProjectEditForm" action="save">
         	<table>
         	<tr>

@@ -30,12 +30,12 @@ along with Agile Tracking Tool.  If not, see <http://www.gnu.org/licenses/>.
     	<g:javascript library="prototype" />
     	<nav:renderSubItems group="tags"/>
     	
-        <h2>Iteration edit</h2>
+        <h2>Iteration</h2>
         <br/>
         
         <g:form name="IterationEditForm" action="save">
         	<g:hiddenField name="id" value="${iteration.id}"/>
-        	<table>
+        	<table style="width:50%">
         	<tr>
         		<td width="150">Working Title:</td>
         		<td><g:textField size="64" name="workingTitle" value="${iteration.workingTitle}"/></td>
