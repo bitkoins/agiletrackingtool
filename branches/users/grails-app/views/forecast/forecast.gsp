@@ -31,7 +31,6 @@ along with Agile Tracking Tool.  If not, see <http://www.gnu.org/licenses/>.
     	<nav:renderSubItems group="tags" />
     	    <h2>Forecast overview: <td><g:formatDate format="dd-MMM yyyy" date="${new Date()}"/></h2>
 			<br/>
-			
 			<div class="formInput">
 				<g:formRemote name="planningInput" url="[action:'calculatePlan']" update="planningResult">
 					<table>
@@ -63,9 +62,7 @@ along with Agile Tracking Tool.  If not, see <http://www.gnu.org/licenses/>.
 					<button>Calculate</button>
 				</g:formRemote>
 			</div>
-			
-			<br/><br/>
-		
+			<br/>
 			<div id="planningResult" class="planningResult">
 			</div>
 			

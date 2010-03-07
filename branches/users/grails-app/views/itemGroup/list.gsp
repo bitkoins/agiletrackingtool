@@ -31,7 +31,7 @@ along with Agile Tracking Tool.  If not, see <http://www.gnu.org/licenses/>.
     	<g:javascript library="prototype" />
     	<nav:renderSubItems group="tags"/>
         
-    	<h2>Groups overview</h2>
+    	<h2>Categories overview</h2>
 		<br/>
 		
 		<div class="itemGroup">

@@ -44,7 +44,7 @@ class Defaults {
 		List<ItemGroup> ret = []
 		nr.times {
 			def group = new ItemGroup()			
-			group.name = "Group-${it}"
+			group.name = "Category-${it}"
 			group.id = it + 1
 			group.items = []
 			group.project = project

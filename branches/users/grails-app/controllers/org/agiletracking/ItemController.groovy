@@ -34,7 +34,7 @@ class ItemController {
 		subItems: [
 			[action:'backlog', order:1, title:'Backlog'],
 			[action:'showAll', order:10, title:'Show all items'],
-			[action:'listGroups', order:90, title:'Show groups']
+			[action:'listGroups', order:90, title:'Show categories']
 		] 
 	]
 	

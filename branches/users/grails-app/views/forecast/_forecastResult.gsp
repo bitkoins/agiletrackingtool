@@ -77,7 +77,7 @@ along with Agile Tracking Tool.  If not, see <http://www.gnu.org/licenses/>.
 	<tr><td></td></tr>
 
 	<tr style="background:yellow">
-		<td>Group:</td>
+		<td>Category:</td>
 		<td width="180">Must Haves [days]</td>
 		<td width="180">+ Could Haves [days]</td>
 		<td width="180">+ Nice to Haves [days]</td>

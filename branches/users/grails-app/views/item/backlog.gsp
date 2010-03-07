@@ -53,6 +53,6 @@ along with Agile Tracking Tool.  If not, see <http://www.gnu.org/licenses/>.
 				<g:render template="itemsPerGroup" model="[items:items,group:group,newItemId:newItemId]"/>					
 			</div>
 		</g:each>
-		<g:link controller="itemGroup" action="create">Create a new group</g:link>
+		<g:link controller="itemGroup" action="create">Create a new category</g:link>
     </body>
 </html>
