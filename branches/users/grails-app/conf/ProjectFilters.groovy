@@ -25,15 +25,23 @@ class ProjectFilters {
 	def projectIdCookieString = "projectId"
 	
     def filters = {
-        
-        checkObjectForCorrectProject(controller:"*", action:"*") {
-        	after = { model -> 
-        		if(flash.projectCheckPassed == false)
-        		{
-        			redirect(controller:'project',action:'list ')
+
+       checkIfProjectIsSelected(controller:"(project|admin|login|logout|register)", action:"*",invert:true) {
+             before = {
+            	if(controllerName && !session.project) {
+            		redirect(controller:'project',action:'list ')
             		return false
-        		}
-        	}	 
+            	}
+             }
+        }
+ 
+        checkIfProjectCheckPassed(controller:"*", action:"*") {
+             after = { model -> 
+                 if(flash.projectCheckPassed == false) {
+                 	redirect(controller:'project',action:'list ')
+            	        return false
+                 }
+             }	 
         }
     }
 }
