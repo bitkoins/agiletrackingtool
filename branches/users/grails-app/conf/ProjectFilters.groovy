@@ -26,7 +26,7 @@ class ProjectFilters {
 	
     def filters = {
 
-       checkIfProjectIsSelected(controller:"(project|admin|login|logout|register)", action:"*",invert:true) {
+       checkIfProjectIsSelected(controller:"(project|admin|login|logout|register|captcha)", action:"*",invert:true) {
              before = {
             	if(controllerName && !session.project) {
             		redirect(controller:'project',action:'list ')
