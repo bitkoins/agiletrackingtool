@@ -31,7 +31,6 @@ class BootStrap {
                             enabled:true,email:"agiletracking@gmail.com",
                             emailShow:true,description:"None")
 
-        md5pass = authenticateService.passwordEncoder("scrum")
 	def userRole = new Role(description:"userRole", authority:"ROLE_USER")
         userRole.addToPeople(userAgile)
  	userRole.save()

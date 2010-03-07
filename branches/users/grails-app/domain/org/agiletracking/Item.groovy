@@ -55,7 +55,7 @@ class Item {
 		stampUid()
 		this.project = project
 		this.group = group
-		description = "...."
+		description = ""
 		points = 1
 		status = ItemStatus.Request
 		priority = Priority.High

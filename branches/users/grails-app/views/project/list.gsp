@@ -35,9 +35,10 @@ along with Agile Tracking Tool.  If not, see <http://www.gnu.org/licenses/>.
 		<div class="item" style="margin:2px">
 		<table>				
 		<tr>
-			<td><g:link action="select" id="${project.id}">${project.name}</g:link></td>			
-			<td width="80"><g:link action="edit" id="${project.id}">edit</g:link></td>
-			<td width="80"><g:link action="delete" id="${project.id}" onclick="return confirm('The whole project will be destroyed!!! Are you sure?');">delete</g:link></td>
+			<td>${project.name}</td>			
+			<td width="60"><g:link action="select" id="${project.id}">Select</g:link></td>			
+			<td width="40"><g:link action="edit" id="${project.id}">Edit</g:link></td>
+			<td width="80"><g:link action="delete" id="${project.id}" onclick="return confirm('The whole project will be destroyed!!! Are you sure?');">Delete</g:link></td>
 		</tr>
 		</table>
 		</div>
