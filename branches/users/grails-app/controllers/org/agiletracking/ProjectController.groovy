@@ -31,8 +31,7 @@ class ProjectController {
 		action:'list' ,
 		isVisible: { authenticateService.userDomain() != null },
 		subItems: [
-			[action:'list', order:1, title:'Select'],
-			[action:'create', order:10, title:'Create new project'],
+			[action:'create', order:10, title:'Create new project']
 		] 
 	]
 	

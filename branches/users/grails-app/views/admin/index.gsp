@@ -31,6 +31,8 @@ along with Agile Tracking Tool.  If not, see <http://www.gnu.org/licenses/>.
     	<nav:renderSubItems group="tags" />
     	
 	        <ul>
+       		        <li><g:link controller="register" action="edit">Edit User Profile</g:link></li>
+			<br/>
 		        <li>
 		        	<g:link style=";"  action="exportFile">Export all data to xml</g:link>
 		        	<ul>
@@ -48,9 +50,6 @@ along with Agile Tracking Tool.  If not, see <http://www.gnu.org/licenses/>.
 		        </li>
 		        <br/>
 		        <li><g:link style=";"  action="loadDefaults">Load example project data</g:link></li>
-			<br/>
-       		        <li><g:link controller="register" action="edit">Edit User Profile</g:link></li>
-       		        <li><g:link controller="logout">Logout</g:link></li>
 	        </ul>
     </body>
 </html>

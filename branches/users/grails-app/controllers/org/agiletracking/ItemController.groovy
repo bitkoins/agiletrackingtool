@@ -34,6 +34,7 @@ class ItemController {
 		subItems: [
 			[action:'backlog', order:1, title:'Backlog'],
 			[action:'showAll', order:10, title:'Show all items'],
+			[action:'createGroup', order:15, title:'Create new category'],
 			[action:'listGroups', order:90, title:'Show categories']
 		] 
 	]
@@ -86,5 +87,9 @@ class ItemController {
 	
 	def listGroups = {
 		redirect(controller:'itemGroup', action:'list')
+	}
+
+	def createGroup = {
+		redirect(controller:'itemGroup', action:'create')
 	}
 }
