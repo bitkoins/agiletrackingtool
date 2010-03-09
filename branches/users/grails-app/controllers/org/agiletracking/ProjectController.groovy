@@ -23,7 +23,7 @@ package org.agiletracking
 class ProjectController {
 	def projectService
 	def authenticateService
-	 
+
 	static navigation = [
 		group:'tags', 
 		order:1, 
@@ -39,7 +39,8 @@ class ProjectController {
 		def project = Project.get(params.id)
                 flash.projectCheckPassed = checkProjectForUser(project) 
 	        if(flash.projectCheckPassed) session.project = project
-		redirect(controller:'item',action:'backlog')
+
+	        redirect(controller:'iterationCurrent')
 	}
 	
 	def delete = {

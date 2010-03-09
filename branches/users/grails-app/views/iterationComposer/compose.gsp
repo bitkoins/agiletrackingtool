@@ -50,12 +50,13 @@ along with Agile Tracking Tool.  If not, see <http://www.gnu.org/licenses/>.
     		}
     	</script>
 		
+	<nav:resources override="false"/>	
     </head>
 
     <body>
     	<g:javascript library="prototype" />
-    	
-			<h2>Items in the iteration: ${iteration.workingTitle} </h2>
+    			<nav:renderSubItems group="tags"/>
+			<h2>Iteration: ${iteration.workingTitle} </h2>
 			
 			<div id="iteration" class="iteration">
 				<g:render template="iterationOverview" model="[iteration:iteration,showIteration:showIteration,isCompositionView:isCompositionView]"/>

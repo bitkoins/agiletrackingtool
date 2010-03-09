@@ -92,7 +92,7 @@ class PointsSnapShotController {
 	
 	def burnUpGraph = {
 			def iteration = iterationService.getOngoingIteration(session.project) 		    
-			def plotData = plotService.createBurnUpPlotData(iteration)
+			def plotData = iteration ? plotService.createBurnUpPlotData(iteration) : null
 			return [plotData:plotData]
 	}
 }

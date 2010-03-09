@@ -43,11 +43,11 @@ along with Agile Tracking Tool.  If not, see <http://www.gnu.org/licenses/>.
         	
         	<tr>
         		<td>Start Date:</td>
-        		<td><g:datePicker name="startTime" value="${iteration.startTime}" precision="day" years="${Util.getDefaultYearRange()}"/></td>
+        		<td><g:datePicker name="startTime" value="${iteration.startTime}" precision="day" years="${org.agiletracking.Util.getDefaultYearRange()}"/></td>
 			</tr>
 			<tr>
         		<td>Duration in days:</td>
-        		<td><g:textField size="5" name="duration" value="${Util.getDaysInBetween(iteration.startTime,iteration.endTime)}"/></td>
+        		<td><g:textField size="5" name="duration" value="${org.agiletracking.Util.getDaysInBetween(iteration.startTime,iteration.endTime)}"/></td>
 			</tr>        		
 			
 			<tr>

@@ -13,19 +13,19 @@ onoremap  gggHG
 nnoremap  gggHG
 vnoremap  "+y
 noremap  
-vnoremap  :update
-nnoremap  :update
-onoremap  :update
+vnoremap  :update
+nnoremap  :update
+onoremap  :update
 nmap  "+gP
 omap  "+gP
 vnoremap  "+x
 noremap  
 noremap  u
-cnoremap   :simalt ~
-inoremap   :simalt ~
+cnoremap   :simalt ~
+inoremap   :simalt ~
 map Q gq
 nmap gx <Plug>NetrwBrowseX
-nnoremap <silent> <Plug>NetrwBrowseX :call netrw#NetrwBrowseX(expand("<cWORD>"),0)
+nnoremap <silent> <Plug>NetrwBrowseX :call netrw#NetrwBrowseX(expand("<cWORD>"),0)
 onoremap <C-F4> c
 nnoremap <C-F4> c
 vnoremap <C-F4> c
@@ -41,12 +41,12 @@ nmap <S-Insert> "+gP
 omap <S-Insert> "+gP
 cnoremap  gggHG
 inoremap  gggHG
-inoremap  :update
+inoremap  :update
 inoremap  u
 cmap  +
 inoremap  
 inoremap  u
-noremap   :simalt ~
+noremap   :simalt ~
 let &cpo=s:cpo_save
 unlet s:cpo_save
 set backspace=indent,eol,start
