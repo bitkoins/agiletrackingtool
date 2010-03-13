@@ -65,20 +65,15 @@ input:focus, select:focus, textarea:focus {
     background: #fff url(../images/skin/shadow.jpg) bottom repeat-x;
     border: 1px solid #ccc;
     border-style: solid none solid none;	
-    margin-top: 2px;
-    margin-bottom: 2px;
     margin-right: 130px;
-    padding: 5px 12px;
-    
 }
 
 .nav, .navigation, .subnavigation {
     background: #fff url(../images/skin/shadow.jpg) bottom repeat-x;
     border: 1px solid #ccc;
     border-style: solid none solid none;	
-    margin-top: 2px;
-    margin-bottom: 10px;
-    padding: 5px 12px;    
+    padding: 2px 12px;
+	font-size: 70%;
 }
 
 .menuButton {
@@ -253,7 +248,7 @@ th.desc a {
     overflow: hidden;
     padding: 0;
 }
-
+:
 .buttons input {
     background: #fff;
     border: 0;
@@ -286,10 +281,10 @@ body {
 	padding-right: 10px;
 }
 
-	.itemGroup {
+.itemGroup {
 	background-color: #FFFF99;
-    margin-left: 10px;
-    margin-right: 10px;
+	margin-left: 10px;
+	margin-right: 10px;
 	margin-bottom: 20px;
 	padding-bottom: 10px;
 	padding-left: 15px;

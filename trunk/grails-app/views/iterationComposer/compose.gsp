@@ -50,12 +50,13 @@ along with Agile Tracking Tool.  If not, see <http://www.gnu.org/licenses/>.
     		}
     	</script>
 		
+	<nav:resources override="false"/>	
     </head>
 
     <body>
     	<g:javascript library="prototype" />
-    	
-			<h2>Items in the iteration: ${iteration.workingTitle} </h2>
+    			<nav:renderSubItems group="tags"/>
+			<h2>Iteration: ${iteration.workingTitle} </h2>
 			
 			<div id="iteration" class="iteration">
 				<g:render template="iterationOverview" model="[iteration:iteration,showIteration:showIteration,isCompositionView:isCompositionView]"/>
@@ -70,7 +71,6 @@ along with Agile Tracking Tool.  If not, see <http://www.gnu.org/licenses/>.
 				<g:if test="${items.size() > 0}">
 				<div id="groupItems${group.id}" class="itemGroup" style="margin-right:50px">
 					<h1>${group.name}</h1>	
-					
 					<g:each var="item" in="${items}">
 					<div id="itemBox${item.id}" class="itemBox">
 						<div id="item${item.id}" class="item" style="width:88%">
@@ -81,22 +81,17 @@ along with Agile Tracking Tool.  If not, see <http://www.gnu.org/licenses/>.
 							<g:remoteLink action="addItemToIteration" id="${item.id}" update="iteration">
 								<div onclick="hideItem('itemBox${item.id}');">
 									<g:if test="${item.iteration}">
-								       	Move from Iteration ${item.iteration.id}
+								      	Move from Iteration ${item.iteration.id}
 									</g:if>
-									<g:else>
-										Add to iteration																		
-									</g:else>	
+									<g:else>Add to iteration</g:else>	
 								</div>
 							</g:remoteLink>
 						</div>
 					</div>
-					
 					<div class="itemSeperator"></div>
 					</g:each>
 				</div>
-				<br></br>
 				</g:if>
-				
 			</g:each>
     </body>
 </html>
