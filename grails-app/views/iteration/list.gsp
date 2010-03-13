@@ -46,10 +46,6 @@ along with Agile Tracking Tool.  If not, see <http://www.gnu.org/licenses/>.
     	
     	<g:render template="/shared/plots/linePlot" model="[plotData:plotData, plotSize:[540,240] "/>
 	
-		<br/>
-		<h1>Iterations:</h1>
-		<br/>
-		
 		<div class="iteration">
 		<h1>Current iteration:</h1>
 		<table border="1">
@@ -62,7 +58,7 @@ along with Agile Tracking Tool.  If not, see <http://www.gnu.org/licenses/>.
 			<td width="50"></td>
 		</tr>
 		
-		<g:each var="iter" in="${iterations.findAll{it.status == IterationStatus.Ongoing} }">
+		<g:each var="iter" in="${iterations.findAll{it.status == org.agiletracking.IterationStatus.Ongoing} }">
 			<tr class="status${iter.status}">
 				<td><g:link controller="iterationCurrent" action="show" id="${iter.id}">${iter.workingTitle}</g:link></td>
 				<td>${iter.finishedPoints}</td>
@@ -70,7 +66,7 @@ along with Agile Tracking Tool.  If not, see <http://www.gnu.org/licenses/>.
 				<td><g:link action="edit" id="${iter.id}">Edit</g:link></td>
 				<td><g:link action="delete" id="${iter.id}" onclick="return confirm('This will delete the iteration. Sure?');" >Delete</g:link></td>
 				<td width="150">
-					<g:if test="${iter.status != IterationStatus.Finished}">
+					<g:if test="${iter.status != org.agiletracking.IterationStatus.Finished}">
 						<g:link controller="iterationComposer" action="compose" id="${iter.id}">Compose Items</g:link>
 					</g:if>
 				</td>
@@ -91,7 +87,7 @@ along with Agile Tracking Tool.  If not, see <http://www.gnu.org/licenses/>.
 			<td width="50"></td>
 		</tr>
 		
-		<g:each var="iter" in="${iterations.findAll{it.status == IterationStatus.FutureWork} }">
+		<g:each var="iter" in="${iterations.findAll{it.status == org.agiletracking.IterationStatus.FutureWork} }">
 			<tr class="status${iter.status}">
 				<td><g:link controller="iterationCurrent" action="show" id="${iter.id}">${iter.workingTitle}</g:link></td>
 				<td>${iter.totalPoints()}</td>
@@ -119,7 +115,7 @@ along with Agile Tracking Tool.  If not, see <http://www.gnu.org/licenses/>.
 			<td width="50"></td>
 		</tr>
 		
-		<g:each var="iter" in="${iterations.findAll{it.status == IterationStatus.Finished} }">
+		<g:each var="iter" in="${iterations.findAll{it.status == org.agiletracking.IterationStatus.Finished} }">
 			<tr class="status${iter.status}">
 				<td><g:link controller="iterationCurrent" action="show" id="${iter.id}">${iter.workingTitle}</g:link></td>
 				<td>${iter.finishedPoints}</td>

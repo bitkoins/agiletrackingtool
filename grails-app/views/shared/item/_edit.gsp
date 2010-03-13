@@ -35,7 +35,7 @@ along with Agile Tracking Tool.  If not, see <http://www.gnu.org/licenses/>.
 		<td witdh="20">${item.uid}</td>
 		<td><g:textField name="description" value="${item.description}" size="100" /></td>
 		<td width="10"><g:textField name="points" value="${item.getPoints()}" size="3"/></td>
-		<td width="50"><g:select name="priority" from="${Priority}" value="${item.priority}" /></td>
+		<td width="50"><g:select name="priority" from="${org.agiletracking.Priority}" value="${item.priority}" /></td>
 	</tr>
 	</table>
 	
