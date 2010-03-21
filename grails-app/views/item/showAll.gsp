@@ -32,6 +32,8 @@ along with Agile Tracking Tool.  If not, see <http://www.gnu.org/licenses/>.
     	<nav:renderSubItems group="tags" />
     	
     		<h2>Work items overview:</h2>
+        	<g:formatDate format="dd-MMM yyyy" date="${new Date()}"/>        	
+        	<p>Total points: ${totalPoints} / Unfinished points: ${unFinishedPoints}</p>
 			<br/><br/>
 			
 			<g:each var="group" in="${groups}">
@@ -47,7 +49,7 @@ along with Agile Tracking Tool.  If not, see <http://www.gnu.org/licenses/>.
 					<g:each var="item" in="${group.items.collect{it}.sort{it.uid}.reverse()}">
 					<div class="item">
 					<tr>
-						<td width="15">${item.uid}</td>
+						<td width="15"><g:link controller="item" action="edit" id="${item.id}">${item.uid}</g:link></td>
 						<td>${item.description}</td>
 						<td width="20">${item.getPoints()}</td>
 						<td width="50">${item.status}</td>

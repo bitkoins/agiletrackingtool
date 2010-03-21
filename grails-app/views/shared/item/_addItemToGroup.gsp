@@ -20,6 +20,6 @@ along with Agile Tracking Tool.  If not, see <http://www.gnu.org/licenses/>.
 ------------------------------------------------------------------------------>
 
 <g:remoteLink update="newItem${newItemId}" action="addItemToGroup" id="${groupId}" params="[newItemId:newItemId]">
-	Add new item
+	Add new item to this group
 </g:remoteLink>
 				

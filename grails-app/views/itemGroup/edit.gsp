@@ -30,13 +30,14 @@ along with Agile Tracking Tool.  If not, see <http://www.gnu.org/licenses/>.
     	<g:javascript library="prototype" />
     	<nav:renderSubItems group="tags"/>
     	
-    	<h2>Category</h2>
+    	<h2>Group edit</h2>
     	<br/>
+        
         <g:form name="ItemGroupEditForm" action="save">
         	<table>
         	<tr>
         		<g:hiddenField name="id" value="${group.id}"/>
-        		<td width="100">Name:</td>
+        		<td width="100">Group Name:</td>
         		<td><g:textField name="name" value="${group.name}"/></td>
         	</tr>
         	</table>

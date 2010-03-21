@@ -23,10 +23,10 @@ along with Agile Tracking Tool.  If not, see <http://www.gnu.org/licenses/>.
 
   <g:if test="${plotData?.hasValidCurves()}">
 	  <%  
-	  	  org.agiletracking.PlotFormatUtil.calculateRangeValues(plotData)
+	  	  PlotFormatUtil.calculateRangeValues(plotData)
 	  %>
-	 <chart:lineChart title='${plotData.title}' dataType='text' data='${org.agiletracking.PlotFormatUtil.formatDataForCurves(plotData)}' 
-	     colors="${org.agiletracking.PlotFormatUtil.formatColorsForCurves(plotData.curves.size())}"
+	 <chart:lineChart title='${plotData.title}' dataType='text' data='${PlotFormatUtil.formatDataForCurves(plotData)}' 
+	     colors="${PlotFormatUtil.formatColorsForCurves(plotData.curves.size())}"
 	     size="${plotSize}"
 	     fill="${[ 'c,lg,0,76A4FB,1,ffffff,0' , 'bg,s,EFEFEF' ]}"
          axes="x,y" type='xy'  

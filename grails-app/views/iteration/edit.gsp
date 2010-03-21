@@ -30,12 +30,12 @@ along with Agile Tracking Tool.  If not, see <http://www.gnu.org/licenses/>.
     	<g:javascript library="prototype" />
     	<nav:renderSubItems group="tags"/>
     	
-        <h2>Iteration</h2>
+        <h2>Iteration edit</h2>
         <br/>
         
         <g:form name="IterationEditForm" action="save">
         	<g:hiddenField name="id" value="${iteration.id}"/>
-        	<table style="width:50%">
+        	<table>
         	<tr>
         		<td width="150">Working Title:</td>
         		<td><g:textField size="64" name="workingTitle" value="${iteration.workingTitle}"/></td>
@@ -43,16 +43,16 @@ along with Agile Tracking Tool.  If not, see <http://www.gnu.org/licenses/>.
         	
         	<tr>
         		<td>Start Date:</td>
-        		<td><g:datePicker name="startTime" value="${iteration.startTime}" precision="day" years="${org.agiletracking.Util.getDefaultYearRange()}"/></td>
+        		<td><g:datePicker name="startTime" value="${iteration.startTime}" precision="day" years="${Util.getDefaultYearRange()}"/></td>
 			</tr>
 			<tr>
         		<td>Duration in days:</td>
-        		<td><g:textField size="5" name="duration" value="${org.agiletracking.Util.getDaysInBetween(iteration.startTime,iteration.endTime)}"/></td>
+        		<td><g:textField size="5" name="duration" value="${Util.getDaysInBetween(iteration.startTime,iteration.endTime)}"/></td>
 			</tr>        		
 			
 			<tr>
 				<td>Status:</td>
-				<td><g:select name="status" from="${org.agiletracking.IterationStatus}" value="${iteration.status}"/></td>
+				<td><g:select name="status" from="${IterationStatus}" value="${iteration.status}"/></td>
 			</tr>
 			
         	</table>

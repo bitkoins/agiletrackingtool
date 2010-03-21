@@ -8,8 +8,8 @@
 export INSTALL_DIR="$HOME/agilettdemo"
 export TRACKING_TOOL_CODE_DIR="$INSTALL_DIR/agiletrackingtool-read-only"
 
-export GRAILS_ZIP="grails-bin-1.2.1.zip"
-export GRAILS_ZIP_LOCATION="http://dist.codehaus.org/grails"
+export GRAILS_ZIP="grails-bin-1.1.1.zip"
+export GRAILS_ZIP_LOCATION="http://dist.codehaus.org/grails"/
 export GRAILS_PLUGIN_URL="http://plugins.grails.org/grails-google-chart/tags/RELEASE_0_5_1/grails-google-chart-0.5.0.zip"
 
 #-------------------------------------------------------------------------------

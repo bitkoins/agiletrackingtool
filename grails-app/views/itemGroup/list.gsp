@@ -31,12 +31,13 @@ along with Agile Tracking Tool.  If not, see <http://www.gnu.org/licenses/>.
     	<g:javascript library="prototype" />
     	<nav:renderSubItems group="tags"/>
         
-    	<h2>Categories overview</h2>
+    	<h2>Groups overview</h2>
 		<br/>
 		
 		<div class="itemGroup">
 		<table>
 			<tr>
+				<td>Id</td>
 				<td>Name</td>
 				<td>Number of Items</td>
 				<td>Finished points</td>
@@ -47,6 +48,7 @@ along with Agile Tracking Tool.  If not, see <http://www.gnu.org/licenses/>.
 		
 			<g:each var="group" in="${groups}">
 				<tr>
+					<td>${group.id}</td>
 					<td>${group.name}</td>
 					<td>${group.items?.size()}</td>
 					<td>${group.finishedPoints()}</td>

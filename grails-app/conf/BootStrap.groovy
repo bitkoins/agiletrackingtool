@@ -19,21 +19,9 @@ You should have received a copy of the GNU General Public License
 along with Agile Tracking Tool.  If not, see <http://www.gnu.org/licenses/>.
 ------------------------------------------------------------------------------*/
 
-import org.agiletracking.*
-
 class BootStrap {
 	
-     def authenticateService
-
      def init = { servletContext ->
-	def md5pass = authenticateService.passwordEncoder("agile")
-	def userAgile = new User(username:"agile",userRealName:"Agile Tracker", passwd:md5pass, 
-                            enabled:true,email:"agiletracking@gmail.com",
-                            emailShow:true,description:"None")
-
-	def userRole = new Role(description:"userRole", authority:"ROLE_USER")
-        userRole.addToPeople(userAgile)
- 	userRole.save()
      }
      
      def destroy = {
