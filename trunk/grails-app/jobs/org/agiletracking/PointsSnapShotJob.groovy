@@ -30,15 +30,9 @@ class PointsSnapShotJob {
 		try
 		{	
   		    Project.list().each{ project ->
-  		    	 def now = new Date()
-  		    	 PointsSnapShot.takeSnapShot(project,now).save()
-			     def fileName = projectService.getProjectExportFileName(project.name, now)
-			  	 if(fileName) { 
-			      	def file = new File(fileName)
-			      	file.write( projectService.exportToXmlString(project) )
-			     }
-			 }
-		}
+  		    	 PointsSnapShot.takeSnapShot(project,new Date() ).save()
+	   	    }
+	 	}
 		catch(Exception e)
 		{
 			println "Exception occured when taking snapShot: " + e
