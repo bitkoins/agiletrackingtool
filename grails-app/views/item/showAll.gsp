@@ -34,28 +34,23 @@ along with Agile Tracking Tool.  If not, see <http://www.gnu.org/licenses/>.
     		<h2>Work items overview:</h2>
 			<br/><br/>
 			
-			<g:each var="group" in="${groups}">
-				<div id="groupItems${group.id}" class="itemGroup">
-				<h1 class="groupName">${group}</h1>
-				<table border="1">
-					<tr>
-						<td width="15">Item id.</td>
-						<td>Description</td>
-						<td width="20">Points</td>
-						<td width="50">Status</td>
-					</tr>
-					<g:each var="item" in="${group.items.collect{it}.sort{it.uid}.reverse()}">
-					<div class="item">
-					<tr>
-						<td width="15">${item.uid}</td>
-						<td>${item.description}</td>
-						<td width="20">${item.getPoints()}</td>
-						<td width="50">${item.status}</td>
-					</tr>
-					</div>
-					</g:each>
-				</table>			
+		<g:each var="group" in="${groups}">
+			<div id="groupItems${group.id}" class="itemGroup">
+			<h1 class="groupName">${group}</h1>
+			<g:each var="item" in="${group.items.collect{it}.sort{it.uid}.reverse()}">
+				<div class="item">
+				<table>
+				<tr>
+					<td width="15">${item.uid}</td>
+					<td>${item.description}</td>
+					<td width="20">${item.getPoints()}</td>
+					<td width="50">${item.status}</td>
+				</tr>
+				</table>
 				</div>
-			</g:each>	
+	                        <div class="itemSeperator"></div>
+			</g:each>
+			</div>
+		</g:each>	
     </body>
 </html>
