@@ -26,6 +26,10 @@ class BootStrap {
      def authenticateService
 
      def init = { servletContext ->
+
+        DataSourceUtils.tuneDataSource(servletContext) 
+
+
 	def md5pass = authenticateService.passwordEncoder("agile")
 	def userAgile = new User(username:"agile",userRealName:"Agile Tracker", passwd:md5pass, 
                             enabled:true,email:"agiletracking@gmail.com",
