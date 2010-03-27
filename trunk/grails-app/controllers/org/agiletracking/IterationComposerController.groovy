@@ -33,8 +33,6 @@ class IterationComposerController {
 		}
 		
 		flash.projectCheckPassed = projectService.executeWhenProjectIsCorrect(session.project,  iter)
-		
-		session.iterId = iter?.id
 				
 		def itemsByGroup = params.priorities ?  
 			itemService.getUnfinishedItemsGroupMap(session.project,Util.parsePriorities(params.priorities)) : 
@@ -48,18 +46,18 @@ class IterationComposerController {
 	}
 	
 	def addItemToIteration = {
-			def iter = Iteration.get(session.iterId)
-			
+			def iter = Iteration.get(Integer.parseInt(params.iterId))
 			def item = Item.get(params.id)
 			
-			flash.projectCheckPassed = projectService.executeWhenProjectIsCorrect(session.project,  item, 
-			 	 	                                                                {  iter.addItem(item) } ) 		
-			
+			flash.projectCheckPassed = iter && item && (item.project.id == iter.project.id) &&
+                                                    projectService.executeWhenProjectIsCorrect(session.project,  item, 
+                                                                                               {  iter.addItem(item) } ) 	
+	
 			render(template:'iterationOverview',model:[iteration:iter])
 	}
 	
 	def deleteItemFromIteration = {
-			def iter = Iteration.get(session.iterId)
+			def iter = Iteration.get(params.iterId)
 			
 			def item = Item.get(params.id)
 			flash.projectCheckPassed = projectService.executeWhenProjectIsCorrect(session.project,  item,
