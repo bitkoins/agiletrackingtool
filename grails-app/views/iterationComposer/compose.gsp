@@ -78,7 +78,7 @@ along with Agile Tracking Tool.  If not, see <http://www.gnu.org/licenses/>.
 						</div>
 						
 						<div class="itemActions" style="width:10%">
-							<g:remoteLink action="addItemToIteration" id="${item.id}" update="iteration">
+							<g:remoteLink action="addItemToIteration" params="[iterId:iteration.id]" id="${item.id}" update="iteration">
 								<div onclick="hideItem('itemBox${item.id}');">
 									<g:if test="${item.iteration}">
 								      	Move from Iteration ${item.iteration.id}

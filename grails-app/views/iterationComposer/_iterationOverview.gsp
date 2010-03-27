@@ -32,7 +32,7 @@ along with Agile Tracking Tool.  If not, see <http://www.gnu.org/licenses/>.
 			<td width="20">${item.uid}</td>
 		 	<td>${item}</td>
 		 	<td width="50">${item.points}</td>
-		 	<td width="150"><g:remoteLink action="deleteItemFromIteration" id="${item.id}" update="iteration">Delete from iteration</g:remoteLink></td>
+		 	<td width="150"><g:remoteLink action="deleteItemFromIteration" params="[iterId:iteration.id]" id="${item.id}" update="iteration">Delete from iteration</g:remoteLink></td>
 		 </tr>
 	</g:each>
 	</table>
