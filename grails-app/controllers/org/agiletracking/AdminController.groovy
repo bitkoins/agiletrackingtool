@@ -68,7 +68,7 @@ class AdminController {
     }
     
     def loadDefaults = {
-    		3.times { projectId ->
+    		1.times { projectId ->
     			def project = new Project(name:"Example project ${projectId}")
 			project.user = authenticateService.userDomain()
     			project.save()
