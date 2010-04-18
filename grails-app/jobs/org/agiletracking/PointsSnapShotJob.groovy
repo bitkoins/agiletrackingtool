@@ -21,7 +21,7 @@ along with Agile Tracking Tool.  If not, see <http://www.gnu.org/licenses/>.
 package org.agiletracking
 
 class PointsSnapShotJob {
-	def cronExpression = "0 15 18 ? * MON-FRI"  // Run every working day at 18.15
+	def cronExpression = "0 15 12 ? * *"  // Run every day at 12.15
 	//def timeout = 5*1000l // execute job once in n seconds
 
 	def projectService  
