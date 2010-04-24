@@ -166,6 +166,9 @@ class RegisterController {
 		person.enabled = true
 		person.emailShow = true
 		person.description = ''
+
+		person.agreeToTermsOfUse = (params.agreeToTermsOfUse == "${true}")
+
 		if (person.save()) {
 			role.addToPeople(person)
 			if (config.security.useMail) {
