@@ -61,20 +61,25 @@ along with Agile Tracking Tool.  If not, see <http://www.gnu.org/licenses/>.
 	    	</div>
 	    	<br/>
     	</g:if>
+
+	<g:if test="${note}">
+            <p>Note: ${note}</p>
+	    <br></br>
+	</g:if>
 		
-		<g:each var="plotDataSet" in="${plots}">
-		<table>
-			<tr>
-			<g:each var="plotData" in="${plotDataSet}">
-				<td>
-					<g:render template="/shared/plots/linePlot" model="[plotData:plotData, plotSize:[540,300] ]"/>
-				</td>
-			</g:each>
-			</tr>
-		</table>
-		<br/>
+	<g:each var="plotDataSet" in="${plots}">
+	<table>
+		<tr>
+		<g:each var="plotData" in="${plotDataSet}">
+			<td>
+				<g:render template="/shared/plots/linePlot" model="[plotData:plotData, plotSize:[540,300] ]"/>
+			</td>
 		</g:each>
-		
+		</tr>
+	</table>
+	<br/>
+	</g:each>
+	
     </body>
 </html>
 

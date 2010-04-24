@@ -165,16 +165,14 @@ class PlotService {
 		iterations.sort{ it.endTime}.each{ iter ->
 			def nrBugs = 0
 			iter.items.each{ item ->
-				if( item.group.name.contains("Bug") && (item.status == ItemStatus.Finished) ) nrBugs++
+				if( item.group.name.toLowerCase().contains("bug") && (item.status == ItemStatus.Finished) ) nrBugs++
 			}
 			
 			def daysAgo = Util.getDaysInBetween(now, iter.endTime)
 			
-			if (true || (daysAgo <= 0) )  {
-				plotCurve.xValues << daysAgo
-				totalBugs += nrBugs
-				plotCurve.yValues << totalBugs					
-			}
+			plotCurve.xValues << daysAgo
+			totalBugs += nrBugs
+			plotCurve.yValues << totalBugs					
 		}
 			
 		def total = plotCurve.yValues.sum{ it }
