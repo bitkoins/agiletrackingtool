@@ -63,6 +63,13 @@
 				</td>
 			</tr>
 
+	                <tr class='prop'>
+				<td valign='top' class='name'><label for='agreeToTermsOfUse'>Agree to <a href="TermsOfUse.html">terms of use</a>:</label></td>
+				<td valign='top' class='value ${hasErrors(bean:person,field:'agreeToTermsOfUse','errors')}'>
+					<input type="checkbox" name='agreeToTermsOfUse' value="${true}"/>
+				</td>
+				
+			</tr>
 		</tbody>
 		</table>
 		</div>

@@ -21,6 +21,7 @@ class User {
 
 	String email
 	boolean emailShow
+	boolean agreeToTermsOfUse
 
 	/** description */
 	String description = ''
@@ -33,5 +34,6 @@ class User {
 		userRealName(blank: false)
 		passwd(blank: false)
 		enabled()
+		agreeToTermsOfUse(inList:[true])
 	}
 }

@@ -20,7 +20,7 @@ along with Agile Tracking Tool.  If not, see <http://www.gnu.org/licenses/>.
 ------------------------------------------------------------------------------>
 <html>
     <head>
-        <title>Iteration listing</title>
+        <title>Project listing</title>
 		<link rel="stylesheet" href="${createLinkTo(dir:'css',file:'main.css')}" />
 		<meta name="layout" content="main" />
     	<nav:resources override="false"/>	
