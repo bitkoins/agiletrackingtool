@@ -77,7 +77,7 @@ class PointsSnapShotController {
 	def showBugHistory = {
 		def iterations = Iteration.findAllByProject(session.project)?.findAll{ it.status != IterationStatus.FutureWork }
 		def plotData = plotService.createBugHistoryPlot(iterations)
-		render(view:"plot", model:[plots:[plotData]])
+		render(view:"plot", model:[plots:[plotData], note:"The bug history is created by checking the categories with names that contain 'bug'."] )
 	}
 	
 	def flowPlot = {
