@@ -33,7 +33,7 @@
 			</td>
 		</g:if>
 		
-		<td width ="50">		
+		<td width ="50"/>		
 		  <g:if test="${!item.hasCriteria()}">
 		  <gui:toolTip text="The item has no acceptance criteria.">
 		     <img src="${createLinkTo(dir:'images',file:'QuestionMark.png')}" alt="QuestionMark" width="35" height="35"/>
@@ -41,7 +41,7 @@
 		</g:if>
 				 	
 		<g:else>
-			<td width ="200">${item.criteria}</td>
+			<td width="200">${item.criteria}</td>
 		</g:else>
 		<td width="10"><g:remoteLink action="editItem" id="${item.id}" update="item${item.id}">Edit</g:remoteLink></td>
 	</tr>
@@ -61,7 +61,7 @@
 			 		</td>
 			 </g:if>
 			 <g:else>
-			 		<td width="40">${subItem.status}</td>
+				<td width="40">${subItem.status}</td>
 			 </g:else>
 			 	 		
 		</tr>

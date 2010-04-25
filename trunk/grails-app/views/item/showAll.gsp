@@ -11,7 +11,7 @@
     	<nav:renderSubItems group="tags" />
     	
     		<h2>Work items overview:</h2>
-			<br/><br/>
+	         <div><br/><br/></div>
 			
 		<g:each var="group" in="${groups}">
 			<div id="groupItems${group.id}" class="itemGroup">

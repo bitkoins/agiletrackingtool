@@ -1,4 +1,4 @@
-<g:link controller="itemGroup" action="edit" id="${group.id}"><h1 class="groupName">${group}</h1></g:link>
+<h1 class="groupName">${group}</h1>
 
 <g:each var="item" in="${items.collect{it}.sort{it.uid}}">
 	<div id="itemBox${item.id}" class="itemBox">

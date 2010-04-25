@@ -6,6 +6,7 @@
 		<nav:resources override="false"/>
     </head>
     <body>
+	<div>
     	<g:javascript library="prototype" />
     	<nav:renderSubItems group="tags" />
     	
@@ -30,8 +31,6 @@
 		        <br/>
 		        <li><g:link style=";"  action="loadDefaults">Load example project data</g:link></li>
 	        </ul>
+	</div>
     </body>
 </html>
-
-
-

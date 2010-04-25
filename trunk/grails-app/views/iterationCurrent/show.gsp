@@ -21,22 +21,23 @@
 			</div>
 			<div style="clear:both"></div>
 		</g:if>
-			
-		<br/><br/>
+		
+		<div><br/><br/></div>
 		
 		<table>
 		<tr>
 			<td>Total Points</td>
 			<td>Finished Points</td>
 			<td>Remaining Points</td>				
-		<tr/>
+		</tr>
 		<tr>
 			<td>${iteration.totalPoints()}</td>
 			<td>${iteration.getFinishedPoints()}</td>
 			<td>${iteration.totalPoints()-iteration.getFinishedPoints()}</td>
-		<tr/>
+		</tr>
 		</table>
-		<br/><br/>
+
+		<div><br/><br/></div>
 		
 		<g:each var="item" in="${items.collect{it}}">
 			<div id="itemBox${item.id}" class="itemBox">
@@ -47,6 +48,6 @@
 		</g:each>
 			
 		</div>
-		<br/>
+		<div><br/></div>
     </body>
 </html>
