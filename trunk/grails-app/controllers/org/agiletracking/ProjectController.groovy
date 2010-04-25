@@ -69,10 +69,14 @@ class ProjectController {
 	def save = {
 		def isNew = (params.id?.size() == 0)
 		def project = isNew ? new Project(user:authenticateService.userDomain()) : Project.get(params.id) 
+		
 		project.name = params.name
 		
                 flash.projectCheckPassed = checkProjectForUser(project) 
-	        if(flash.projectCheckPassed) project.save()
+	        if(flash.projectCheckPassed) {
+			project.save()
+			if(isNew) projectService.addGroupToNewProject(project)
+		}
 			
 		redirect(action:'list')
 	}
