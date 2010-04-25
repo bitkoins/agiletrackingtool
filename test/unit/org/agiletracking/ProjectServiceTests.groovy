@@ -105,18 +105,14 @@ class ProjectServiceTests extends GrailsUnitTestCase {
         [iterationServiceControl, iterationServiceControl]*.verify()
         assertEquals 0, Project.count()
     }
-    
-    void testFileNameCreation()
+
+    void testAddGroupToNewProject()
     {
-    	def exportDir = "/tmp/hello world/"
-    	mockConfig "agile.exportDirectory = \"${exportDir}\""
-    	def fileName = projectService.getProjectExportFileName("a word", "4:12")
-    	assertEquals exportDir + "a_word" + "_4_12" + ".xml", fileName
-    }
-    
-    void testFileNameCreationWithNoConfig()
-    {
-    	def exportDir = "/tmp/hello world/"
-    	assertNull projectService.getProjectExportFileName("a word", "4:12")
+        def project = Defaults.getProjects(1)[0]
+        mockDomain(Project, [project])
+	mockDomain(ItemGroup, [] )
+	projectService.addGroupToNewProject(project)
+	assertEquals 1, ItemGroup.count()
+	assertEquals project, ItemGroup.list()[0].project	
     }
 }

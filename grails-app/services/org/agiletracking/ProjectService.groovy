@@ -26,6 +26,12 @@ class ProjectService {
     
     def itemGroupService
     def iterationService
+
+    def addGroupToNewProject(def project)
+    {
+	def group = new ItemGroup(project:project,name:'Default category',items:[])
+	group.save()
+    }
     
     def delete(def project) {
     	PointsSnapShot.findAllByProject(project).each{ it.delete() }
@@ -35,7 +41,7 @@ class ProjectService {
     }
     
     def executeWhenProjectIsCorrect(def project, def objectForProjectCheck, def closureWhenProjectIsValid = {})
-	{
+    {
 		def projectCheckPassed = false
 		 
         if( project && objectForProjectCheck && 
@@ -46,10 +52,10 @@ class ProjectService {
         if(projectCheckPassed) closureWhenProjectIsValid()
         
         return projectCheckPassed
-	}
+    }
 	
-	def exportToXmlString(def project, def docVersion = UtilXml.currentDocVersion)
-	{
+    def exportToXmlString(def project, def docVersion = UtilXml.currentDocVersion)
+    {
 		def findAllForProject = { domain -> domain.findAllByProject(project) }
 				 
     	return UtilXml.exportToXmlString(project,
@@ -58,12 +64,5 @@ class ProjectService {
     	                                 findAllForProject(Iteration), 
     	                                 findAllForProject(PointsSnapShot),
     	                                 new Date(), docVersion )
-	}
-		
-	def getProjectExportFileName(def projectName, def date)
-	{
-		def exportDir = ConfigurationHolder.config?.agile?.exportDirectory
-			def dateTimeString = date.toString().replace(" ","_").replace(":","_")
-    	return exportDir ? exportDir + "${projectName.replace(" ", "_")}_${dateTimeString}.xml" : null
-	}
+    }
 }
