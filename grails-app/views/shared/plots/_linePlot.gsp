@@ -4,7 +4,9 @@
 	  <%  
 	  	  org.agiletracking.PlotFormatUtil.calculateRangeValues(plotData)
 	  %>
-	 <chart:lineChart title='${plotData.title}' dataType='text' data='${org.agiletracking.PlotFormatUtil.formatDataForCurves(plotData)}' 
+
+    	 <!-- Switch to easyChart by chart:lineChart ... , to googleChart: g:lineChart .../ -->
+	 <g:lineChart title='${plotData.title}' dataType='text' data='${org.agiletracking.PlotFormatUtil.formatDataForCurves(plotData)}' 
 	     colors="${org.agiletracking.PlotFormatUtil.formatColorsForCurves(plotData.curves.size())}"
 	     size="${plotSize}"
 	     fill="${[ 'c,lg,0,76A4FB,1,ffffff,0' , 'bg,s,EFEFEF' ]}"
