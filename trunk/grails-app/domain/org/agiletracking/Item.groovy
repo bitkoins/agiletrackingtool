@@ -52,7 +52,7 @@ class Item {
 	
 	Item(def project, def group)
 	{
-		stampUid()
+		uid = maxUid(project) + 1
 		this.project = project
 		this.group = group
 		description = ""
@@ -108,11 +108,6 @@ class Item {
 		this.itemPoints = points
 	}
 	
-	def stampUid()
-	{		
-		this.uid = maxUid()				
-	}
-	
 	def hasCriteria()
 	{
 		return criteria ? criteria.trim().size() != 0 : false
@@ -124,9 +119,16 @@ class Item {
 		group?.deleteItem(id)
 	}
 	
-	static def maxUid()
+	static def maxUid(def project)
 	{
-		def items = Item.list(max:1,sort:'uid',order:'desc')
-		return items ? (items[0].uid + 1) : 1
+		//def items = Item.list(max:1,sort:'uid',order:'desc')
+		def maxUid = Item.createCriteria().get {
+			eq("project",project)
+			projections {
+				max("uid")
+			}
+		}
+
+		return maxUid ?: 0
 	}	
 }
