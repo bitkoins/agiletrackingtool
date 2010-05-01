@@ -29,7 +29,7 @@ class ItemTests extends GroovyTestCase {
 	
 	void setUp()
 	{
-		projects = Defaults.getProjects(1)
+		projects = Defaults.getProjects(2)
 		project = projects[0]
 		groups = Defaults.getGroups(2,project)
 		items = Defaults.getItems(5,groups,project)
@@ -57,9 +57,7 @@ class ItemTests extends GroovyTestCase {
     		item.errors.allErrors.each { println it }
     	assertNotNull item.save()
     }
-    
-    
-    
+       
     void testSubItemSave()
     {
     	def subItem = Defaults.getSubItems(1,[items[0]])[0]
@@ -116,9 +114,23 @@ class ItemTests extends GroovyTestCase {
         
     void testUniqueItemIdIsInitiallyOne()
     {   
-    	def item = items[0]
-    	item.stampUid()
-    	assertTrue item.uid == 1
+    	assertTrue items[0].uid == 1
+    }
+   
+    void testUidIsCorrectlyTakenWhenMultipleProjectsArePresent()
+    {
+	saveItemsAndGroups()
+	
+	def aValue = 234
+	def otherProject = projects[1]
+	def otherGroup = Defaults.getGroups(1,project)[0]
+	otherGroup.save()
+	def otherItems = Defaults.getItems(2,[otherGroup],otherProject)
+	otherItems[-1].uid = aValue
+	(otherItems)*.save()
+
+        assertEquals aValue, Item.maxUid(otherProject)
+	assertEquals items.max{it.uid}.uid, Item.maxUid(project) 
     }
     
     void testUniqueItemIdTakesMaximumValue()
@@ -126,11 +138,9 @@ class ItemTests extends GroovyTestCase {
     	saveItemsAndGroups()
     	def maxItem = items[0]
     	def aValue = 1234
-    	maxItem.uid = items.size() + aValue
+    	maxItem.uid = aValue
     	maxItem.save()
-    	def newItem = new Item()
-    	newItem.stampUid()
-    	assertTrue newItem.uid == (items.size()+aValue+1)
+    	assertEquals aValue, Item.maxUid(project) 
     }
     
     void testItemHasNoCriteria()
