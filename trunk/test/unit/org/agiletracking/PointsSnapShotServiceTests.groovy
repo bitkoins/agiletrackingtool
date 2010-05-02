@@ -2,7 +2,7 @@ package org.agiletracking
 import grails.test.*
 
 class PointsSnapShotServiceTests extends GrailsUnitTestCase {
-    def snapShotService, group, groups, snapShots
+    def snapShotService, group, groups, snapShots, project
 
     protected void setUp() {
         super.setUp()
@@ -11,7 +11,7 @@ class PointsSnapShotServiceTests extends GrailsUnitTestCase {
         def now = new Date()
     	def projects = Defaults.getProjects(2)    	
     	mockDomain(Project, projects)
-    	def project = projects[0]
+    	project = projects[0]
     	    	
     	groups = Defaults.getGroups(3,project)
     	mockDomain(ItemGroup, groups)
@@ -44,6 +44,40 @@ class PointsSnapShotServiceTests extends GrailsUnitTestCase {
     	def findNumberPointsForGroups = { PointsForGroup.findAllByGroup(it).size() }
     	assertEquals 0, findNumberPointsForGroups(group)
     	(groups-group).each{ otherGroup -> assertTrue findNumberPointsForGroups != 0 }
+    }
+
+    void testPerformSnapJobWhenNoChangeMadeToItems()
+    {
+    	def itemControl = mockFor(Item)
+    	def psControl = mockFor(PointsSnapShot)
+    	def now = new Date()
+    	
+    	itemControl.demand.static.lastUpdateDateForProject(1..1) { _project -> assertEquals project, _project; return now - 2 }
+    	psControl.demand.takeSnapShot(0..0) { _project, _date -> }
+    	    	
+    	snapShotService.performSnapShotJob(project, now)
+    }
+    
+    void testPerformSnapJobWhenChangeMadeToItems()
+    {
+    	def now = new Date()
+    	def itemControl = mockFor(Item)
+    	itemControl.demand.static.lastUpdateDateForProject(1..1) { _project -> assertEquals project, _project; return now - 1 }
+
+    	/* Note: mixing up mockDomain and mockFor does not seem to support save. Workaround by using Expando: */
+    	def newSnapShot = new Expando()
+    	def psControl = mockFor(PointsSnapShot)
+    	psControl.demand.static.takeSnapShot(1..1) { _project, _date ->
+    			assertEquals _project, project
+    			assertEquals _date, now
+    			return newSnapShot 
+    	}
+    	
+    	def saved = false
+    	newSnapShot.save = { saved = true }
+    	
+    	snapShotService.performSnapShotJob(project, now)
+    	assertTrue saved
     }
 }
         

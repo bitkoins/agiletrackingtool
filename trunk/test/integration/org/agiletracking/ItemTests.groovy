@@ -142,7 +142,15 @@ class ItemTests extends GroovyTestCase {
     	maxItem.save()
     	assertEquals aValue, Item.maxUid(project) 
     }
-    
+
+    void testRetrieveLatestItem()
+    {
+	/* Hard to test because when saving the item date is updated again. 
+	 * Implementation wise it's the same as maxUid() */
+	saveItemsAndGroups()
+	assertNotNull Item.lastUpdateDateForProject(project).class
+    }
+
     void testItemHasNoCriteria()
     {
     	def values = [null, "  ", " ", ""]
@@ -158,4 +166,5 @@ class ItemTests extends GroovyTestCase {
         assertTrue items[0].hasCriteria()    	
     }
 }
+
     
