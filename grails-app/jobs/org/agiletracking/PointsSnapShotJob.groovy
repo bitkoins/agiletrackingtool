@@ -21,22 +21,23 @@ along with Agile Tracking Tool.  If not, see <http://www.gnu.org/licenses/>.
 package org.agiletracking
 
 class PointsSnapShotJob {
-	def cronExpression = "0 15 12 ? * *"  // Run every day at 12.15
-	//def timeout = 5*1000l // execute job once in n seconds
+    //def cronExpression = "0 15 12 ? * *"  // Run every day at 12.15
+    def timeout = 5*1000l // execute job once in n seconds
 
-	def projectService  
+    def pointsSnapShotService
 	
     def execute() {
 		try
 		{	
   		    Project.list().each{ project ->
-  		    	 PointsSnapShot.takeSnapShot(project,new Date() ).save()
-	   	    }
+                         pointsSnapShotService.performSnapShotJob(project)
+                         log.info "Created snapShot for project.id = ${project.id}"
+		    }	
 	 	}
 		catch(Exception e)
 		{
-			println "Exception occured when taking snapShot: " + e
-			println "Exception ignored."
+			log.error "Exception occured when taking snapShot: " + e
+			log.error "Exception ignored."
 		}	
     }
 }

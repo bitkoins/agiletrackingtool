@@ -120,15 +120,24 @@ class Item {
 	}
 	
 	static def maxUid(def project)
+	{	
+		return _retrieveMaxValueForField(project,"uid")
+	}	
+
+	static def lastUpdateDateForProject(def project)
+	{	
+		return _retrieveMaxValueForField(project,"lastUpdated")
+	}
+
+	static def _retrieveMaxValueForField(def project, def fieldAsString)
 	{
-		//def items = Item.list(max:1,sort:'uid',order:'desc')
-		def maxUid = Item.createCriteria().get {
+ 		def max = Item.createCriteria().get {
 			eq("project",project)
 			projections {
-				max("uid")
+				max(fieldAsString)
 			}
 		}
 
-		return maxUid ?: 0
-	}	
+		return max ?: 0
+	}
 }

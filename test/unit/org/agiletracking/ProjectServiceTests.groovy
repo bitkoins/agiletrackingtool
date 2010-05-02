@@ -110,9 +110,9 @@ class ProjectServiceTests extends GrailsUnitTestCase {
     {
         def project = Defaults.getProjects(1)[0]
         mockDomain(Project, [project])
-	mockDomain(ItemGroup, [] )
-	projectService.addGroupToNewProject(project)
-	assertEquals 1, ItemGroup.count()
-	assertEquals project, ItemGroup.list()[0].project	
+        mockDomain(ItemGroup, [] )
+        projectService.addGroupToNewProject(project)
+        assertEquals 1, ItemGroup.count()
+        assertEquals project, ItemGroup.list()[0].project	
     }
 }
