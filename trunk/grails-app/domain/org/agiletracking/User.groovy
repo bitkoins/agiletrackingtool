@@ -34,6 +34,7 @@ class User {
 		userRealName(blank: false)
 		passwd(blank: false)
 		enabled()
+		email(email:true,blank:false)
 		agreeToTermsOfUse(inList:[true])
 	}
 }
