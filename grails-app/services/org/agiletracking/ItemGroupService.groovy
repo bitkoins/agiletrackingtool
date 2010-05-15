@@ -26,6 +26,7 @@ class ItemGroupService {
     def transformToItemsByGroup(def groups, def items)
     {
     	def itemsByGroup = [:]
+
     	groups.each{ group -> itemsByGroup[group] = [] }
     	items.each{ item ->
     		def foundGroup = groups.find{ item.group.id == it.id}  
@@ -33,15 +34,22 @@ class ItemGroupService {
     	}
     	return itemsByGroup 
     }
-    
-	def deleteWholeGroup(def group)
-	{
-		group.items.collect{it}.each{ item ->
-			item.iteration?.deleteItem(item.id)
-			item.group?.deleteItem(item.id)
-	    	item.delete()
-		}
-		
-		group.delete()
+
+     def removeItemsFromGroupMap(def itemsToRemove, def itemsByGroup)
+     {
+	itemsToRemove.each{ item ->
+		def foundGroup = itemsByGroup.find{ it.key.id == item.group.id }.key
+		if(foundGroup) itemsByGroup[foundGroup] -= item
 	}
+     }
+	   
+     def deleteWholeGroup(def group)
+     {
+	group.items.collect{it}.each{ item ->
+		item.iteration?.deleteItem(item.id)
+		item.group?.deleteItem(item.id)
+        	item.delete()
+	}
+	group.delete()
+    }
 }

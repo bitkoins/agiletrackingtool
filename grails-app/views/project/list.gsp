@@ -24,7 +24,11 @@
 		</div>
 	        <div class="itemSeperator"></div>
 	</g:each>		
+
+	<g:if test="${projects?.size() == 0}">		
+           <g:link controller="admin" action="loadDefaults">Load example project data</g:link>
+	</g:if>
+
 	</div>
-			
 	</body>
 </html>

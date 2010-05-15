@@ -115,4 +115,5 @@ class ProjectServiceTests extends GrailsUnitTestCase {
         assertEquals 1, ItemGroup.count()
         assertEquals project, ItemGroup.list()[0].project	
     }
+
 }

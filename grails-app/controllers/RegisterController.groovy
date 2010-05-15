@@ -75,6 +75,8 @@ class RegisterController {
 	 */
 	def update = {
 
+	
+
 		def person
 		def user = authenticateService.userDomain()
 		if (user) {
@@ -88,6 +90,11 @@ class RegisterController {
 		if (!person) {
 			flash.message = "[Illegal Access] User not found with id ${params.id}"
 			redirect action: index, id: params.id
+			return
+		}
+
+		if(person.username == "demo")  { 
+			render "Not allowed to change user 'demo'"
 			return
 		}
 

@@ -45,7 +45,7 @@
 	<h2>Select items for iteration:</h2>
 	<g:each var="entry" in="${itemsByGroup}">
 		<g:set var="group" value="${entry.key}" />
-		<g:set var="items" value="${entry.value.sort{it.priority}}" />
+		<g:set var="items" value="${entry.value}" />
 		
 		<g:if test="${items.size() > 0}">
 		<div id="groupItems${group.id}" class="itemGroup" style="margin-right:50px">
