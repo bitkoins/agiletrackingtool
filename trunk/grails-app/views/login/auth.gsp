@@ -41,7 +41,6 @@
 #login .inner .chk {height:12px;}
 </style>
 </head>
-
 <body>
 	<div id='login'>
 		<div class='inner'>
@@ -49,6 +48,10 @@
 			<div class='login_message'>${flash.message}</div>
 			</g:if>
 			<div class='fheader'>Please Login..</div>
+			<br/>
+			<p>For demonstration purposes use:</p>
+			<p>Login ID='${org.codehaus.groovy.grails.commons.ConfigurationHolder.config.agile.demo.username}' and Password='${org.codehaus.groovy.grails.commons.ConfigurationHolder.config.agile.demo.username}'</p>
+			<br/>
 			<form action='${postUrl}' method='POST' id='loginForm' class='cssform'>
 				<p>
 					<label for='j_username'>Login ID</label>

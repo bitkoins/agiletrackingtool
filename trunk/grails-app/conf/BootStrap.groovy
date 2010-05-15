@@ -18,8 +18,8 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with Agile Tracking Tool.  If not, see <http://www.gnu.org/licenses/>.
 ------------------------------------------------------------------------------*/
-
 import org.agiletracking.*
+import org.codehaus.groovy.grails.commons.*
 
 class BootStrap {
 	
@@ -27,9 +27,9 @@ class BootStrap {
 
      def init = { servletContext ->
         DataSourceUtils.tuneDataSource(servletContext) 
-
-	def md5pass = authenticateService.passwordEncoder("agile")
-	def userAgile = new User(username:"agile",userRealName:"Agile Tracker", passwd:md5pass, 
+        def md5pass = authenticateService.passwordEncoder(ConfigurationHolder.config.agile.demo.password)
+	def userAgile = new User(username:ConfigurationHolder.config.agile.demo.username,
+                            userRealName:"Mister Demo", passwd:md5pass, 
                             enabled:true,email:"agiletracking@gmail.com",
                             emailShow:true,description:"None",
 			    agreeToTermsOfUse:true)

@@ -59,10 +59,11 @@ class ProjectService {
 		def findAllForProject = { domain -> domain.findAllByProject(project) }
 				 
     	return UtilXml.exportToXmlString(project,
-    			  						 findAllForProject(ItemGroup), 
+					 findAllForProject(ItemGroup), 
     	                                 findAllForProject(Item), 
     	                                 findAllForProject(Iteration), 
     	                                 findAllForProject(PointsSnapShot),
     	                                 new Date(), docVersion )
     }
+
 }

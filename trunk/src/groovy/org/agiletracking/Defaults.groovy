@@ -68,7 +68,7 @@ class Defaults {
 			def item = new Item(project:project)
 			item.uid = index + (maxUid + 1)
 			item.id = item.uid + 1 
-			item.description = "${project.name} + Item  ${index}"			
+			item.description = "Example Item  ${index}"			
 			item.points = Util.random(points)
 			item.dateCreated = new Date() - 10
 			item.lastUpdated = new Date()

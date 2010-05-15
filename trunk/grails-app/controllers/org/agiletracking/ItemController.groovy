@@ -24,7 +24,7 @@ class ItemController {
 	def itemService
 	def itemGroupService
 	def projectService
-	
+       	
 	static navigation = [
 		group:'tags',
 		order:20, 
@@ -33,6 +33,7 @@ class ItemController {
 		isVisible: { session.project != null },
 		subItems: [
 			[action:'backlog', order:1, title:'Backlog'],
+			[action:'prioritize', order:5, title:'Prioritize'],
 			[action:'showAll', order:10, title:'Show all items'],
 			[action:'createGroup', order:15, title:'Create new category'],
 			[action:'listGroups', order:90, title:'Show categories']
@@ -40,10 +41,7 @@ class ItemController {
 	]
 	
 	def backlog = {
-			def itemsByGroup =  params.priorities ? 
-						itemService.getUnfinishedItemsGroupMap(session.project, Util.parsePriorities(params.priorities)) :
-			            itemService.getUnfinishedItemsGroupMap(session.project)
-			
+			def itemsByGroup = itemService.getUnfinishedItemsGroupMap(session.project)
 			return [itemsByGroup:itemsByGroup]
 	}
 	
@@ -92,4 +90,27 @@ class ItemController {
 	def createGroup = {
 		redirect(controller:'itemGroup', action:'create')
 	}
+
+	def prioritize = { 
+				  def itemIdList = Project.get(session.project.id).getPrioritizedItemIdList()
+				  def prioItems = itemService.retrieveUnfinishedItemsForProject(session.project,itemIdList)
+					
+				  def items = itemService.getUnfinishedItems(session.project)
+				  def itemsByGroup = itemGroupService.transformToItemsByGroup(items.collect{it.group}.unique(),
+																										  items-prioItems)
+
+				  return [prioItems:prioItems, itemsByGroup:itemsByGroup, message:flash.message ]
+   }
+
+   def savePriorities = {
+				  def itemIdList = params['prioItems_input'].split(" ")
+				  itemIdList = itemIdList.findAll{ it && !it.contains("dummy") }
+				  itemIdList = itemIdList.collect{ Integer.parseInt(it.split("_")[1]) } 
+				  
+				  def prioItems = itemService.retrieveUnfinishedItemsForProject(session.project,itemIdList)
+				  def project = Project.get(session.project.id)
+				  project.setPrioritizedItemIdList(prioItems.collect{it.id})
+				  project.save()
+				  redirect(action:"backlog")
+   }
 }

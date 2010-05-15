@@ -1,7 +1,7 @@
 /*----------------------------------------------------------------------------
 Project: Agile Tracking Tool
 
-Copyright 2008, 2009, 2010   Ben Schreur
+Copyright 2008, 2009   Ben Schreur
 ------------------------------------------------------------------------------
 This file is part of Agile Tracking Tool.
 
@@ -19,32 +19,49 @@ You should have received a copy of the GNU General Public License
 along with Agile Tracking Tool.  If not, see <http://www.gnu.org/licenses/>.
 ------------------------------------------------------------------------------*/
 package org.agiletracking
+import grails.test.*
 
-class Project {
-	String name
-	String prioritizedItemIds
-	static belongsTo = [user:User]
-	static String seperator = ":"
-
-        static mapping = {
-           prioritizedItemIds type: 'text'
-        }
-
-	static constraints  = {
-	   name(blank:false)
-	   user(nullable:true)
-	   prioritizedItemIds(nullable:true)
+class ProjectTests extends GrailsUnitTestCase {
+	def project
+	
+	protected void setUp()
+	{
+		super.setUp()
+		project = Defaults.getProjects(1)[0]
+		mockDomain(Project,[project])
+	}
+	
+	protected void tearDown()
+	{
+		super.tearDown()
 	}
 
-	void setPrioritizedItemIdList(def itemIdList)	
+   void testSave() 
 	{
-	    prioritizedItemIds = itemIdList.join(seperator)
+	   if ( !project.validate() )
+	    		project.errors.allErrors.each { println it }
+		assertTrue project.validate()		
 	}
 
-	def getPrioritizedItemIdList()		
+	void performSetPrioritizedList(def ids)
 	{
-	    return prioritizedItemIds?.size() ?
-	           prioritizedItemIds.split(seperator).collect{ Long.parseLong(it) } :
-		   []
+		project.setPrioritizedItemIdList(ids)
+		assertEquals ids, project.getPrioritizedItemIdList()
+	}
+	
+	void testSetPrioritizedList()
+	{
+		performSetPrioritizedList([1,2,3,5])
+	}
+
+	void testSetPrioritizedEmptyList()
+	{
+		performSetPrioritizedList([])
+	}
+
+	void testSetPrioritizedListOfOneElement()
+	{
+		performSetPrioritizedList([42])
 	}
 }
+ 

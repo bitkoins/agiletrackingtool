@@ -283,12 +283,13 @@ body {
 
 .itemGroup {
 	background-color: #FFFF99;
-	margin-left: 10px;
+	margin-left: 00px;
 	margin-right: 10px;
 	margin-bottom: 7px;
 	padding-bottom: 5px;
-	padding-left: 15px;
-	padding-top: 2px;
+	padding-left: 10px;
+	padding-right: 10px;	
+	padding-top: 10px;
 }
     		
 .itemBox {

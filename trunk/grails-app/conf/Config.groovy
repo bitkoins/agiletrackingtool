@@ -80,4 +80,5 @@ log4j = {
     warn   'org.mortbay.log'
 }
 
-google.analytics.webPropertyID = "UA-11163740-4"
+agile.demo.username="demo"
+agile.demo.password="demo"

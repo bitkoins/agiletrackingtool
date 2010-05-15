@@ -25,34 +25,36 @@ class ItemService {
 	    
     def itemGroupService
 
-    def _getUnfinishedItemsGroupMapWithItemCheck(def project, Closure itemCheck)
-	{
-		def itemsByGroup = [:]		
-		def items = Item.findAllByProject(project)
-		def selectedItems = items.findAll{ item -> (item.status != ItemStatus.Finished) && itemCheck(item) }  
-		def groups = ItemGroup.findAllByProject(project)
-		
-		return itemGroupService.transformToItemsByGroup(groups, selectedItems)
-	}
-	
-	def getUnfinishedItemsGroupMap(def project, List priorityList)
-	{
-		def itemCheck = { item ->
-			return priorityList.contains(item.priority)   
-		}
-		
-		return 	_getUnfinishedItemsGroupMapWithItemCheck(project,itemCheck)
-	}
-	
 	def getUnfinishedItemsGroupMap(def project)
 	{
-		return 	_getUnfinishedItemsGroupMapWithItemCheck(project, { item -> true})
+		def items = getUnfinishedItems(project)
+		def groups = ItemGroup.findAllByProject(project)
+		return itemGroupService.transformToItemsByGroup(groups, items)
 	}
-	
+
+	def getUnfinishedItems(def project)
+	{
+		return Item.findAllByProjectAndStatusNotEqual(project,ItemStatus.Finished)
+	}
+
 	def deleteItem(def item)
 	{
 		item.iteration?.deleteItem(item.id)
 		item.group?.deleteItem(item.id)
 		item.delete()
+	}
+
+	def retrieveUnfinishedItemsForProject(def project, def itemIdList)
+	{
+		return itemIdList.collect{ Item.get(it) }.findAll{ 
+			it?.project?.id == project.id && it?.checkUnfinished() }
+	}
+
+	void removeItemsFromList(def itemList, def itemIdsToRemove)
+	{
+		itemIdsToRemove.each{ rid ->
+			def itemToRemove = itemList.find{ it.id == rid} 
+			itemList.remove(itemToRemove)
+		}		
 	}
 }

@@ -22,6 +22,7 @@ package org.agiletracking
 
 class IterationComposerController {
 	def itemService
+	def itemGroupService
 	def projectService
 		
 	def compose = {
@@ -31,16 +32,22 @@ class IterationComposerController {
 			redirect(action:"list")
 			return			
 		}
+
+		flash.projectCheckPassed = projectService.executeWhenProjectIsCorrect(session.project, iter)
 		
-		flash.projectCheckPassed = projectService.executeWhenProjectIsCorrect(session.project,  iter)
-				
-		def itemsByGroup = params.priorities ?  
-			itemService.getUnfinishedItemsGroupMap(session.project,Util.parsePriorities(params.priorities)) : 
-			itemService.getUnfinishedItemsGroupMap(session.project)
-				
-		itemsByGroup.each{ group, items ->
-				iter.items.each{ items.remove(it) } 
-		}
+      def items = itemService.getUnfinishedItems(session.project)
+		def prioItemIdList = Project.get(session.project.id).getPrioritizedItemIdList()
+		def prioItems = itemService.retrieveUnfinishedItemsForProject(session.project,prioItemIdList)
+
+		itemService.removeItemsFromList(items,prioItems.collect{it.id})
+		def iterItemIds = iter.items.collect{it.id}
+		[items,prioItems].each{ mitems -> itemService.removeItemsFromList(mitems,iterItemIds) }
+		
+		def itemsByGroup = [:] 
+		def prioGroup = new ItemGroup(name:"Prioritized items")
+		itemsByGroup[prioGroup]= prioItems
+		itemsByGroup += itemGroupService.transformToItemsByGroup(items.collect{it.group}.unique(),
+                                                               items)
 		
 		return [iteration:iter, itemsByGroup:itemsByGroup, isCompositionView:true]
 	}
@@ -50,8 +57,8 @@ class IterationComposerController {
 			def item = Item.get(params.id)
 			
 			flash.projectCheckPassed = iter && item && (item.project.id == iter.project.id) &&
-                                                    projectService.executeWhenProjectIsCorrect(session.project,  item, 
-                                                                                               {  iter.addItem(item) } ) 	
+                       projectService.executeWhenProjectIsCorrect(
+                               session.project,  item, {  iter.addItem(item) } ) 	
 	
 			render(template:'iterationOverview',model:[iteration:iter])
 	}
