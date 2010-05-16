@@ -35,7 +35,7 @@ class IterationCurrentController {
 		isVisible: { session.project != null }
 	]
 
-	def defaultAction = "show"
+	static def defaultAction = "show"
 	
 	def show = {
 		def iteration = params.id ? Iteration.get(params.id) : iterationService.getOngoingIteration(session.project)
