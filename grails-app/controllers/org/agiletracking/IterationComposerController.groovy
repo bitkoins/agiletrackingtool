@@ -37,7 +37,7 @@ class IterationComposerController {
 		
       def items = itemService.getUnfinishedItems(session.project)
 		def prioItemIdList = Project.get(session.project.id).getPrioritizedItemIdList()
-		def prioItems = itemService.retrieveUnfinishedItemsForProject(session.project,prioItemIdList)
+		def prioItems = items.findAll{ prioItemIdList.contains(it.id) } 
 
 		itemService.removeItemsFromList(items,prioItems.collect{it.id})
 		def iterItemIds = iter.items.collect{it.id}

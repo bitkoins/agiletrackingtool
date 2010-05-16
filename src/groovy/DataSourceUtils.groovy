@@ -13,7 +13,7 @@ class DataSourceUtils {
 
   public static tuneDataSource = {servletContext ->
     def ctx = servletContext.getAttribute(ApplicationAttributes.APPLICATION_CONTEXT)
-    ctx.dataSource.with {d ->
+    ctx.dataSourceUnproxied.with {d ->
       d.setMinEvictableIdleTimeMillis(ms)
       d.setTimeBetweenEvictionRunsMillis(ms)
       d.setNumTestsPerEvictionRun(3)
