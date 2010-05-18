@@ -93,9 +93,8 @@ class ItemController {
 
 	def prioritize = { 
 				  def itemIdList = Project.get(session.project.id).getPrioritizedItemIdList()
-					
 				  def items = itemService.getUnfinishedItems(session.project)
-				  def prioItems = items.findAll{ items.contains(it.id) }
+				  def prioItems = itemService.retrieveUnfinishedItemsForProject(session.project, itemIdList) 
 				  def itemsByGroup = itemGroupService.transformToItemsByGroup(items.collect{it.group}.unique(),
 																										  items-prioItems)
 
