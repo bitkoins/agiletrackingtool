@@ -36,8 +36,8 @@ class IterationComposerController {
 		flash.projectCheckPassed = projectService.executeWhenProjectIsCorrect(session.project, iter)
 		
       def items = itemService.getUnfinishedItems(session.project)
-		def prioItemIdList = Project.get(session.project.id).getPrioritizedItemIdList()
-		def prioItems = items.findAll{ prioItemIdList.contains(it.id) } 
+		def prioItemUidList = Project.get(session.project.id).getPrioritizedItemUidList()
+		def prioItems = itemService.matchItemsWithUid(items,prioItemUidList)
 
 		itemService.removeItemsFromList(items,prioItems.collect{it.id})
 		def iterItemIds = iter.items.collect{it.id}

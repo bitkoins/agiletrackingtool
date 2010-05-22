@@ -45,8 +45,8 @@ class ProjectTests extends GrailsUnitTestCase {
 
 	void performSetPrioritizedList(def ids)
 	{
-		project.setPrioritizedItemIdList(ids)
-		assertEquals ids, project.getPrioritizedItemIdList()
+		project.setPrioritizedItemUidList(ids)
+		assertEquals ids, project.getPrioritizedItemUidList()
 	}
 	
 	void testSetPrioritizedList()

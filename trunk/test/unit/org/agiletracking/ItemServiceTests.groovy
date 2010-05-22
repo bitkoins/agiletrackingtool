@@ -101,5 +101,25 @@ class ItemServiceTests extends GrailsUnitTestCase {
 		assertEquals newSize, items.size()
 		itemIdsToRemove.each{ removedId -> assertNull items.find{ it.id == removedId } }
 	}
+   
+	void testMatchUidWhenNoneAreThere()
+	{
+		def matchList = itemService.matchItemsWithUid(items, [] )
+		assertEquals 0, matchList.size()
+	}
 
+	void testMatchUidWhenNoneExistingAreThere()
+	{
+		def max = items.max{ it.uid }.uid
+		def matchList = itemService.matchItemsWithUid(items, [max+1, max+10] )
+		assertEquals 0, matchList.size()
+	}
+
+	void testMatchUidWithCorrectSequenceWhenSomeMatch()
+	{
+		def uidList = items[0..2].collect{it.uid}.reverse() 
+		def matchList = itemService.matchItemsWithUid(items, uidList)
+		assertEquals uidList.size(), matchList.size() 
+		assertEquals uidList, matchList.collect{ it.uid } 
+	}
 }

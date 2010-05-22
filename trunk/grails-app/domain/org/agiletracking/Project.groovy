@@ -36,15 +36,14 @@ class Project {
 	   prioritizedItemIds(nullable:true)
 	}
 
-	void setPrioritizedItemIdList(def itemIdList)	
+	void setPrioritizedItemUidList(def itemUidList)	
 	{
-	    prioritizedItemIds = itemIdList.join(seperator)
+	    prioritizedItemIds = itemUidList.join(seperator)
 	}
 
-	def getPrioritizedItemIdList()		
+	def getPrioritizedItemUidList()		
 	{
 	    return prioritizedItemIds?.size() ?
-	           prioritizedItemIds.split(seperator).collect{ Long.parseLong(it) } :
-		   []
+	           prioritizedItemIds.split(seperator).collect{ Item.parseUid(it) } : []
 	}
 }

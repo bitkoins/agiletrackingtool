@@ -57,4 +57,9 @@ class ItemService {
 			itemList.remove(itemToRemove)
 		}		
 	}
+
+	def matchItemsWithUid(def items, def uidList)
+	{
+		return uidList.collect{ uid -> items.find{it.uid == uid} }.findAll{ it }
+	}
 }
