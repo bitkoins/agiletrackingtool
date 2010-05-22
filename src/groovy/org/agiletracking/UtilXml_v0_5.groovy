@@ -38,7 +38,12 @@ class UtilXml_v0_5 {
 			
 			Project
 			{
-				name(project.name)
+				name(project.name)				
+			}
+
+			PrioritizedItems
+			{
+				itemIdList(project.prioritizedItemIds)
 			}
 			
 			Groups{
@@ -147,6 +152,8 @@ class UtilXml_v0_5 {
 		
 		def exportDate = odf.parse( doc.ExportDate.text().toString() )		
 		def project = new Project(name:doc.Project.name.text() )
+
+		project.prioritizedItemIds = doc.PrioritizedItems.itemIdList.text()
 		
 		/*-------------Groups-------------------------------*/
 		doc.Groups.Group.each{ 

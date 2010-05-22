@@ -24,7 +24,7 @@ class Project {
 	String name
 	String prioritizedItemIds
 	static belongsTo = [user:User]
-	static String seperator = ":"
+	static String seperator = ","
 
         static mapping = {
            prioritizedItemIds type: 'text'

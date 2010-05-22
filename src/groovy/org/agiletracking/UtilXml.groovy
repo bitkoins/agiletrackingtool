@@ -21,7 +21,7 @@ along with Agile Tracking Tool.  If not, see <http://www.gnu.org/licenses/>.
 package org.agiletracking
 
 class UtilXml {
-	static def supportedVersions = [UtilXml_v0_5.docVersion, UtilXml_v0_4.docVersion, UtilXml_v0_3.docVersion]
+	static def supportedVersions = [UtilXml_v0_5.docVersion, UtilXml_v0_4.docVersion ]
 	static def currentDocVersion = supportedVersions[0]
 		
 	static def exportToXmlString(def project, def groups, def items, def iterations, def pointsSnapShots = [], def exportDate, 
@@ -35,9 +35,6 @@ class UtilXml {
 				break;
 			case UtilXml_v0_4.docVersion:
 				ret = UtilXml_v0_4.exportToXmlString(groups, items, iterations, pointsSnapShots, exportDate)
-				break;
-			case UtilXml_v0_3.docVersion:
-				ret = UtilXml_v0_3.exportToXmlString(groups, items, iterations, pointsSnapShots, exportDate)
 				break;
 			default:
 				throw new Exception("Version ${docVersion} is not supported.")
@@ -59,9 +56,6 @@ class UtilXml {
 				break;
 			case UtilXml_v0_4.docVersion:
 				ret = UtilXml_v0_4.importFromXmlDoc(doc)
-				break;
-			case UtilXml_v0_3.docVersion:
-				ret = UtilXml_v0_3.importFromXmlDoc(doc)
 				break;
 			default:
 				throw new Exception("Version ${docVersion} is not supported.")
