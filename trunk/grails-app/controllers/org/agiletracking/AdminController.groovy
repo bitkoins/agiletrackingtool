@@ -41,7 +41,7 @@ class AdminController {
     		}
     		
     		def docVersion = params.docVersion ? params.docVersion : UtilXml.currentDocVersion
-    		def xmlString = projectService.exportToXmlString(session.project)
+    		def xmlString = projectService.exportToXmlString(Project.get(session.project.id))
     
     		render(contentType: "text/xml", text:xmlString ) 
     }
