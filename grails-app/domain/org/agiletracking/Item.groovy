@@ -140,4 +140,9 @@ class Item {
 
 		return max ?: 0
 	}
+
+	static def parseUid(def uidString)
+	{
+		return Integer.parseInt(uidString)
+	}	
 }

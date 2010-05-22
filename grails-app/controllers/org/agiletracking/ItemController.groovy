@@ -92,23 +92,22 @@ class ItemController {
 	}
 
 	def prioritize = { 
-				  def itemIdList = Project.get(session.project.id).getPrioritizedItemIdList()
 				  def items = itemService.getUnfinishedItems(session.project)
-				  def prioItems = itemService.retrieveUnfinishedItemsForProject(session.project, itemIdList) 
+				  def itemUidList = Project.get(session.project.id).getPrioritizedItemUidList()
+				  def prioItems = itemService.matchItemsWithUid(items, itemUidList)
+		        itemService.removeItemsFromList(items,itemUidList)
 				  def itemsByGroup = itemGroupService.transformToItemsByGroup(items.collect{it.group}.unique(),
-																										  items-prioItems)
+																								  items)
 
 				  return [prioItems:prioItems, itemsByGroup:itemsByGroup, message:flash.message ]
    }
 
    def savePriorities = {
-				  def itemIdList = params['prioItems_input'].split(" ")
-				  itemIdList = itemIdList.findAll{ it && !it.contains("dummy") }
-				  itemIdList = itemIdList.collect{ Integer.parseInt(it.split("_")[1]) } 
-				  
-				  def prioItems = itemService.retrieveUnfinishedItemsForProject(session.project,itemIdList)
+				  def itemUidList = params['prioItems_input'].split(" ")
+				  itemUidList = itemUidList.findAll{ it && !it.contains("dummy") }
+				  itemUidList = itemUidList.collect{ Integer.parseInt(it.split("_")[1]) } 
 				  def project = Project.get(session.project.id)
-				  project.setPrioritizedItemIdList(prioItems.collect{it.id})
+				  project.setPrioritizedItemUidList(itemUidList)
 				  project.save()
 				  redirect(action:"backlog")
    }

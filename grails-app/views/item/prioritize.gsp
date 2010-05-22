@@ -84,7 +84,7 @@
 	    <li id="dummy_0">Drag item to this area</li>
 	  </g:if>
 	   <g:each var="item" in="${prioItems}">
-               	<li id="${item.id}">${item.uid} &nbsp ${item.description}</li>
+               	<li id="${item.uid}">${item.uid} &nbsp ${item.description}</li>
 	    </g:each>
             </gui:draggableList>
 	  <p style="background-color:lightgrey">Lowest priority</p>	
@@ -101,7 +101,7 @@
 	    <h1>${group.name}</h1>		    
             <gui:draggableList id="${group}" class="list" prepend="item_">
 	     <g:each var="item" in="${itemsByGroup[group]}">i
-               	<li id="${item.id}">${item.uid} &nbsp ${item.description}</li>
+               	<li id="${item.uid}">${item.uid} &nbsp ${item.description}</li>
 	    </g:each>
             </gui:draggableList> 
 	    </div>
