@@ -95,11 +95,11 @@ class ItemServiceTests extends GrailsUnitTestCase {
 
    void testRemoveItemsFromListThatExist()
    {
-		def itemIdsToRemove = items[2..3].collect{it.id}
-		def newSize = items.size() - itemIdsToRemove.size()
-		itemService.removeItemsFromList( items, itemIdsToRemove)
+		def itemUidsToRemove = items[2..3].collect{it.uid}
+		def newSize = items.size() - itemUidsToRemove.size()
+		itemService.removeItemsFromList( items, itemUidsToRemove)
 		assertEquals newSize, items.size()
-		itemIdsToRemove.each{ removedId -> assertNull items.find{ it.id == removedId } }
+		itemUidsToRemove.each{ removedId -> assertNull items.find{ it.uid == removedId } }
 	}
    
 	void testMatchUidWhenNoneAreThere()

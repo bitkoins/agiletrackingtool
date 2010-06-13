@@ -50,10 +50,10 @@ class ItemService {
 			it?.project?.id == project.id && it?.checkUnfinished() }
 	}
 
-	void removeItemsFromList(def itemList, def itemIdsToRemove)
+	void removeItemsFromList(def itemList, def itemUidsToRemove)
 	{
-		itemIdsToRemove.each{ rid ->
-			def itemToRemove = itemList.find{ it.id == rid} 
+		itemUidsToRemove.each{ rid ->
+			def itemToRemove = itemList.find{ it.uid == rid} 
 			itemList.remove(itemToRemove)
 		}		
 	}
