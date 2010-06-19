@@ -20,7 +20,7 @@ along with Agile Tracking Tool.  If not, see <http://www.gnu.org/licenses/>.
 ------------------------------------------------------------------------------*/
 package org.agiletracking
 
-class IterationCurrentController {
+class CurrentWorkController {
 
 	def itemService
 	def plotService

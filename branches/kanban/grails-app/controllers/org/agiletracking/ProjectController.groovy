@@ -40,7 +40,7 @@ class ProjectController {
                 flash.projectCheckPassed = checkProjectForUser(project) 
 	        if(flash.projectCheckPassed) session.project = project
 
-	        redirect(controller:'iterationCurrent')
+	        redirect(controller:'currentWork')
 	}
 	
 	def delete = {
