@@ -1,0 +1,1 @@
+gvim -u _vimrc
