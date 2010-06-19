@@ -32,6 +32,7 @@ class UtilXmlTests extends GroovyTestCase {
 	{
 		project = Defaults.getProjects(1)[0]
 		project.prioritizedItemIds = "someTextWillDoForTesting"
+		project.type = ProjectType.Kanban
 		groups = Defaults.getGroups(5)
     	items = Defaults.getItems(5,groups,project)
     	subItems = Defaults.getSubItems(20,items)
@@ -100,6 +101,7 @@ class UtilXmlTests extends GroovyTestCase {
 		if(docVersion ==  UtilXml_v0_5.docVersion) { 
 			assertEquals importProject.name, project.name
 			assertEquals importProject.prioritizedItemIds, project.prioritizedItemIds
+			assertEquals importProject.type, project.type
 	   }
 		
 		assertEquals groups.size() , importGroups.size()
