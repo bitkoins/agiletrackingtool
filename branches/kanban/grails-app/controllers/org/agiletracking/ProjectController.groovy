@@ -76,6 +76,7 @@ class ProjectController {
       flash.projectCheckPassed = checkProjectForUser(project) 
       if(flash.projectCheckPassed) {
 			project.save()
+			session.project = project
 			if(isNew) projectService.addGroupToNewProject(project)
 		}
 			

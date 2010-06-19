@@ -38,20 +38,42 @@ class CurrentWorkController {
 	static def defaultAction = "show"
 	
 	def show = {
-		def iteration = params.id ? Iteration.get(params.id) : iterationService.getOngoingIteration(session.project)
-		
-		if(!iteration) {
-			redirect(controller:'iteration', action:'list')
-			return
-		}
-
-		flash.projectCheckPassed = projectService.executeWhenProjectIsCorrect(session.project, iteration )
-		
+		def iteration = null
+		def plotData = null
 		def mlist = []
-		ItemStatus.each{ status -> mlist += iteration.items?.findAll{ it.status == status }.sort{ it.uid } }
-		def plotData = plotService.createBurnUpPlotData(iteration)
-		
-		return [iteration:iteration,items:mlist,plotData:plotData]
+
+		if(!session.project.usesKanban() ) {
+				  iteration = params.id ? Iteration.get(params.id) : 
+                                      iterationService.getOngoingIteration(session.project)
+				  
+				  if(!iteration) {
+					  redirect(controller:'iteration', action:'list')
+					  return
+				  }
+
+				  flash.projectCheckPassed = projectService.executeWhenProjectIsCorrect(session.project, iteration )
+				  mlist = iteration.items.collect{it}.sort{it.uid}
+      		  plotData = plotService.createBurnUpPlotData(iteration)
+		}
+		else {
+	      def itemUidList = Project.get(session.project.id).getPrioritizedItemUidList()
+			def items = Item.list()
+			mlist = itemService.matchItemsWithUid(items, itemUidList)
+			mlist = mlist.findAll{ it.checkUnfinished() } 
+			if(mlist.size() > 0 ) mlist = mlist[0..(Math.min(mlist.size(),5)-1)]
+		}
+	
+	  def itemsSortedOnStatus = []
+ 	  ItemStatus.each{ status -> itemsSortedOnStatus += mlist.findAll{ it.status == status } }
+     return [iteration:iteration,items:itemsSortedOnStatus,plotData:plotData]
+	}
+
+	def showScrumBoard = {
+
+	}
+
+	def showKanbanBoard = {
+
 	}
 	
 	def closeCurrent = {

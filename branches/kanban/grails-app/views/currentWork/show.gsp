@@ -1,6 +1,6 @@
 <html>
     <head>
-        <title>View current iteration</title>
+        <title>Current Work</title>
 		<link rel="stylesheet" href="${createLinkTo(dir:'css',file:'main.css')}" />
 		<meta name="layout" content="main" />
 		<nav:resources override="false"/>	
@@ -8,9 +8,9 @@
     <body>
     	<g:javascript library="prototype" />
     	<nav:renderSubItems group="tags"/>
-    	
-    	<div class="iteration">
 
+	<g:if test="${iteration}">    	
+ 	<div class="iteration">
 	<h2>${iteration.workingTitle}</h2>
 	<g:if test="${iteration.status == org.agiletracking.IterationStatus.Ongoing}">
 		<g:link action="closeCurrent">Close and copy unfinished items to the next iteration</g:link>
@@ -37,10 +37,11 @@
 		<td>${iteration.totalPoints()-iteration.getFinishedPoints()}</td>
 	</tr>
 	</table>
+	</div>
+	</g:if>
 
-	<div><br/><br/></div>
 
-		
+	<div class="currentWork">	
 	<g:each var="item" in="${items.collect{it}}">
 		<div id="itemBox${item.id}" class="itemBox">
 			<div id="item${item.id}">
@@ -48,9 +49,9 @@
 			</div>
 		</div>
 	</g:each>
+	</div>
 		
 	<div><br/></div>
 
-	</div>
-    </body>
+   </body>
 </html>
