@@ -62,18 +62,19 @@ class ProjectController {
 	
 	def edit = {
 		def project = Project.get(params.id)
-                flash.projectCheckPassed = checkProjectForUser(project) 
+      flash.projectCheckPassed = checkProjectForUser(project) 
 		return [project:project]
 	}
 	
 	def save = {
 		def isNew = (params.id?.size() == 0)
-		def project = isNew ? new Project(user:authenticateService.userDomain()) : Project.get(params.id) 
+		def project = isNew ? new Project(user:authenticateService.userDomain()) : Project.get(params.id)
 		
 		project.name = params.name
+		project.type = ProjectType.valueOf(params.type)
 		
-                flash.projectCheckPassed = checkProjectForUser(project) 
-	        if(flash.projectCheckPassed) {
+      flash.projectCheckPassed = checkProjectForUser(project) 
+      if(flash.projectCheckPassed) {
 			project.save()
 			if(isNew) projectService.addGroupToNewProject(project)
 		}
