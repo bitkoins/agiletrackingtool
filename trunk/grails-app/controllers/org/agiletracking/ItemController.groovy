@@ -32,11 +32,9 @@ class ItemController {
 		action:'backlog' ,
 		isVisible: { session.project != null },
 		subItems: [
-			[action:'backlog', order:1, title:'Backlog'],
+			[action:'backlog', order:1, title:'Show'],
 			[action:'prioritize', order:5, title:'Prioritize'],
-			[action:'showAll', order:10, title:'Show all items'],
-			[action:'createGroup', order:15, title:'Create new category'],
-			[action:'listGroups', order:90, title:'Show categories']
+			[action:'createGroup', order:15, title:'New category'],
 		] 
 	]
 	
@@ -44,11 +42,7 @@ class ItemController {
 			def itemsByGroup = itemService.getUnfinishedItemsGroupMap(session.project)
 			return [itemsByGroup:itemsByGroup]
 	}
-	
-	def showAll = {
-			return [groups:ItemGroup.findAllByProject(session.project)] 
-	}
-	
+
 	def editItem = {
 		def item = Item.get(params.id)
 		flash.projectCheckPassed = projectService.executeWhenProjectIsCorrect(session.project, item)
@@ -83,10 +77,6 @@ class ItemController {
 		       model:[item:item,groupId:item.group.id,newItemId:newItemId]) 
 	}
 	
-	def listGroups = {
-		redirect(controller:'itemGroup', action:'list')
-	}
-
 	def createGroup = {
 		redirect(controller:'itemGroup', action:'create')
 	}

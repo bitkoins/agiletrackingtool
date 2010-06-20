@@ -63,5 +63,13 @@ class ProjectTests extends GrailsUnitTestCase {
 	{
 		performSetPrioritizedList([42])
 	}
+
+	void testKanbanCheck()
+	{
+		project.type = null
+		assertTrue !project.usesKanban() 
+		project.type = ProjectType.Kanban
+		assertTrue project.usesKanban() 
+	}
 }
  

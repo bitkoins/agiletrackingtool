@@ -23,6 +23,8 @@ package org.agiletracking
 class Project {
 	String name
 	String prioritizedItemIds
+   ProjectType type	
+
 	static belongsTo = [user:User]
 	static String seperator = ","
 
@@ -34,6 +36,7 @@ class Project {
 	   name(blank:false)
 	   user(nullable:true)
 	   prioritizedItemIds(nullable:true)
+		type(nullable:true)
 	}
 
 	void setPrioritizedItemUidList(def itemUidList)	
@@ -46,4 +49,8 @@ class Project {
 	    return prioritizedItemIds?.size() ?
 	           prioritizedItemIds.split(seperator).collect{ Item.parseUid(it) } : []
 	}
+
+	def usesKanban() {
+		return type == ProjectType.Kanban
+	} 
 }

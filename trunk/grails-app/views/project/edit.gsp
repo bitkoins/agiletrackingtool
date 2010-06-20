@@ -15,9 +15,13 @@
         	<table>
         	<tr>
         		<g:hiddenField name="id" value="${project.id}"/>
-        		<td width="100">Project Name:</td>
+        		<td width="100">Name:</td>
         		<td><g:textField name="name" value="${project.name}"/></td>
         	</tr>
+			<tr>
+				<td width="100">Style:</td>
+            <td><g:select name="type" value="${project.type}" from="${org.agiletracking.ProjectType}" /></td>
+			</tr>
         	</table>
         	<button>Save</button>
         </g:form>
