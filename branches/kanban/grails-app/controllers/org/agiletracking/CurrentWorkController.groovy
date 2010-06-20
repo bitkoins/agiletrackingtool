@@ -38,42 +38,38 @@ class CurrentWorkController {
 	static def defaultAction = "show"
 	
 	def show = {
-		def iteration = null
-		def plotData = null
-		def mlist = []
+		def newAction = session.project?.usesKanban() ? 'showKanbanView' : 'showScrumView'
+		redirect(action:newAction,params:params)
+	}
 
-		if(!session.project.usesKanban() ) {
-				  iteration = params.id ? Iteration.get(params.id) : 
-                                      iterationService.getOngoingIteration(session.project)
-				  
-				  if(!iteration) {
-					  redirect(controller:'iteration', action:'list')
-					  return
-				  }
-
-				  flash.projectCheckPassed = projectService.executeWhenProjectIsCorrect(session.project, iteration )
-				  mlist = iteration.items.collect{it}.sort{it.uid}
-      		  plotData = plotService.createBurnUpPlotData(iteration)
-		}
-		else {
-	      def itemUidList = Project.get(session.project.id).getPrioritizedItemUidList()
-			def items = Item.list()
-			mlist = itemService.matchItemsWithUid(items, itemUidList)
-			mlist = mlist.findAll{ it.checkUnfinished() } 
-			if(mlist.size() > 0 ) mlist = mlist[0..(Math.min(mlist.size(),5)-1)]
-		}
-	
+	def _sortItemsOnStatus(def items) {
 	  def itemsSortedOnStatus = []
- 	  ItemStatus.each{ status -> itemsSortedOnStatus += mlist.findAll{ it.status == status } }
-     return [iteration:iteration,items:itemsSortedOnStatus,plotData:plotData]
+ 	  ItemStatus.each{ status -> itemsSortedOnStatus += items.findAll{ it.status == status } }
+	  return itemsSortedOnStatus
 	}
 
-	def showScrumBoard = {
+	def showScrumView = {
+       def iteration = params.id ? Iteration.get(params.id) : 
+                                   iterationService.getOngoingIteration(session.project)
+		 if(!iteration) {
+			  redirect(controller:'iteration', action:'list')
+		     return
+		 }
 
+		 flash.projectCheckPassed = projectService.executeWhenProjectIsCorrect(session.project, iteration )
+		 def items = iteration.items.collect{it}.sort{it.uid}
+       def plotData = plotService.createBurnUpPlotData(iteration)
+
+      return [iteration:iteration,items:_sortItemsOnStatus(items),plotData:plotData]
 	}
 
-	def showKanbanBoard = {
-
+	def showKanbanView = {
+		 def itemUidList = Project.get(session.project?.id)?.getPrioritizedItemUidList()
+		 def items = []
+		 itemUidList.each{ uid -> items += Item.findByProjectAndUid(session.project,uid) }
+		 items = items.findAll{ it && it.checkUnfinished() } 
+		 if(items.size() > 0 ) items = items[0..(Math.min(items.size(),6)-1)]
+		 return [items:_sortItemsOnStatus(items)]
 	}
 	
 	def closeCurrent = {

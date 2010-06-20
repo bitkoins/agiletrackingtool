@@ -9,7 +9,6 @@
     	<g:javascript library="prototype" />
     	<nav:renderSubItems group="tags"/>
 
-	<g:if test="${iteration}">    	
  	<div class="iteration">
 	<h2>${iteration.workingTitle}</h2>
 	<g:if test="${iteration.status == org.agiletracking.IterationStatus.Ongoing}">
@@ -38,18 +37,8 @@
 	</tr>
 	</table>
 	</div>
-	</g:if>
 
-
-	<div class="currentWork">	
-	<g:each var="item" in="${items.collect{it}}">
-		<div id="itemBox${item.id}" class="itemBox">
-			<div id="item${item.id}">
-			   <g:render template="itemView" model="[item:item]"/>
-			</div>
-		</div>
-	</g:each>
-	</div>
+   <g:render template="showItems" model="[items:items]"/>
 		
 	<div><br/></div>
 
