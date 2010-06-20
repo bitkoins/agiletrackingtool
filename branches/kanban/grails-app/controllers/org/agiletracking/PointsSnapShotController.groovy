@@ -32,6 +32,7 @@ class PointsSnapShotController {
 		isVisible: { session.project != null }, 
 		subItems: [
 			[action:'plot', order:1, title:"Overall history"],
+         [action:'finishedWork',order:5,title:'Finished work'],
 			[action:'allPlots', order:10, title:'Category history'],			
 			[action:'burnUpGraph', order:100, title:'BurnDown'],
 			[action:'flowPlot', order:80, title:'Flow history'],
@@ -53,6 +54,15 @@ class PointsSnapShotController {
 		}
 		
 		return [startTime,endTime]
+	}
+
+	def finishedWork = {
+			def groups = ItemGroup.findAllByProject(session.project)
+			groups.each{ group ->
+				group.items = group.items.collect{it}.findAll{ !it.checkUnfinished() }
+			}
+
+			return [groups:groups]
 	}
 	
 	def plot = {
