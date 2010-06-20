@@ -51,14 +51,14 @@ class CurrentWorkController {
 	def showScrumView = {
        def iteration = params.id ? Iteration.get(params.id) : 
                                    iterationService.getOngoingIteration(session.project)
-		 if(!iteration) {
-			  redirect(controller:'iteration', action:'list')
-		     return
-		 }
+		 def items = []
+		 def plotData
 
-		 flash.projectCheckPassed = projectService.executeWhenProjectIsCorrect(session.project, iteration )
-		 def items = iteration.items.collect{it}.sort{it.uid}
-       def plotData = plotService.createBurnUpPlotData(iteration)
+		 if(iteration) {
+			 flash.projectCheckPassed = projectService.executeWhenProjectIsCorrect(session.project, iteration )
+			 items = iteration.items.collect{it}.sort{it.uid}
+	       plotData = plotService.createBurnUpPlotData(iteration)
+		}
 
       return [iteration:iteration,items:_sortItemsOnStatus(items),plotData:plotData]
 	}

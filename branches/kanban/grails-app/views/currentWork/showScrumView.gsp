@@ -9,6 +9,7 @@
     	<g:javascript library="prototype" />
     	<nav:renderSubItems group="tags"/>
 
+	<g:if test="${iteration}">
  	<div class="iteration">
 	<h2>${iteration.workingTitle}</h2>
 	<g:if test="${iteration.status == org.agiletracking.IterationStatus.Ongoing}">
@@ -37,8 +38,15 @@
 	</tr>
 	</table>
 	</div>
-
    <g:render template="showItems" model="[items:items]"/>
+
+	</g:if>
+	<g:else>
+    	<p>
+      Please <g:link controller="iteration" action="create">create an iteration</g:link> or 
+      <g:link controller="item" action="backlog">update your backlog</g:link>.
+      </p>
+	</g:else>
 		
 	<div><br/></div>
 
