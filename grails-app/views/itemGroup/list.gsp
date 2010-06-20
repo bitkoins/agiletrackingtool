@@ -9,30 +9,20 @@
     	<g:javascript library="prototype" />
     	<nav:renderSubItems group="tags"/>
         
-    	<h2>Categories overview</h2>
-	<div class="itemGroup">
-	<br/>
-	<table>
-		<tr>
-			<td>Name</td>
-			<td>Number of Items</td>
-			<td>Finished points</td>
-			<td>Total points</td>
-			<td/>
-			<td/>
-		</tr>
-	
+	<div class="itemGroup" style="width:70%;padding:10px">
 		<g:each var="group" in="${groups}">
+			<div class="item">
+			<table>
 			<tr>
-				<td>${group.name}</td>
-				<td>${group.items?.size()}</td>
-				<td>${group.finishedPoints()}</td>
-				<td>${group.totalPoints()}</td>
-				<td><g:link action="edit" id="${group.id}" >Edit</g:link></td>
-				<td><g:link action="delete" id="${group.id}" onclick="return confirm('This will delete all items and history of this group. Sure?');" >Delete</g:link></td>
+				<td swidth="400">${group.name}</td>
+				<td width="80"><g:link action="edit" id="${group.id}" >Edit</g:link></td>
+				<td width="80"><g:link action="delete" id="${group.id}" onclick="return confirm('This will delete all items and history of this group. Sure?');" >Delete</g:link></td>
 			</tr>
+			</table>
+			</div>
+	      <div class="itemSeperator"></div>
 		</g:each>
-	</table>
+
 	</div>
     </body>
 </html>

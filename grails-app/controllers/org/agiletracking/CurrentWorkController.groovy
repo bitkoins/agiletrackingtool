@@ -20,7 +20,7 @@ along with Agile Tracking Tool.  If not, see <http://www.gnu.org/licenses/>.
 ------------------------------------------------------------------------------*/
 package org.agiletracking
 
-class IterationCurrentController {
+class CurrentWorkController {
 
 	def itemService
 	def plotService
@@ -38,20 +38,38 @@ class IterationCurrentController {
 	static def defaultAction = "show"
 	
 	def show = {
-		def iteration = params.id ? Iteration.get(params.id) : iterationService.getOngoingIteration(session.project)
-		
-		if(!iteration) {
-			redirect(controller:'iteration', action:'list')
-			return
+		def newAction = session.project?.usesKanban() ? 'showKanbanView' : 'showScrumView'
+		redirect(action:newAction,params:params)
+	}
+
+	def _sortItemsOnStatus(def items) {
+	  def itemsSortedOnStatus = []
+ 	  ItemStatus.each{ status -> itemsSortedOnStatus += items.findAll{ it.status == status } }
+	  return itemsSortedOnStatus
+	}
+
+	def showScrumView = {
+       def iteration = params.id ? Iteration.get(params.id) : 
+                                   iterationService.getOngoingIteration(session.project)
+		 def items = []
+		 def plotData
+
+		 if(iteration) {
+			 flash.projectCheckPassed = projectService.executeWhenProjectIsCorrect(session.project, iteration )
+			 items = iteration.items.collect{it}.sort{it.uid}
+	       plotData = plotService.createBurnUpPlotData(iteration)
 		}
 
-		flash.projectCheckPassed = projectService.executeWhenProjectIsCorrect(session.project, iteration )
-		
-		def mlist = []
-		ItemStatus.each{ status -> mlist += iteration.items?.findAll{ it.status == status }.sort{ it.uid } }
-		def plotData = plotService.createBurnUpPlotData(iteration)
-		
-		return [iteration:iteration,items:mlist,plotData:plotData]
+      return [iteration:iteration,items:_sortItemsOnStatus(items),plotData:plotData]
+	}
+
+	def showKanbanView = {
+		 def itemUidList = Project.get(session.project?.id)?.getPrioritizedItemUidList()
+		 def items = []
+		 itemUidList.each{ uid -> items += Item.findByProjectAndUid(session.project,uid) }
+		 items = items.findAll{ it && it.checkUnfinished() } 
+		 if(items.size() > 0 ) items = items[0..(Math.min(items.size(),6)-1)]
+		 return [items:_sortItemsOnStatus(items)]
 	}
 	
 	def closeCurrent = {

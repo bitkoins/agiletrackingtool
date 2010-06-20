@@ -32,7 +32,7 @@ class IterationController {
 		order:40, 
 		title:'Iterations', 
 		action:'list',
-		isVisible: { session.project != null },
+		isVisible: { session.project != null && !session.project?.usesKanban() },
 		subItems: [
 			[action:'list', order:10, title:"Manage"],
 			[action:'history', order:20, title:'List all iterations'],

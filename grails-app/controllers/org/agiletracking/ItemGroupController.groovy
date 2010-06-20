@@ -26,11 +26,14 @@ class ItemGroupController {
 	def projectService
 	
 	static navigation = [
-		group:'itemGroup',
+		group:'tags',
+		action:'list',
+		order:25,
+		title:'Categories',
 		isVisible: { session.project != null }, 
 		subItems: [
-			[action:'list', order:1, title:'Show groups'],
-			[action:'create', order:10, title:'Create new group']			
+			[action:'list', order:1, title:'Show'],
+			[action:'create', order:10, title:'New category']			
 		] 
 	]
 

@@ -1,6 +1,6 @@
 <html>
     <head>
-        <title>Work items overview</title>
+      <title>All items</title>
 		<link rel="stylesheet" href="${createLinkTo(dir:'css',file:'main.css')}" />
 		<meta name="layout" content="main" />
      	<nav:resources override="false"/>	
@@ -10,8 +10,7 @@
     	<g:javascript library="prototype" />
     	<nav:renderSubItems group="tags" />
     	
-    		<h2>Work items overview:</h2>
-	         <div><br/><br/></div>
+      <div><br/><br/></div>
 			
 		<g:each var="group" in="${groups}">
 			<div id="groupItems${group.id}" class="itemGroup">
@@ -23,11 +22,10 @@
 					<td width="15">${item.uid}</td>
 					<td>${item.description}</td>
 					<td width="20">${item.getPoints()}</td>
-					<td width="50">${item.status}</td>
 				</tr>
 				</table>
 				</div>
-	                        <div class="itemSeperator"></div>
+	         <div class="itemSeperator"></div>
 			</g:each>
 			</div>
 		</g:each>	

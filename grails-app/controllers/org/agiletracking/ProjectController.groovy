@@ -31,7 +31,8 @@ class ProjectController {
 		action:'list' ,
 		isVisible: { authenticateService.userDomain() != null },
 		subItems: [
-			[action:'create', order:10, title:'Create new project']
+			[action:'list', order:0, title:'Show'],
+			[action:'create', order:10, title:'New project']
 		] 
 	]
 	
@@ -40,7 +41,7 @@ class ProjectController {
                 flash.projectCheckPassed = checkProjectForUser(project) 
 	        if(flash.projectCheckPassed) session.project = project
 
-	        redirect(controller:'iterationCurrent')
+	        redirect(controller:'currentWork')
 	}
 	
 	def delete = {
@@ -62,19 +63,21 @@ class ProjectController {
 	
 	def edit = {
 		def project = Project.get(params.id)
-                flash.projectCheckPassed = checkProjectForUser(project) 
+      flash.projectCheckPassed = checkProjectForUser(project) 
 		return [project:project]
 	}
 	
 	def save = {
 		def isNew = (params.id?.size() == 0)
-		def project = isNew ? new Project(user:authenticateService.userDomain()) : Project.get(params.id) 
+		def project = isNew ? new Project(user:authenticateService.userDomain()) : Project.get(params.id)
 		
 		project.name = params.name
+		project.type = ProjectType.valueOf(params.type)
 		
-                flash.projectCheckPassed = checkProjectForUser(project) 
-	        if(flash.projectCheckPassed) {
+      flash.projectCheckPassed = checkProjectForUser(project) 
+      if(flash.projectCheckPassed) {
 			project.save()
+			session.project = project
 			if(isNew) projectService.addGroupToNewProject(project)
 		}
 			

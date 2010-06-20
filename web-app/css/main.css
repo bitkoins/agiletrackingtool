@@ -329,7 +329,7 @@ body {
 	clear:both;
 }
     		
-.iteration, .planning{
+.iteration, .planning, .currentWork{
 	#background-color: #CCFF99;
 	background-color: #FFFF99;
 	margin-top: 20px;
@@ -345,28 +345,27 @@ body {
 	background-color: white;
 }
 
-.iteration .statusFinished {
+.statusFinished {
 	background-color: #99FF66;
 }
 
-.iteration .statusBlocking {
+.statusBlocking {
 	background-color: #FF0000;
 	color: white;
 		
 }
 
-.iteration .statusBlocking a {
+.statusBlocking a {
 	color: white;		
 }
 
-.iteration .statusInProgress {
+.statusInProgress {
 	background-color: #CCFFFF;
 }
 
-.iteration .statusRequest {
+.statusRequest {
 	background-color: white;
 }
-
 
 .clear {
 	clear: both;

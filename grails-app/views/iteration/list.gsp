@@ -39,7 +39,7 @@
 		
 		<g:each var="iter" in="${iterations.findAll{it.status == org.agiletracking.IterationStatus.Ongoing} }">
 			<tr class="status${iter.status}">
-				<td><g:link controller="iterationCurrent" action="show" id="${iter.id}">${iter.workingTitle}</g:link></td>
+				<td><g:link controller="currentWork" action="show" id="${iter.id}">${iter.workingTitle}</g:link></td>
 				<td>${iter.finishedPoints}</td>
 				<td><g:formatDate format="dd-MMM yyyy" date="${iter.endTime}"/></td>
 				<td><g:link action="edit" id="${iter.id}">Edit</g:link></td>
@@ -68,7 +68,7 @@
 		
 		<g:each var="iter" in="${iterations.findAll{it.status == org.agiletracking.IterationStatus.FutureWork} }">
 			<tr class="status${iter.status}">
-				<td><g:link controller="iterationCurrent" action="show" id="${iter.id}">${iter.workingTitle}</g:link></td>
+				<td><g:link controller="currentWork" action="show" id="${iter.id}">${iter.workingTitle}</g:link></td>
 				<td>${iter.totalPoints()}</td>
 				<td><g:formatDate format="dd-MMM yyyy" date="${iter.endTime}"/></td>
 				<td><g:link action="edit" id="${iter.id}">Edit</g:link></td>
@@ -96,7 +96,7 @@
 		
 		<g:each var="iter" in="${iterations.findAll{it.status == org.agiletracking.IterationStatus.Finished} }">
 			<tr class="status${iter.status}">
-				<td><g:link controller="iterationCurrent" action="show" id="${iter.id}">${iter.workingTitle}</g:link></td>
+				<td><g:link controller="currentWork" action="show" id="${iter.id}">${iter.workingTitle}</g:link></td>
 				<td>${iter.finishedPoints}</td>
 				<td><g:formatDate format="dd-MMM yyyy" date="${iter.endTime}"/></td>
 				<td>${iter.durationInDays}</td>
