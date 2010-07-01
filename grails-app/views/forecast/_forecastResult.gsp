@@ -1,3 +1,5 @@
+<g:if test="${!session.project.usesKanban() && iterations}">
+
 <h1>Working days for scheduled iterations:</h1>
 <table>
 
@@ -35,6 +37,7 @@
 <br/>
 <br/>
 
+</g:if>
 
 <h1>Working days for all remaining work:</h1>
 <table>
