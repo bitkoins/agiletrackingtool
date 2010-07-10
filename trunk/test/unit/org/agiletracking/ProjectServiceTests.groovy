@@ -1,17 +1,21 @@
 package org.agiletracking
 import grails.test.*
 import org.codehaus.groovy.grails.commons.*
+import org.codehaus.groovy.grails.plugins.GrailsPluginManager
+import org.codehaus.groovy.grails.plugins.PluginManagerHolder
 
 class ProjectServiceTests extends GrailsUnitTestCase {
     def projectService
 
     protected void setUp() {
         super.setUp()
+		  PluginManagerHolder.pluginManager = [hasGrailsPlugin: { String name -> true }] as GrailsPluginManager
         projectService = new ProjectService()
     }
 
     protected void tearDown() {
         super.tearDown()
+        PluginManagerHolder.pluginManager = null
     }
     
     void performTestExecutionWithProjectCheck(def projectIsCorrect)
@@ -22,7 +26,8 @@ class ProjectServiceTests extends GrailsUnitTestCase {
         
         def objectToCheck = new Expando(project: projectIsCorrect ? project : otherProject)
         
-        assertEquals projectIsCorrect, projectService.executeWhenProjectIsCorrect(project, objectToCheck, { called = true; } )
+        assertEquals projectIsCorrect, 
+                     projectService.executeWhenProjectIsCorrect(project, objectToCheck, { called = true; } )
         assertEquals projectIsCorrect, called
     }
     
@@ -74,7 +79,8 @@ class ProjectServiceTests extends GrailsUnitTestCase {
         
         assertEquals anyString, projectService.exportToXmlString(project)
         
-        def mockControllers = [projectControl,groupControl,itemControl,iterationControl,snapshotControl, utilXmlControl]
+        def mockControllers = [projectControl,groupControl,itemControl,iterationControl,
+                               snapshotControl, utilXmlControl]
         mockControllers*.verify()
     }
     
@@ -96,7 +102,8 @@ class ProjectServiceTests extends GrailsUnitTestCase {
         def iterationControl = mockFor(Iteration)
         iterationControl.demand.static.findAllByProject(1..1) { _iteration-> return [iteration] }
         def iterationServiceControl = mockFor(IterationService)
-        iterationServiceControl.demand.static.unloadItemsAndDelete(1..1) { _iteration -> assertSame iteration, _iteration }
+        iterationServiceControl.demand.static.unloadItemsAndDelete(1..1) { _iteration -> 
+                  assertSame iteration, _iteration }
         
         projectService.iterationService = iterationServiceControl.createMock()
         projectService.itemGroupService = itemGroupServiceControl.createMock()
