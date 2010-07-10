@@ -29,8 +29,8 @@ class ProjectService {
 
     def addGroupToNewProject(def project)
     {
-	def group = new ItemGroup(project:project,name:'Default category',items:[])
-	group.save()
+    	def group = new ItemGroup(project:project,name:'Default category',items:[])
+	   group.save()
     }
     
     def delete(def project) {
