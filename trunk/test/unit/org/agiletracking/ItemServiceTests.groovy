@@ -1,8 +1,5 @@
 package org.agiletracking
-
 import grails.test.*
-import org.codehaus.groovy.grails.plugins.GrailsPluginManager
-import org.codehaus.groovy.grails.plugins.PluginManagerHolder
 
 class ItemServiceTests extends GrailsUnitTestCase {
 	def itemService
@@ -14,8 +11,6 @@ class ItemServiceTests extends GrailsUnitTestCase {
 
 	protected void setUp() {
       super.setUp()
-		PluginManagerHolder.pluginManager = [hasGrailsPlugin: { String name -> true }] as GrailsPluginManager
-      
       itemService = new ItemService()
       itemService.itemGroupService = new ItemGroupService()
       nr = 0
@@ -29,8 +24,7 @@ class ItemServiceTests extends GrailsUnitTestCase {
 
 	protected void tearDown() {
    	super.tearDown()
-      PluginManagerHolder.pluginManager = null
-	}
+   }
     
    void testGetUnfinishedItemsGroupMap()
    {

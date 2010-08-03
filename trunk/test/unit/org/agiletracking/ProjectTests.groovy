@@ -20,8 +20,6 @@ along with Agile Tracking Tool.  If not, see <http://www.gnu.org/licenses/>.
 ------------------------------------------------------------------------------*/
 package org.agiletracking
 import grails.test.*
-import org.codehaus.groovy.grails.plugins.GrailsPluginManager
-import org.codehaus.groovy.grails.plugins.PluginManagerHolder
 
 class ProjectTests extends GrailsUnitTestCase {
 	def project
@@ -29,7 +27,6 @@ class ProjectTests extends GrailsUnitTestCase {
 	protected void setUp()
 	{
 		super.setUp()
-		PluginManagerHolder.pluginManager = [hasGrailsPlugin: { String name -> true }] as GrailsPluginManager
 		project = Defaults.getProjects(1)[0]
 		mockDomain(Project,[project])
 	}
@@ -37,7 +34,6 @@ class ProjectTests extends GrailsUnitTestCase {
 	protected void tearDown()
 	{
 		super.tearDown()
-	   PluginManagerHolder.pluginManager = null
 	}
 
    void testSave() 
