@@ -1,23 +1,18 @@
 package org.agiletracking
 import grails.test.*
-import org.codehaus.groovy.grails.plugins.GrailsPluginManager
-import org.codehaus.groovy.grails.plugins.PluginManagerHolder
 
 class IterationServiceTests extends GrailsUnitTestCase {
 	def project
 	def iterationService
 	
     protected void setUp() {
-      super.setUp()
-		PluginManagerHolder.pluginManager = [hasGrailsPlugin: { String name -> true }] as GrailsPluginManager
-
     	project = Defaults.getProjects(1)[0]
     	iterationService = new IterationService()
+        super.setUp()
     }
 
     protected void tearDown() {
         super.tearDown()
-        PluginManagerHolder.pluginManager = null
     }
 
     void testDeleteIteration()

@@ -20,18 +20,12 @@ along with Agile Tracking Tool.  If not, see <http://www.gnu.org/licenses/>.
 ------------------------------------------------------------------------------*/
 import org.agiletracking.*
 import org.codehaus.groovy.grails.commons.*
-import org.codehaus.groovy.grails.plugins.GrailsPluginManager
-import org.codehaus.groovy.grails.plugins.PluginManagerHolder
 
 class BootStrap {
 	
      def authenticateService
 
      def init = { servletContext ->
-	
-		  /* Workaround for issue: GRAILS-6482 */	
-		  PluginManagerHolder.pluginManager = [hasGrailsPlugin: { String name -> true }] as GrailsPluginManager
-
         DataSourceUtils.tuneDataSource(servletContext) 
         def md5pass = authenticateService.passwordEncoder(ConfigurationHolder.config.agile.demo.password)
 	def userAgile = new User(username:ConfigurationHolder.config.agile.demo.username,
@@ -46,6 +40,6 @@ class BootStrap {
      }
      
      def destroy = {
-			 PluginManagerHolder.pluginManager = null
+    		 
      }
 } 
