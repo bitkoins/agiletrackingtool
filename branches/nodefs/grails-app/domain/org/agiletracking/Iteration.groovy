@@ -28,8 +28,6 @@ class Iteration extends ItemContainer {
 	static belongsTo = [project:Project]
 	
 	static constraints = {
-		pointsPerDay(nullable:true)
-		finishedPoints(nullable:true)
 		workingTitle(nullable:true)
 		startTime(nullable:true)
 		endTime(nullable:true)
@@ -39,9 +37,9 @@ class Iteration extends ItemContainer {
 	
 	String toString() { return workingTitle }
 
-	List listUnfinishedItemsForGroup(def group)
+	Collection<Item> listUnfinishedItemsForGroup(ItemGroup group)
 	{
-		def unItems = []
+		Collection<Item> unItems = []
 		items.each{ 
 			if ((it.group == group) && it.checkUnfinished()) unItems << it
 		}		
@@ -60,48 +58,34 @@ class Iteration extends ItemContainer {
 		status = IterationStatus.Ongoing
 	}
 
-	def getDurationInDays()
+	Integer calculateDurationInDays()
 	{
 		return Util.getDaysInBetween(startTime,endTime)
 	}
 	
-	def getDaysLeft(def now)
+	Integer calculateDaysLeft(def now)
 	{
 		def days =  Util.getDaysInBetween(now,endTime) 
 		if ( days < 0) return 0 
 		return days
 	}
 	
-	def getPointsPerDay()
+	Integer calculatePointsPerDay()
 	{
 		def ret = 0
 		
-		if ( getDurationInDays() != 0) {
-			ret =  getFinishedPoints()*1.0/ getDurationInDays()
+		if ( calculateDurationInDays() != 0) {
+			ret =  calculateFinishedPoints()*1.0/ calculateDurationInDays()
 		}
 		return ret
 	}
 	
-	def getFinishedPoints()
+	Double calculateUnfinishedPoints()
 	{
-		def sum = 0
-		items.each{ if ( it.status == ItemStatus.Finished ) sum+= it.points}
-		return sum
+		return (totalPoints()-finishedPoints())
 	}
 	
-	def totalPoints()
-	{
-		def sum = 0;
-		items.each{ sum+= it.points }
-		return sum
-	}
-	
-	def getUnfinishedPoints()
-	{
-		return (totalPoints()-getFinishedPoints())
-	}
-	
-	def getUnfinishedItems()
+	Collection<Item> getUnfinishedItems()
 	{
 		def unfinishedItems = []
 		items.collect{it}.each {
@@ -109,11 +93,6 @@ class Iteration extends ItemContainer {
 		}
 		return unfinishedItems
 	}
-	
-	def setFinishedPoints() { return }
-	def setPointsPerDay(){return}
-	def setDurationInDays(){ return }
-	def setDaysLeft() {return}
 	
 	void addItem(Item item)
 	{

@@ -19,7 +19,7 @@
 		<g:each var="iter" in="${iterations}">
 			<div id="iteration${iter.id}" class="iteration">
 			<h2>${iter.workingTitle}</h2>
-			<p>Finished/Total Points: ${iter.getFinishedPoints()} / ${iter.totalPoints()}</p>
+			<p>Finished/Total Points: ${iter.finishedPoints()} / ${iter.totalPoints()}</p>
 			<br/>
 			<table>
 			<tr>

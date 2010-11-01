@@ -39,18 +39,18 @@ class Project {
 		type(nullable:true)
 	}
 
-	void setPrioritizedItemUidList(def itemUidList)	
+	void setPrioritizedItemUidList(Collection<Integer> itemUidList)	
 	{
 	    prioritizedItemIds = itemUidList.join(seperator)
 	}
 
-	def getPrioritizedItemUidList()		
+	Collection<Integer> getPrioritizedItemUidList()		
 	{
 	    return prioritizedItemIds?.size() ?
 	           prioritizedItemIds.split(seperator).collect{ Item.parseUid(it) } : []
 	}
 
-	def usesKanban() {
+	boolean usesKanban() {
 		return type == ProjectType.Kanban
 	} 
 }

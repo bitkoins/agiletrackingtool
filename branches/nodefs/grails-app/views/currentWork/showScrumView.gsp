@@ -33,8 +33,8 @@
 	</tr>
 	<tr>
 		<td>${iteration.totalPoints()}</td>
-		<td>${iteration.getFinishedPoints()}</td>
-		<td>${iteration.totalPoints()-iteration.getFinishedPoints()}</td>
+		<td>${iteration.finishedPoints()}</td>
+		<td>${iteration.totalPoints()-iteration.finishedPoints()}</td>
 	</tr>
 	</table>
 	</div>

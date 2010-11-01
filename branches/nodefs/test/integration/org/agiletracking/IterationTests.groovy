@@ -65,8 +65,8 @@ class IterationTests extends GroovyTestCase {
     	def now = new Date()
     	iter.startTime = now - 5
     	iter.endTime = now + 5
-    	assertTrue iter.getDaysLeft(now) == 5
-    	assertTrue iter.getDurationInDays() == 10
+    	assertTrue iter.calculateDaysLeft(now) == 5
+    	assertTrue iter.calculateDurationInDays() == 10
     }
     
     void testChangingItems()
@@ -186,9 +186,9 @@ class IterationTests extends GroovyTestCase {
     void testPointsPerDay()
     {
     	def nrFinishedItems = items.size()-1
-    	assertTrue iter.getPointsPerDay() == nrFinishedItems*100/10
-    	assertTrue iter.getFinishedPoints() == 100*nrFinishedItems
-    	assertTrue iter.totalPoints() == 100*items.size()
+    	assertTrue iter.calculatePointsPerDay() == nrFinishedItems*100/10
+    	assertTrue iter.calculateFinishedPoints() == 100*nrFinishedItems
+    	assertTrue iter.calculateTotalPoints() == 100*items.size()
     }
     
     void testStrangeArtifactOnListMethodOfIterationProbablyRelatedToEagerFetchingOfItems()
