@@ -30,7 +30,7 @@ class PlotUtil
 	
 	static def getTotalPlotCurve(def overViews, def dates, def zeroDate, def legend)
 	{
-		def overViewSelector = { overView -> overView.getTotalPoints() }
+		def overViewSelector = { overView -> overView.totalPoints() }
 		return _getPlotCurveWithOverViewSelector(overViews, dates, zeroDate, legend, overViewSelector)
 	}
 	

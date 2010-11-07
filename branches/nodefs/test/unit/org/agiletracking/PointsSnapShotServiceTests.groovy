@@ -67,7 +67,7 @@ class PointsSnapShotServiceTests extends GrailsUnitTestCase {
     	/* Note: mixing up mockDomain and mockFor does not seem to support save. Workaround by using Expando: */
     	def newSnapShot = new Expando()
     	def psControl = mockFor(PointsSnapShot)
-    	psControl.demand.static.takeSnapShot(1..1) { _project, _date ->
+    	psControl.demand.static.takeSnapShot(1..1) { Project _project, Date _date ->
     			assertEquals _project, project
     			assertEquals _date, now
     			return newSnapShot 

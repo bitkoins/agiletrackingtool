@@ -34,7 +34,7 @@ class PointsSnapShotService {
         }        
     }
 
-    def performSnapShotJob(def project, def now = new Date() )
+    def performSnapShotJob(def project, Date now = new Date() )
     {
 		def lastUpdateDate = Item.lastUpdateDateForProject(project)
 		if (lastUpdateDate && (Util.getDaysInBetween(lastUpdateDate, now)  <= 1) ) {

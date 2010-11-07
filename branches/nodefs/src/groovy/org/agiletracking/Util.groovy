@@ -20,14 +20,16 @@ along with Agile Tracking Tool.  If not, see <http://www.gnu.org/licenses/>.
 ------------------------------------------------------------------------------*/
 package org.agiletracking
 
+import java.util.Date
+
 class Util {
 	
-	static def random(def list)
+	static def random(Collection list)
 	{
 		 return list[ Math.round(Math.random()*(list.size()-1)).toInteger() ]
 	}
 	
-	static reScale(def list, def min, def max)
+	static Collection reScale(Collection list, Double min, Double max)
 	{
 		def scale = max-min
 		if ( Math.abs(scale) < 1e-9 ) return list
@@ -36,12 +38,12 @@ class Util {
 	}
 
 	
-	static def _calculateReductionFactor(def listSize, def maxSize)
+	static Integer _calculateReductionFactor(Integer listSize, Integer maxSize)
 	{
 		return Math.ceil(new Double(listSize) / maxSize).toInteger()
 	}
 	
-	static def makeListShorterWithScaling(def list, def maxSize)
+	static Collection makeListShorterWithScaling(def list, def maxSize)
 	{
 		if ( list.size() <= maxSize) return list
 		def retList = []
@@ -59,15 +61,14 @@ class Util {
 		return retList
 	}
 	
-	static def getDaysInBetween(def d1, def d2)
+	static Integer getDaysInBetween(Date d1, Date d2)
 	{
-		/* endTime/startTime are java.sql.TimeStamp */
 		def days = (d2.getTime()-d1.getTime() )/ (24*60*60*1000)
 		def ret =  Math.round(days).toInteger()	
 		return ret
 	}
 	
-	static List parsePriorities(String priorities)
+	static Collection<String> parsePriorities(String priorities)
 	{
 		priorities.split(",").collect{ prio -> Priority.valueOf(prio) }
 	}
@@ -84,7 +85,7 @@ class Util {
 		Project.list()*.delete()
 	}
 	
-	static def getDefaultYearRange()
+	static Integer getDefaultYearRange()
 	{
 		def year = new Date().year + 1900
 		return (year-3)..(year+3)

@@ -22,9 +22,9 @@ package org.agiletracking
 
 class Defaults {
 	
-	static List<Iteration> getIterations(Integer nr, def project)
+	static Collection<Iteration> getIterations(Integer nr, def project)
 	{
-		List<Iteration> ret = []
+		Collection<Iteration> ret = []
 		nr.times {
 			Iteration iter = new Iteration(project:project)
 			iter.workingTitle = "Iteration-${it}"
@@ -39,9 +39,9 @@ class Defaults {
 		return ret
 	}
 	
-	static List<ItemGroup> getGroups(Integer nr, def project = getProjects(1)[0] )
+	static Collection<ItemGroup> getGroups(Integer nr, def project = getProjects(1)[0] )
 	{
-		List<ItemGroup> ret = []
+		Collection<ItemGroup> ret = []
 		nr.times {
 			def group = new ItemGroup()			
 			group.name = "Category-${it}"
@@ -55,13 +55,13 @@ class Defaults {
 		return ret
 	}
 	
-	static List<Item> getItems(Integer nr, List<ItemGroup> groups, def project = getProjects(1)[0], def maxUid = 0)
+	static Collection<Item> getItems(Integer nr, Collection<ItemGroup> groups, def project = getProjects(1)[0], def maxUid = 0)
 	{
 		maxUid = maxUid ? maxUid : Item.maxUid()				
-		List<Item> ret = []
+		Collection<Item> ret = []
 		def prios = [Priority.Low, Priority.Medium, Priority.High]
 		
-		List points = []
+		Collection points = []
 		9.times{ points << it }
 		
 		nr.times{ index -> 
@@ -94,11 +94,11 @@ class Defaults {
 		return ret
 	}
 	
-	static List<SubItem> getSubItems(Integer nr, List<Item> items)
+	static Collection<SubItem> getSubItems(Integer nr, Collection<Item> items)
 	{
-		List<SubItem> ret = []
+		Collection<SubItem> ret = []
 		
-		List points = []
+		Collection points = []
 		6.times{ points << it }
 		
 		nr.times{

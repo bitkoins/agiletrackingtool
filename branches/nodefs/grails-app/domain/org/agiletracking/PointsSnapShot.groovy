@@ -20,6 +20,8 @@ along with Agile Tracking Tool.  If not, see <http://www.gnu.org/licenses/>.
 ------------------------------------------------------------------------------*/
 package org.agiletracking
 
+import java.util.Date
+
 class PointsSnapShot
 {
 	Date            date
@@ -34,7 +36,7 @@ class PointsSnapShot
 	
 	PointsSnapShot() { }
 
-	PointsSnapShot(def project, def date)
+	PointsSnapShot(Project project, Date date)
 	{
 		this.project = project
 		this.date = date
@@ -42,19 +44,19 @@ class PointsSnapShot
 		pointsForGroups = []
 	}	
 		
-	def getPointsForGroup(def group)
+	PointsForGroup getPointsForGroup(ItemGroup group)
 	{
 		return pointsForGroups.find{ it.group == group }		
 	}
 	
-	static def getSnapShotClosestTo(def project, def date, def maximumDaysOffset)
+	static PointsSnapShot getSnapShotClosestTo(Project project, Date date, Integer maximumDaysOffset)
     {
         def snapShots = getSnapShotsBetween(project,date-maximumDaysOffset, date+maximumDaysOffset)
         if (!snapShots) return null
         return snapShots.sort{ Math.abs(Util.getDaysInBetween(it.date,date)) }[0]
     }
 	
-	static def getSnapShotsBetween(def myProject, def date1, def date2)
+	static Collection<PointsSnapShot> getSnapShotsBetween(Project myProject, Date date1, Date date2)
 	{
 		 return PointsSnapShot.createCriteria().list {
 		 	 and {
@@ -75,7 +77,7 @@ class PointsSnapShot
 		}
 	}
 	
-	static def takeSnapShot(def project, def date) 
+	static PointsSnapShot takeSnapShot(Project project, Date date) 
 	{
 		def ret = new PointsSnapShot(project, date)
 		def groups = ItemGroup.findAllByProject(project)
