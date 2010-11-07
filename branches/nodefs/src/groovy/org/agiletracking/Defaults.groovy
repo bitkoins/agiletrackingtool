@@ -22,7 +22,7 @@ package org.agiletracking
 
 class Defaults {
 	
-	static Collection<Iteration> getIterations(Integer nr, def project)
+	static Collection<Iteration> getIterations(Integer nr, Project project)
 	{
 		Collection<Iteration> ret = []
 		nr.times {
@@ -30,7 +30,7 @@ class Defaults {
 			iter.workingTitle = "Iteration-${it}"
 			iter.status = IterationStatus.FutureWork
 			iter.startTime = new Date() - 10
-			iter.endTime   = new Date()
+			iter.endTime = new Date()
 			iter.items = []
 			
 			ret << iter
@@ -39,7 +39,7 @@ class Defaults {
 		return ret
 	}
 	
-	static Collection<ItemGroup> getGroups(Integer nr, def project = getProjects(1)[0] )
+	static Collection<ItemGroup> getGroups(Integer nr, Project project = getProjects(1)[0] )
 	{
 		Collection<ItemGroup> ret = []
 		nr.times {
@@ -55,7 +55,7 @@ class Defaults {
 		return ret
 	}
 	
-	static Collection<Item> getItems(Integer nr, Collection<ItemGroup> groups, def project = getProjects(1)[0], def maxUid = 0)
+	static Collection<Item> getItems(Integer nr, Collection<ItemGroup> groups, Project project = getProjects(1)[0], Integer maxUid = 0)
 	{
 		maxUid = maxUid ? maxUid : Item.maxUid()				
 		Collection<Item> ret = []
@@ -114,7 +114,7 @@ class Defaults {
 		return ret
 	}
 	
-	static def getPointsOverView()
+	static PointsOverView getPointsOverView()
 	{
 		def myRandom = { Math.round(Math.random()*100.0) }
 		def overView = new PointsOverView()
@@ -126,11 +126,12 @@ class Defaults {
 		return overView	
 	}
 	
-	static def getSnapShots(def groups, def startTime, def endTime, def project = getProjects(1)[0])
+	static Collection<PointsSnapShot> getSnapShots(Collection<ItemGroup> groups, 
+				Date startDate, Date endDate, Project project = getProjects(1)[0])
 	{
 		def snapShots = []
 							
-		(startTime..endTime).eachWithIndex{ date, index ->
+		(startDate..endDate).eachWithIndex{ date, index ->
 			def snapShot = new PointsSnapShot(project, date)
 			snapShot.id = index + 1
 			snapShot.overView = getPointsOverView()
@@ -145,7 +146,7 @@ class Defaults {
 		return snapShots
 	}
 	
-	static def getProjects(Integer nr)
+	static Collection<Project> getProjects(Integer nr)
 	{
 		def projects = []
 		nr.times{
@@ -157,7 +158,9 @@ class Defaults {
 		return projects 
 	}
 	
-	static def getProjectDataSet(def mockDomainClosure, def projectId = 1, def itemMaxUid = 0)
+	static Collection getProjectDataSet(Closure mockDomainClosure, 
+													Integer projectId = 1, 
+													Integer itemMaxUid = 0)
 	{	
 		def now = new Date()
 	

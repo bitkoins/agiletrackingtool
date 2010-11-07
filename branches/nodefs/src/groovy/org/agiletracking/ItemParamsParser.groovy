@@ -26,13 +26,13 @@ class ItemParamsParser {
 	 *       string list depending on the amount of new parameters. 
 	 *       request.getParameterValue("newSubItem_...") always return a list of strings.
 	 */
-	static def updateItemWithParams(def item, def params, def getParameterValuesClosure = null)
-	
+	static void updateItemWithParams(Item item, Map<String,String> params, 
+                                    Closure getParameterValuesClosure = null)
 	{	
 		item.description = params.description
 		item.comment = params.comment
 		item.criteria = params.criteria
-		def pointsParser = { oldPoints, newPoints ->
+		def pointsParser = { Double oldPoints, String newPoints ->
 			def ret = oldPoints
 			try {
 				ret = newPoints ? Double.parseDouble(newPoints) : 0
