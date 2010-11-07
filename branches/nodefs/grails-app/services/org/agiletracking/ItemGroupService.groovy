@@ -23,7 +23,8 @@ package org.agiletracking
 class ItemGroupService {
     static transactional = true
 
-    def transformToItemsByGroup(def groups, def items)
+    Map<ItemGroup,Collection<Item>> transformToItemsByGroup(
+					Collection<ItemGroup> groups, Collection<Item> items)
     {
     	def itemsByGroup = [:]
 
@@ -35,21 +36,22 @@ class ItemGroupService {
     	return itemsByGroup 
     }
 
-     def removeItemsFromGroupMap(def itemsToRemove, def itemsByGroup)
+     void removeItemsFromGroupMap(Collection<Item> itemsToRemove, 
+							   			 Map<ItemGroup,Collection<Item>> itemsByGroup)
      {
-	itemsToRemove.each{ item ->
-		def foundGroup = itemsByGroup.find{ it.key.id == item.group.id }.key
-		if(foundGroup) itemsByGroup[foundGroup] -= item
-	}
+     	  itemsToRemove.each{ item ->
+		     def foundGroup = itemsByGroup.find{ it.key.id == item.group.id }.key
+   		  if(foundGroup) itemsByGroup[foundGroup] -= item
+        }
      }
 	   
-     def deleteWholeGroup(def group)
+     void deleteWholeGroup(ItemGroup group)
      {
-	group.items.collect{it}.each{ item ->
-		item.iteration?.deleteItem(item.id)
-		item.group?.deleteItem(item.id)
-        	item.delete()
-	}
-	group.delete()
+		group.items.collect{it}.each{ item ->
+			item.iteration?.deleteItem(item.id)
+			item.group?.deleteItem(item.id)
+	        	item.delete()
+		}
+		group.delete()
     }
 }

@@ -23,7 +23,7 @@ package org.agiletracking
 class PlotService {
     static transactional = true
         
-    def createIterationHistoryPlot(def iterations)
+    PlotData createIterationHistoryPlot(Collection<Iteration> iterations)
     {
     	def plotData = new PlotData("Iteration history")
 		plotData.xLabel = "Days ago from now"
@@ -47,7 +47,7 @@ class PlotService {
     
     }
     
-    def createPointsHistoryPlot(def snapShots)
+    PlotData createPointsHistoryPlot(Collection<PointsSnapShot> snapShots)
     {
     	def overViews = snapShots.collect{ it.overView }
 		def dates = snapShots.collect{ it.date }
@@ -67,7 +67,8 @@ class PlotService {
 		return plotData
 	}
 	
-	def createGroupPointsHistoryPlots(def snapShots, def groups)
+	Collection<PlotData> createGroupPointsHistoryPlots(Collection<PointsSnapShot> snapShots, 
+																	   Collection<ItemGroup> groups)
 	{
 		def plots = []
 		plots += _makePlots("for all items", snapShots.collect{it.overView}, snapShots.collect{it.date} )
@@ -91,7 +92,7 @@ class PlotService {
 		return plots
 	}
 	
-	def createFlowPlot(def snapShots)
+	PlotData createFlowPlot(Collection<PointsSnapShot> snapShots)
 	{
 		def overViews = snapShots.collect{ it.overView }
 		def dates = snapShots.collect{ it.date }
@@ -109,7 +110,7 @@ class PlotService {
 		return plotData
 	}
 			
-	def _makePlots(def title, def overViews,def dates) 
+	Collection<PlotData> _makePlots(String title, Collection<PointsOverView> overviews,Collection<Date> dates) 
 	{
 		def plotData = new PlotData("Finished points " + title)
 		plotData.xLabel = "Days ago from now"
@@ -121,7 +122,8 @@ class PlotService {
 
 		def now = new Date()		
 		[Priority.High,Priority.Medium,Priority.Low].each{ prio ->
-			plotData.curves << PlotUtil.getPlotCurveForView(overViews,dates,now,"${prio}-priority",prio, ItemStatus.Finished)
+			plotData.curves << PlotUtil.getPlotCurveForView(overviews,dates,now,
+																		   "${prio}-priority",prio, ItemStatus.Finished)
 			plotDataTotal.curves << PlotUtil.getTotalPlotCurveForPriority(overViews,dates,now,"${prio}-priority",prio)
 		}
 		
@@ -130,7 +132,7 @@ class PlotService {
 		return plots
 	}
 	
-	def createBurnUpPlotData(def iteration)
+	PlotData createBurnUpPlotData(Iteration iteration)
     {
         def plotData = new PlotData("BurnDown chart") 
         plotData.xLabel = "Days since iteration start"
@@ -156,7 +158,7 @@ class PlotService {
         return plotData
    }
    
-   def createBugHistoryPlot(def iterations)
+   PlotData createBugHistoryPlot(Collection<Iteration> iterations)
    {
 		def plotCurve = new PlotCurve("Number of bugs solved")
 		

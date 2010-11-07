@@ -21,36 +21,36 @@ along with Agile Tracking Tool.  If not, see <http://www.gnu.org/licenses/>.
 package org.agiletracking
 
 class ItemService {
-    static transactional = true
+   static transactional = true
 	    
-    def itemGroupService
+   def itemGroupService
 
-	def getUnfinishedItemsGroupMap(def project)
+	Map<ItemGroup,Collection<Item>> getUnfinishedItemsGroupMap(Project project)
 	{
 		def items = getUnfinishedItems(project)
 		def groups = ItemGroup.findAllByProject(project)
 		return itemGroupService.transformToItemsByGroup(groups, items)
 	}
 
-	def getUnfinishedItems(def project)
+	Collection<Item> getUnfinishedItems(Project project)
 	{
 		return Item.findAllByProjectAndStatusNotEqual(project,ItemStatus.Finished)
 	}
 
-	def deleteItem(def item)
+	void deleteItem(Item item)
 	{
 		item.iteration?.deleteItem(item.id)
 		item.group?.deleteItem(item.id)
 		item.delete()
 	}
 
-	def retrieveUnfinishedItemsForProject(def project, def itemIdList)
+	Collection<Integer> retrieveUnfinishedItemsForProject(Project project, Collection<Integer> itemIdList)
 	{
 		return itemIdList.collect{ Item.get(it) }.findAll{ 
 			it?.project?.id == project.id && it?.checkUnfinished() }
 	}
 
-	void removeItemsFromList(def itemList, def itemUidsToRemove)
+	void removeItemsFromList(Collection<Item> itemList, Collection<Integer> itemUidsToRemove)
 	{
 		itemUidsToRemove.each{ rid ->
 			def itemToRemove = itemList.find{ it.uid == rid} 
@@ -58,7 +58,7 @@ class ItemService {
 		}		
 	}
 
-	def matchItemsWithUid(def items, def uidList)
+	Collection<Integer> matchItemsWithUid(Collection<Item> items, Collection<Integer> uidList)
 	{
 		return uidList.collect{ uid -> items.find{it.uid == uid} }.findAll{ it }
 	}

@@ -53,8 +53,8 @@ class ProjectServiceTests extends GrailsUnitTestCase {
         def iterationControl = mockFor(Iteration)
         def snapshotControl = mockFor(PointsSnapShot)
         
-        def project,groups,items,iterations,snapshots
-        (project,groups,items,iterations,snapshots) = (1..5).collect{ new Object() }
+		  def project = new Project()
+        def (groups,items,iterations,snapshots) = (1..4).collect{ new Object() }
         groupControl.demand.static.findAllByProject(1..1) { _project -> return groups }
         itemControl.demand.static.findAllByProject(1..1) { _project -> return items }
         iterationControl.demand.static.findAllByProject(1..1) { _project -> return iterations }
@@ -62,7 +62,7 @@ class ProjectServiceTests extends GrailsUnitTestCase {
         
         def utilXmlControl = mockFor(UtilXml)
         def anyString = "Now is here"
-        utilXmlControl.demand.static.exportToXmlString(1..1) { 
+        utilXmlControl.demand.static.exportToXmlString(1..1) {  
             _project, _groups, _items, _iterations, _pointsSnapShots, _exportDate, _docVersion ->
                 assertSame project, _project
                 assertSame items, _items
@@ -74,7 +74,8 @@ class ProjectServiceTests extends GrailsUnitTestCase {
         
         assertEquals anyString, projectService.exportToXmlString(project)
         
-        def mockControllers = [projectControl,groupControl,itemControl,iterationControl,snapshotControl, utilXmlControl]
+        def mockControllers = [projectControl,groupControl,itemControl,iterationControl,
+	                            snapshotControl, utilXmlControl]
         mockControllers*.verify()
     }
     

@@ -19,7 +19,6 @@ You should have received a copy of the GNU General Public License
 along with Agile Tracking Tool.  If not, see <http://www.gnu.org/licenses/>.
 ------------------------------------------------------------------------------*/
 package org.agiletracking
-import org.codehaus.groovy.grails.commons.*
 
 class ProjectService {
     static transactional = true
@@ -27,43 +26,43 @@ class ProjectService {
     def itemGroupService
     def iterationService
 
-    def addGroupToNewProject(def project)
+    void addGroupToNewProject(Project project)
     {
-	def group = new ItemGroup(project:project,name:'Default category',items:[])
-	group.save()
+		def group = new ItemGroup(project:project,name:'Default category',items:[])
+		group.save()
     }
     
-    def delete(def project) {
+    void delete(Project project) {
     	PointsSnapShot.findAllByProject(project).each{ it.delete() }
 		Iteration.findAllByProject(project).each{ iteration -> iterationService.unloadItemsAndDelete(iteration) }
 		ItemGroup.findAllByProject(project).each{ group -> itemGroupService.deleteWholeGroup(group) }
 		project.delete()
     }
     
-    def executeWhenProjectIsCorrect(def project, def objectForProjectCheck, def closureWhenProjectIsValid = {})
+    boolean executeWhenProjectIsCorrect(Project project, Object objectForProjectCheck, 
+											    Closure closureToCallWhenProjectIsValid = { } )
     {
-		def projectCheckPassed = false
+  		 def projectCheckPassed = false
 		 
-        if( project && objectForProjectCheck && 
+       if( project && objectForProjectCheck && 
             objectForProjectCheck.project.id == project.id ) {
-        	projectCheckPassed = true
+        	   projectCheckPassed = true
         }
         
-        if(projectCheckPassed) closureWhenProjectIsValid()
+        if(projectCheckPassed) closureToCallWhenProjectIsValid()
         
         return projectCheckPassed
     }
 	
-    def exportToXmlString(def project, def docVersion = UtilXml.currentDocVersion)
+    String exportToXmlString(Project project, String docVersion = UtilXml.currentDocVersion)
     {
 		def findAllForProject = { domain -> domain.findAllByProject(project) }
 				 
     	return UtilXml.exportToXmlString(project,
 					 findAllForProject(ItemGroup), 
-    	                                 findAllForProject(Item), 
-    	                                 findAllForProject(Iteration), 
-    	                                 findAllForProject(PointsSnapShot),
-    	                                 new Date(), docVersion )
+                findAllForProject(Item), 
+                findAllForProject(Iteration), 
+                findAllForProject(PointsSnapShot),
+                new Date(), docVersion )
     }
-
 }
