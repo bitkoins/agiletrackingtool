@@ -37,9 +37,11 @@ class PlotCurve {
 		return ((xValues.size()> 0) && (yValues.size() > 0))
 	}
 	
-	def add(PlotCurve curve, def newLegend)
+	PlotCurve plus(PlotCurve curve, String newLegend)
 	{
-		if (this.xValues.size() != curve.xValues.size() ) throw new Exception("Cannot add curves when the number of xValues is different.")
+		if (this.xValues.size() != curve.xValues.size()) {
+			 throw new Exception("Cannot add curves when the number of xValues is different.")
+		}
 		
 		PlotCurve ret = new PlotCurve(newLegend)
 		this.xValues.each{ ret.xValues << it }

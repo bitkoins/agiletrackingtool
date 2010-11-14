@@ -22,45 +22,45 @@ package org.agiletracking
 
 class PlotUtil
 {
-	static def getPlotCurveForItemStatus(def overViews, def dates, def zeroDate, def legend, def status)
+	static PlotCurve getPlotCurveForItemStatus(Collection<PointsOverView> overViews, 
+				Collection<Date> dates, Date zeroDate, String legend, ItemStatus status)
 	{
 		def overViewSelector = { overView -> overView.getPointsForItemStatus(status) }
 		return _getPlotCurveWithOverViewSelector(overViews, dates, zeroDate, legend, overViewSelector)
 	}
 	
-	static def getTotalPlotCurve(def overViews, def dates, def zeroDate, def legend)
+	static PlotCurve getTotalPlotCurve(Collection<PointsOverView> overViews, 
+					Collection<Date> dates, Date zeroDate, String legend)
 	{
 		def overViewSelector = { overView -> overView.totalPoints() }
 		return _getPlotCurveWithOverViewSelector(overViews, dates, zeroDate, legend, overViewSelector)
 	}
 	
-	static def getPlotCurveForView(def overViews, def dates, def zeroDate, def legend, def priority, def status)
+	static PlotCurve getPlotCurveForView(Collection<PointsOverView> overViews, 
+					Collection<Date> dates, Date zeroDate, String legend, Priority priority, ItemStatus status)
 	{
 		def overViewSelector = { overView -> overView.getPointsForView(priority, status) }
 		return _getPlotCurveWithOverViewSelector(overViews, dates, zeroDate, legend, overViewSelector)
 	}
 	
-	static def getTotalPlotCurveForPriority(def overViews, def dates, def zeroDate, def legend, def priority)
+	static PlotCurve getTotalPlotCurveForPriority(Collection<PointsOverView> overViews, 
+						Collection<Date> dates, Date zeroDate, String legend, Priority priority)
 	{
 		def overViewSelector = { overView -> overView.getPointsForPriority(priority) }
 		return _getPlotCurveWithOverViewSelector(overViews, dates, zeroDate, legend, overViewSelector)
 	}
 	
-	static def _getPlotCurveWithOverViewSelector(def overViews, def dates, def zeroDate, def legend, def overViewSelector)
+	static PlotCurve _getPlotCurveWithOverViewSelector(Collection<PointsOverView> overViews, 
+							Collection<Date> dates, Date zeroDate, String legend, Closure overViewSelector)
 	{
 		def curve = new PlotCurve(legend)
-		if ( overViews.size() != dates.size() ) 
-		{
-			throw new Exception("Cannot create a plotCurve when the number of dates and overView values are different.")
+		if ( overViews.size() != dates.size() ) {
+			throw new Exception("Cannot create a plotCurve when the number of dates and " + \
+									  "overView values are different.")
 		}
 		
-		overViews.each{ overView ->
-			curve.yValues << overViewSelector(overView)
-		}
-		
-		dates.each{ date ->
-			curve.xValues << Util.getDaysInBetween(zeroDate,date)
-		}
+		overViews.each{ overView -> curve.yValues << overViewSelector(overView) }
+		dates.each{ date -> curve.xValues << Util.getDaysInBetween(zeroDate,date) }
 		
 		return curve
 	}

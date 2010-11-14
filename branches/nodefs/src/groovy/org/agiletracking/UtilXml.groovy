@@ -19,15 +19,18 @@ You should have received a copy of the GNU General Public License
 along with Agile Tracking Tool.  If not, see <http://www.gnu.org/licenses/>.
 ------------------------------------------------------------------------------*/
 package org.agiletracking
+import groovy.util.slurpersupport.GPathResult
 
 class UtilXml {
-	static def supportedVersions = [UtilXml_v0_5.docVersion, UtilXml_v0_4.docVersion ]
-	static def currentDocVersion = supportedVersions[0]
+	static String supportedVersions = [UtilXml_v0_5.docVersion, UtilXml_v0_4.docVersion ]
+	static String currentDocVersion = supportedVersions[0]
 		
-	static def exportToXmlString(def project, def groups, def items, def iterations, def pointsSnapShots = [], def exportDate, 
-			def docVersion = currentDocVersion )
+	static String exportToXmlString(Project project, Collection<ItemGroup> groups, 
+						Collection<Item> items, Collection<Iteration> iterations, 
+						Collection<PointsSnapShot> pointsSnapShots = [], Date exportDate, 
+						String docVersion = currentDocVersion )
 	{
-		def ret		
+		String ret		
 		switch(docVersion)
 		{
 			case UtilXml_v0_5.docVersion:
@@ -43,11 +46,11 @@ class UtilXml {
 		return ret
 	}
 	
-	static def importFromXmlString(def xmlString)
+	static Map importFromXmlString(String xmlString)
 	{
-		def ret 
-		def doc = new XmlSlurper().parseText(xmlString)
-		def docVersion = doc.DocumentVersion.text()
+		Map ret 
+		GPathResult doc = new XmlSlurper().parseText(xmlString)
+		String docVersion = doc.DocumentVersion.text()
 		
 		switch(docVersion)
 		{
@@ -64,7 +67,7 @@ class UtilXml {
 		return ret
 	}
 	
-	static void setRelationToDomainObjects(def map)
+	static void setRelationToDomainObjects(Map map)
 	{
 		map.itemsByIteration.each{ iter, items ->
 			items.each{ item -> iter.addItem(item) } 

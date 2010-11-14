@@ -24,7 +24,7 @@ class PlanCalculator {
 	def itemsByGroup 
 	Points2DaysCalculator p2dCalc
 	
-	PlanCalculator(def items, def pointsPerDayMin, def pointsPerDayMax, def pointsUncertaintyPercentage)
+	PlanCalculator(Collection<Item> items, Double pointsPerDayMin, Double pointsPerDayMax, Double pointsUncertaintyPercentage)
 	{
 		p2dCalc = new Points2DaysCalculator()
 		p2dCalc.pointsPerDayMin = pointsPerDayMin
@@ -41,46 +41,46 @@ class PlanCalculator {
 		}
 	}
 	
-	def getGroups()
+	Collection<ItemGroup> getGroups()
 	{
 		return itemsByGroup.keySet()
 	}
 	
-	def getUnfinishedPoints(def group, def priority)
+	Double getUnfinishedPoints(ItemGroup group, Priority priority)
 	{
 		def sum = 0
 		itemsByGroup[group].findAll{ it.priority == priority }?.each{ sum += it.points }
 		return sum
 	}
 	
-	def getWorkingDaysLeft(def group, def priority)
+	Integer getWorkingDaysLeft(ItemGroup group, Priority priority)
 	{
 		return points2Days(getUnfinishedPoints(group,priority));
 	}
 	
-	def getWorkingDaysRangeLeft(def group, def priority)
+	Integer getWorkingDaysRangeLeft(ItemGroup group, Priority priority)
 	{
 		return points2DaysRange(getUnfinishedPoints(group, priority))
 	}
 	
-	def getUnfinishedPoints(def priority)
+	Double getUnfinishedPoints(Priority priority)
 	{
 		def points = 0
 		getGroups()?.each{ group -> points += getUnfinishedPoints(group,priority) }
 		return points
 	}
 	
-	def getWorkingDaysLeft(def priority)
+	Integer getWorkingDaysLeft(Priority priority)
 	{
 		return points2Days(getUnfinishedPoints(priority))
 	}
 	
-	def getWorkingDaysRangeLeft(def priority)
+	Range<Integer> getWorkingDaysRangeLeft(Priority priority)
 	{
 		return points2DaysRange(getUnfinishedPoints(priority))
 	}
 	
-	def getWorkingDaysRangeByPriority(def daysHoliday = 0)
+	Range<Integer> getWorkingDaysRangeByPriority(Integer daysHoliday = 0)
 	{
 		def dateByPriority = [:]
 		
@@ -98,12 +98,12 @@ class PlanCalculator {
 		return dateByPriority
 	}
 	
-	def points2DaysRange(def points)
+	Range<Integer> points2DaysRange(Double points)
 	{
 		return p2dCalc.points2DaysRange(points)
 	}
 	
-	def points2Days(def points)
+	Integer points2Days(Double points)
 	{
 		return p2dCalc.points2Days(points)
 	}

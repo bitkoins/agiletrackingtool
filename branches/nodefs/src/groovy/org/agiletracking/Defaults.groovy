@@ -157,19 +157,4 @@ class Defaults {
 		}
 		return projects 
 	}
-	
-	static Collection getProjectDataSet(Closure mockDomainClosure, 
-													Integer projectId = 1, 
-													Integer itemMaxUid = 0)
-	{	
-		def now = new Date()
-	
-		def project = Defaults.getProjects(1)[0]
-		def groups = Defaults.getGroups(Util.random(3..8), project)
-		def items = Defaults.getItems(Util.random(5..10), groups, project, itemMaxUid )
-		def iterations = Defaults.getIterations(Util.random(2..5), project)
-		def snapShots = Defaults.getSnapShots(groups, now-10, now-5, project) 
-		
-		return [project, groups, items, iterations, snapShots] 
-	} 
 }

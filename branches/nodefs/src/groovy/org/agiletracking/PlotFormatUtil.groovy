@@ -1,4 +1,4 @@
-/*----------------------------------------------------------------------------
+/*---------------------------------------------------------------------------
 Project: Agile Tracking Tool
 
 Copyright 2008, 2009   Ben Schreur
@@ -12,7 +12,7 @@ the Free Software Foundation, either version 3 of the License, or
 
 Agile Tracking Tool is distributed in the hope that it will be useful,
 but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License
@@ -22,7 +22,7 @@ package org.agiletracking
 
 class PlotFormatUtil
 {
-	static def formatDataForCurve(List<PlotCurve> plotCurves, def xMin, def xMax, def yMin, def yMax)
+	static Collection<PlotCurve> formatDataForCurve(Collection<PlotCurve> plotCurves, Double xMin, Double xMax, Double yMin, Double yMax)
 	{
 		def formattedPlotCurves = []
 		plotCurves.each{ plotCurve ->
@@ -43,7 +43,7 @@ class PlotFormatUtil
 		return formattedPlotCurves
 	}
 	
-	static def calculateRangeValues(PlotData plotData)
+	static void calculateMinMaxValues(PlotData plotData)
 	{
 		if (plotData.xMin == null) plotData.xMin = plotData.curves.collect{ it.xValues.min() }.min()
 		if (plotData.xMax == null) plotData.xMax = plotData.curves.collect{ it.xValues.max() }.max()
@@ -53,27 +53,27 @@ class PlotFormatUtil
 		if(plotData.yMax == plotData.yMin) plotData.yMax = plotData.yMin + 1.0
 	}
 	
-	static def formatDataForCurves(PlotData plotData)
+	static Collection<PlotCurve> formatDataForCurves(PlotData plotData)
 	{
-		calculateRangeValues(plotData)
+		calculateMinMaxValues(plotData)
 		return formatDataForCurve(plotData.curves, plotData.xMin, plotData.xMax, plotData.yMin, plotData.yMax)
 	}
 	
-	static def formatLegendString(PlotData plotData)
+	static String formatLegendString(PlotData plotData)
 	{
 		return plotData.curves.collect{it.legend}.join("|")
 	}
 	
-	static def formatColorsForCurves(Integer nrCurves)
+	static String formatColorsForCurves(Integer nrCurves)
 	{
-		if (!nrCurves) return ""
 		def colors = ["ff0000","00ff00","0000ff","ff00ff"]
-		def myList = []
-		def colorIndex=0
-		nrCurves.times{ it ->
-			myList << colors[colorIndex]
-			colorIndex++
+		println "Input = " + nrCurves
+		println "Input = " + colors.size()
+
+		if (nrCurves > colors.size() ) { 
+			throw new Exception("Only 4 colors supported to for plotting curves.") 
 		}
-		return myList.join(",")
+
+		return colors[0..(nrCurves-1)].join(",")
 	}
 }
