@@ -85,7 +85,7 @@ class Util {
 		Project.list()*.delete()
 	}
 	
-	static Integer getDefaultYearRange()
+	static IntRange getDefaultYearRange()
 	{
 		def year = new Date().year + 1900
 		return (year-3)..(year+3)
