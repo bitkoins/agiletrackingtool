@@ -70,7 +70,7 @@ class Iteration extends ItemContainer {
 		return days
 	}
 	
-	Integer calculatePointsPerDay()
+	Double calculatePointsPerDay()
 	{
 		def ret = 0
 		

@@ -38,7 +38,7 @@ class PlotService {
 			if ( daysFromNow < 0 )
 			{
 				plotCurve.xValues << daysFromNow
-				plotCurve.yValues << iteration.getPointsPerDay()*7
+				plotCurve.yValues << iteration.calculatePointsPerDay()*7
 			}
 		}
 		plotData.curves << plotCurve
