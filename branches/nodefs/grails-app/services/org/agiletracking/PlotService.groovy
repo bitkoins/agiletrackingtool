@@ -146,13 +146,13 @@ class PlotService {
 		dates = dates.collect{it + (now-iteration.startTime)}
 		def iterationCurve = PlotUtil.getPlotCurveForItemStatus(overViews,dates, now,"Finished", ItemStatus.Finished)
 		if ( iterationCurve.yValues.size() > 0 ) {
-			iterationCurve.yValues = iterationCurve.yValues.collect{ iteration.totalPoints() - (it - iterationCurve.yValues[0]) }
+			iterationCurve.yValues = iterationCurve.yValues.collect{ iteration.calculateTotalPoints() - (it - iterationCurve.yValues[0]) }
 		} 
 		plotData.curves << iterationCurve
 				
 		def nominalCurve = new PlotCurve("Steady Pace")
 		nominalCurve.xValues = [0, iteration.endTime-iteration.startTime]
-		nominalCurve.yValues = [iteration.totalPoints(), 0]
+		nominalCurve.yValues = [iteration.calculateTotalPoints(), 0]
 		plotData.curves << nominalCurve  
 	
         return plotData

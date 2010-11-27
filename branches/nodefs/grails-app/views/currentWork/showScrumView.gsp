@@ -32,9 +32,9 @@
 		<td>Remaining Points</td>				
 	</tr>
 	<tr>
-		<td>${iteration.totalPoints()}</td>
-		<td>${iteration.finishedPoints()}</td>
-		<td>${iteration.totalPoints()-iteration.finishedPoints()}</td>
+		<td>${iteration.calculateTotalPoints()}</td>
+		<td>${iteration.calculateFinishedPoints()}</td>
+		<td>${iteration.calculateTotalPoints()-iteration.calculateFinishedPoints()}</td>
 	</tr>
 	</table>
 	</div>
