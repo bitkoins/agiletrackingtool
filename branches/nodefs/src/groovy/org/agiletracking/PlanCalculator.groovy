@@ -58,7 +58,7 @@ class PlanCalculator {
 		return points2Days(getUnfinishedPoints(group,priority));
 	}
 	
-	Integer getWorkingDaysRangeLeft(ItemGroup group, Priority priority)
+	IntRange getWorkingDaysRangeLeft(ItemGroup group, Priority priority)
 	{
 		return points2DaysRange(getUnfinishedPoints(group, priority))
 	}
@@ -80,7 +80,7 @@ class PlanCalculator {
 		return points2DaysRange(getUnfinishedPoints(priority))
 	}
 	
-	Range<Integer> getWorkingDaysRangeByPriority(Integer daysHoliday = 0)
+	Map<String,Range<Integer>> getWorkingDaysRangeByPriority(Integer daysHoliday = 0)
 	{
 		def dateByPriority = [:]
 		

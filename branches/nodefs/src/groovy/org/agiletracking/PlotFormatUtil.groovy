@@ -67,8 +67,6 @@ class PlotFormatUtil
 	static String formatColorsForCurves(Integer nrCurves)
 	{
 		def colors = ["ff0000","00ff00","0000ff","ff00ff"]
-		println "Input = " + nrCurves
-		println "Input = " + colors.size()
 
 		if (nrCurves > colors.size() ) { 
 			throw new Exception("Only 4 colors supported to for plotting curves.") 

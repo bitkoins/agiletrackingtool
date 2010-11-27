@@ -124,7 +124,7 @@ class PlotService {
 		[Priority.High,Priority.Medium,Priority.Low].each{ prio ->
 			plotData.curves << PlotUtil.getPlotCurveForView(overviews,dates,now,
 																		   "${prio}-priority",prio, ItemStatus.Finished)
-			plotDataTotal.curves << PlotUtil.getTotalPlotCurveForPriority(overViews,dates,now,"${prio}-priority",prio)
+			plotDataTotal.curves << PlotUtil.getTotalPlotCurveForPriority(overviews,dates,now,"${prio}-priority",prio)
 		}
 		
 		def plots = []

@@ -80,11 +80,7 @@ class Iteration extends ItemContainer {
 		return ret
 	}
 	
-	Double calculateUnfinishedPoints()
-	{
-		return (totalPoints()-finishedPoints())
-	}
-	
+
 	Collection<Item> getUnfinishedItems()
 	{
 		def unfinishedItems = []
