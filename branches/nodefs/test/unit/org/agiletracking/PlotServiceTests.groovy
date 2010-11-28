@@ -9,4 +9,6 @@ class PlotServiceTests extends GrailsUnitTestCase {
     protected void tearDown() {
         super.tearDown()
     }
+
+    void testPleaseAddTestHere() { }
 }
