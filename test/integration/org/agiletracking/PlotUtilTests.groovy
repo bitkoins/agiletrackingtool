@@ -60,7 +60,7 @@ class PlotUtilTests extends GroovyTestCase
 	{
 		def curve = PlotUtil.getTotalPlotCurve(overViews,dates,nowDate,legend)
 		overViews.eachWithIndex{ overView, index ->
-			assertTrue curve.yValues[index] == overView.getTotalPoints()
+			assertTrue curve.yValues[index] == overView.totalPoints()
 		}
 	}
 		

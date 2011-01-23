@@ -19,13 +19,16 @@ You should have received a copy of the GNU General Public License
 along with Agile Tracking Tool.  If not, see <http://www.gnu.org/licenses/>.
 ------------------------------------------------------------------------------*/
 package org.agiletracking
+import groovy.util.slurpersupport.GPathResult
 
 class UtilXml_v0_5 {
 	static java.text.DateFormat odf = new java.text.SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-	static def docVersion = "0.5"
-	static def seperator = ";"
+	static String docVersion = "0.5"
+	static String seperator = ";"
 		
-	static def exportToXmlString(def project, def groups, def items, def iterations, def pointsSnapShots, def exportDate )
+	static String exportToXmlString(Project project, Collection<ItemGroup> groups, 
+						Collection<Item> items, Collection<Iteration> iterations, 
+						Collection<PointsSnapShot> pointsSnapShots = [], Date exportDate ) 
 	{
 		def builder = new groovy.xml.StreamingMarkupBuilder()
 		builder.encoding = "UTF-8"
@@ -144,9 +147,8 @@ class UtilXml_v0_5 {
 		return builder.bind(doc).toString()	
 	}
 	
-	static def importFromXmlDoc(def doc)
+	static Map importFromXmlDoc(GPathResult doc)
 	{
-		
 		def groups = []
 		def items = []				
 		def itemsByIteration = [:]
@@ -154,7 +156,7 @@ class UtilXml_v0_5 {
 		
 		def exportDate = odf.parse( doc.ExportDate.text().toString() )		
 		def project = new Project(name:doc.Project.name.text() )
-		project.type = ProjectType.valueOf(doc.Project.type?.text() )
+		project.type = ProjectType.valueOf(doc.Project.type.text() )
 
 		project.prioritizedItemIds = doc.PrioritizedItems.itemIdList.text()
 		
@@ -237,9 +239,13 @@ class UtilXml_v0_5 {
 				it.PointsByItemStatus.each{
 					def status = ItemStatus.valueOf( it.itemStatus.text() )
 					def pointsList = it.points.text().split(seperator).collect{ Double.parseDouble(it) }
-					if (pointsList.size() != dates.size()) throw new Exception("The number of dates and points elemements are not equal.")
+					if (pointsList.size() != dates.size()) {
+						 throw new Exception("The number of dates and points elemements are not equal.")
+					}
 					
-					pointsList.eachWithIndex{ points, index -> overViews[index].setPointsForView(prio, status, points) }
+					pointsList.eachWithIndex{ points, index -> 
+							overViews[index].setPointsForView(prio, status, points) 
+					}
 				}
 			}
 			
@@ -268,7 +274,10 @@ class UtilXml_v0_5 {
 			def snapShot = new PointsSnapShot(project,it.date)
 			snapShot.overView = it.overView
 			groups.each{ group ->
-				def dateAndOverView = datesAndOverViewsByGroup[group]?.find{ Util.getDaysInBetween(it.date, snapShot.date)==0 }
+				def dateAndOverView = datesAndOverViewsByGroup[group]?.find{ 
+					Util.getDaysInBetween(it.date, snapShot.date)==0 
+				}
+
 				if (dateAndOverView) {
 					def pointsForGroup = new PointsForGroup(group,snapShot)
 					pointsForGroup.overView = dateAndOverView.overView
@@ -278,19 +287,8 @@ class UtilXml_v0_5 {
 			snapShots << snapShot
 		}
 		
-		return ['groups':groups,'items':items, 'iterations':iterations, 'snapShots':snapShots, 'itemsByIteration':itemsByIteration,'itemsByGroup':itemsByGroup, 'exportDate':exportDate,'project':project]
-	}
-	
-	static void setRelationToDomainObjects(def map)
-	{
-		map.items.each{ item.project = map.project }
-	
-		map.itemsByIteration.each{ iter, items ->
-			items.each{ item -> iter.addItem(item) } 
-		}
-	
-		map.itemsByGroup.each{ group, items ->
-			items.each{ item -> group.addItem(item) }
-		}
+		return ['groups':groups,'items':items, 'iterations':iterations, 'snapShots':snapShots,\
+				  'itemsByIteration':itemsByIteration,'itemsByGroup':itemsByGroup,\
+              'exportDate':exportDate,'project':project]
 	}
 }

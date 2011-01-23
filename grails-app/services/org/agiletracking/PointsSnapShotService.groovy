@@ -23,7 +23,7 @@ package org.agiletracking
 class PointsSnapShotService {
     static transactional = true
         
-    def deleteWholeGroup(def group)        
+    void deleteWholeGroup(ItemGroup group)        
     {        
         PointsSnapShot.findAllByProject(group.project).each{ snapShot ->        
             def pointsForGroup = snapShot.getPointsForGroup(group)        
@@ -34,7 +34,7 @@ class PointsSnapShotService {
         }        
     }
 
-    def performSnapShotJob(def project, def now = new Date() )
+    void performSnapShotJob(Project project, Date now = new Date() )
     {
 		def lastUpdateDate = Item.lastUpdateDateForProject(project)
 		if (lastUpdateDate && (Util.getDaysInBetween(lastUpdateDate, now)  <= 1) ) {

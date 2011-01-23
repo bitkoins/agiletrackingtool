@@ -3,7 +3,7 @@
 <h1>Working days for scheduled iterations:</h1>
 <table>
 
-<g:set var="dayRanges" value="${iterations.collect{iter->planCalculator.p2dCalc.points2DaysRange(iter.getUnfinishedPoints())} }"/>
+<g:set var="dayRanges" value="${iterations.collect{iter->planCalculator.p2dCalc.points2DaysRange(iter.calculateUnfinishedPoints())} }"/>
 <g:set var="minTotal" value="${dayRanges.sum{it.min()}}"/> 
 <g:set var="maxTotal" value="${dayRanges.sum{it.max()}}"/>
 
@@ -25,7 +25,7 @@
 </tr>
 
 <g:each var="iter" in="${iterations}">
-	<g:set var="dayRange" value="${planCalculator.p2dCalc.points2DaysRange(iter.getUnfinishedPoints())}"/>
+	<g:set var="dayRange" value="${planCalculator.p2dCalc.points2DaysRange(iter.calculateUnfinishedPoints())}"/>
 	<tr>
 		<td><g:link controller="iterationComposer" action="compose" id="${iter.id}">${iter.workingTitle}</g:link></td>
 		<td>${dayRange.min()}..${dayRange.max()}</td>

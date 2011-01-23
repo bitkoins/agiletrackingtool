@@ -26,19 +26,19 @@ class ItemService {
    def itemGroupService
 	def iterationService 
 
-	def getUnfinishedItemsByGroup(def project)
+	Map<ItemGroup,Collection<Item>> getUnfinishedItemsByGroup(Project project)
 	{
 		def items = getUnfinishedItems(project)
 		def groups = ItemGroup.findAllByProject(project)
 		return itemGroupService.transformToItemsByGroup(groups, items)
 	}
 
-	def getUnfinishedItems(def project)
+	Collection<Item> getUnfinishedItems(Project project)
 	{
 		return Item.findAllByProjectAndStatusNotEqual(project,ItemStatus.Finished)
 	}
 
-	def getFinishedItemsByGroup(def project) 
+	Map<ItemGroup,Collection<Item>> getFinishedItemsByGroup(Project project) 
 	{
 		def items = getFinishedItems(project)
 		def groups = ItemGroup.findAllByProject(project)
@@ -50,6 +50,11 @@ class ItemService {
 		return Item.findAllByProjectAndStatus(project,ItemStatus.Finished)
 	}
 
+	Collection<Item> getFinishedItems(Project project) 
+	{
+		return Item.findAllByProjectAndStatus(project,ItemStatus.Finished)
+	}
+
 	void deleteItem(Item item)
 	{
 	   iterationService.deleteItem(item)
@@ -57,13 +62,13 @@ class ItemService {
 		item.delete()
 	}
 
-	def retrieveUnfinishedItemsForProject(def project, def itemIdList)
+	Collection<Integer> retrieveUnfinishedItemsForProject(Project project, Collection<Integer> itemIdList)
 	{
 		return itemIdList.collect{ Item.get(it) }.findAll{ 
 			it?.project?.id == project.id && it?.checkUnfinished() }
 	}
 
-	void removeItemsFromList(def itemList, def itemUidsToRemove)
+	void removeItemsFromList(Collection<Item> itemList, Collection<Integer> itemUidsToRemove)
 	{
 		itemUidsToRemove.each{ rid ->
 			def itemToRemove = itemList.find{ it.uid == rid} 
@@ -71,7 +76,7 @@ class ItemService {
 		}		
 	}
 
-	def matchItemsWithUid(def items, def uidList)
+	Collection<Integer> matchItemsWithUid(Collection<Item> items, Collection<Integer> uidList)
 	{
 		return uidList.collect{ uid -> items.find{it.uid == uid} }.findAll{ it }
 	}

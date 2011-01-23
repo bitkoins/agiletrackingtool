@@ -31,6 +31,6 @@ class ItemGroup extends ItemContainer {
 		project(nullable:false)
 	}
 	
-	def totalPoints() { return items.sum{ it.points } }
-	def finishedPoints() { return items.sum{ (it.status == ItemStatus.Finished) ? it.points : 0 } }
+	Double totalPoints() { return items.sum{ it.points } }
+	Double finishedPoints() { return items.sum{ (it.status == ItemStatus.Finished) ? it.points : 0 } }
 }

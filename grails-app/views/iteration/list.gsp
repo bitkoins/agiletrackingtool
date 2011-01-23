@@ -40,7 +40,7 @@
 		<g:each var="iter" in="${iterations.findAll{it.status == org.agiletracking.IterationStatus.Ongoing} }">
 			<tr class="status${iter.status}">
 				<td><g:link controller="currentWork" action="show" id="${iter.id}">${iter.workingTitle}</g:link></td>
-				<td>${iter.finishedPoints}</td>
+				<td>${iter.calculateFinishedPoints()}</td>
 				<td><g:formatDate format="dd-MMM yyyy" date="${iter.endTime}"/></td>
 				<td><g:link action="edit" id="${iter.id}">Edit</g:link></td>
 				<td><g:link action="delete" id="${iter.id}" onclick="return confirm('This will delete the iteration. Sure?');" >Delete</g:link></td>
@@ -69,7 +69,7 @@
 		<g:each var="iter" in="${iterations.findAll{it.status == org.agiletracking.IterationStatus.FutureWork} }">
 			<tr class="status${iter.status}">
 				<td><g:link controller="currentWork" action="show" id="${iter.id}">${iter.workingTitle}</g:link></td>
-				<td>${iter.totalPoints()}</td>
+				<td>${iter.calculateTotalPoints()}</td>
 				<td><g:formatDate format="dd-MMM yyyy" date="${iter.endTime}"/></td>
 				<td><g:link action="edit" id="${iter.id}">Edit</g:link></td>
 				<td><g:link action="delete" id="${iter.id}" onclick="return confirm('This will delete the iteration. Sure?');" >Delete</g:link></td>
@@ -97,10 +97,10 @@
 		<g:each var="iter" in="${iterations.findAll{it.status == org.agiletracking.IterationStatus.Finished} }">
 			<tr class="status${iter.status}">
 				<td><g:link controller="currentWork" action="show" id="${iter.id}">${iter.workingTitle}</g:link></td>
-				<td>${iter.finishedPoints}</td>
+				<td>${iter.calculateFinishedPoints()}</td>
 				<td><g:formatDate format="dd-MMM yyyy" date="${iter.endTime}"/></td>
-				<td>${iter.durationInDays}</td>
-				<td>${String.format("%5.3g",iter.pointsPerDay*7)}</td>
+				<td>${iter.calculateDurationInDays()}</td>
+				<td>${String.format("%5.3g",iter.calculatePointsPerDay()*7)}</td>
 				<td><g:link action="edit" id="${iter.id}">Edit</g:link></td>
 				<td><g:link action="delete" id="${iter.id}" onclick="return confirm('This will delete the iteration. Sure?');" >Delete</g:link></td>
 			</tr>

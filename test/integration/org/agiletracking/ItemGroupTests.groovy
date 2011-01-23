@@ -55,13 +55,13 @@ class ItemGroupTests extends GroovyTestCase {
     void testFinishedPointsWhenAllPointsAreFinished()
     {
     	items.each{ it.status = ItemStatus.Finished }
-    	assertTrue group.finishedPoints() == items.sum{ it.points }
+    	assertTrue group.calculateFinishedPoints() == items.sum{ it.points }
     }
     	
     void testFinishedPointsWhenAllPointsAreRequest()
     {
        	items.each{ it.status = ItemStatus.Request }
-       	assertTrue group.finishedPoints() == 0
+       	assertTrue group.calculateFinishedPoints() == 0
     }
     
     void testFindByProject()

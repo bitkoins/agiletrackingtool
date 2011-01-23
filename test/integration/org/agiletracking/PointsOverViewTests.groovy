@@ -39,7 +39,7 @@ class PointsOverViewTests extends GroovyTestCase {
 	
 	void testInitialValuesAreZero()
 	{
-		assertTrue overView.getTotalPoints() == 0
+		assertTrue overView.totalPoints() == 0
 	}
 	
 	void testPointsForItemStatusAreInitiallyZero()
@@ -121,14 +121,14 @@ class PointsOverViewTests extends GroovyTestCase {
 			overView.addPointsForView(prio,status,value)
 			sum += value
 			assertTrue overView.getPointsForView(prio,status) == sum
-			assertTrue overView.getTotalPoints() == sum
+			assertTrue overView.totalPoints() == sum
 		}
 	}
 	
 	void testCreateOverView()
 	{
 		overView = PointsOverView.createOverView(items)
-		assertTrue overView.getTotalPoints() == defaultItemPoint * items.size()
+		assertTrue overView.totalPoints() == defaultItemPoint * items.size()
 	}
 	
 	void testTiming()
