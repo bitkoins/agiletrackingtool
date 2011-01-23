@@ -156,7 +156,7 @@ class UtilXml_v0_5 {
 		
 		def exportDate = odf.parse( doc.ExportDate.text().toString() )		
 		def project = new Project(name:doc.Project.name.text() )
-		project.type = ProjectType.valueOf(doc.Project.type?.text() )
+		project.type = ProjectType.valueOf(doc.Project.type.text() )
 
 		project.prioritizedItemIds = doc.PrioritizedItems.itemIdList.text()
 		

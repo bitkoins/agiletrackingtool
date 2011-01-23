@@ -71,5 +71,10 @@ class ProjectTests extends GrailsUnitTestCase {
 		project.type = ProjectType.Kanban
 		assertTrue project.usesKanban() 
 	}
+
+	void testFallbackToDefaultProjectType() {
+		project.type = null
+		assertEquals ProjectType.Scrum, project.type
+	}
 }
  

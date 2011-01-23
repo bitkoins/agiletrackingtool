@@ -53,4 +53,8 @@ class Project {
 	boolean usesKanban() {
 		return type == ProjectType.Kanban
 	} 
+
+	ProjectType getType() { 
+		type ?: ProjectType.Scrum
+	}
 }
