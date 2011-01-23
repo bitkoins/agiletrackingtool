@@ -1,4 +1,4 @@
-<h1>(${iteration.totalPoints()} points)</h1>
+<h1>(${iteration.calculateTotalPoints()} points)</h1>
 <table border="1">
 <tr>
 	<td>Id</td>

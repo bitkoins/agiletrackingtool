@@ -57,4 +57,8 @@ class ItemContainer {
 	{
 		return getItem(id) != null
 	}
+
+	Double calculateTotalPoints() { return items.sum{ it.points } }
+	Double calculateFinishedPoints() { return items.sum{ (it.status == ItemStatus.Finished) ? it.points : 0 } }
+	Double calculateUnfinishedPoints() { calculateTotalPoints()-calculateFinishedPoints() }
 }	

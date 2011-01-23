@@ -20,6 +20,9 @@ along with Agile Tracking Tool.  If not, see <http://www.gnu.org/licenses/>.
 ------------------------------------------------------------------------------*/
 package org.agiletracking
 
+import org.agiletracking.Project
+import org.agiletracking.ItemGroup
+
 class Item {
 	String        description
 	Double        itemPoints	
@@ -47,7 +50,7 @@ class Item {
 
 	Item()  { subItems = [] }
 	
-	Item(def project)
+	Item(Project project)
 	{
 		uid = maxUid(project) + 1
 		this.project = project
@@ -89,7 +92,7 @@ class Item {
 		}
 	}
 	
-	def getPoints()
+	Double getPoints()
 	{
 		def p = 0
 		if ( !(subItems?.size() == 0)){ 
@@ -98,22 +101,22 @@ class Item {
 		return [itemPoints,p].max()
 	}
 	
-	def setPoints(def points)
+	void setPoints(Double points)
 	{
 		this.itemPoints = points
 	}
 	
-	def hasCriteria()
+	boolean hasCriteria()
 	{
 		return criteria ? criteria.trim().size() != 0 : false
 	}
 	
-	static def maxUid(def project)
+	static Integer maxUid(Project project)
 	{	
 		return _retrieveMaxValueForField(project,"uid")
 	}	
 
-	static def lastUpdateDateForProject(def project)
+	static Date lastUpdateDateForProject(def project)
 	{	
 		return _retrieveMaxValueForField(project,"lastUpdated")
 	}
@@ -130,7 +133,7 @@ class Item {
 		return max ?: 0
 	}
 
-	static def parseUid(def uidString)
+	static Integer parseUid(String uidString)
 	{
 		return Integer.parseInt(uidString)
 	}	

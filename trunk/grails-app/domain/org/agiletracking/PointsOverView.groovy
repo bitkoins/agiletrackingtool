@@ -31,44 +31,44 @@ class PointsOverView
 			map = [:]
 		}
 		
-		def key(def priority,status)
+		String key(Priority priority,ItemStatus status)
 		{
 			return new String("${priority}.${status}")
 		}
 		
-		void setPointsForView(def priority,def status,def points)
+		void setPointsForView(Priority priority,ItemStatus status, Double points)
 		{
 			map[key(priority,status)] = new Double(points)
 		}
 		
-		def getPointsForView(def priority, def status)
+		Double getPointsForView(Priority priority, ItemStatus status)
 		{
 			def k = key(priority,status)
 			return map.containsKey(k) ? map[k] : 0.0
 		}
 		
-		def getTotalPoints()
+		Double totalPoints()
 		{
 			def total = 0.0
 			map.each{ key, points -> total += points }
 			return total
 		}
 		
-		def getPointsForPriority(def priority)
+		Double getPointsForPriority(Priority priority)
 		{
 			def total = 0.0
 			ItemStatus.each{ status -> total += getPointsForView(priority,status) }
 			return total
 		}
 		
-		def getPointsForItemStatus(def status)
+		Double getPointsForItemStatus(ItemStatus status)
 		{
 			def total = 0.0
 			Priority.each{ priority -> total += getPointsForView(priority,status) }
 			return total
 		}
 		
-		static def createOverView(def items)
+		static PointsOverView createOverView(Collection<Item> items)
 		{
 			def ret = new PointsOverView()
 			items.each{ item ->
@@ -78,7 +78,7 @@ class PointsOverView
 			return ret
 		}
 		
-		def addPointsForView(def priority, def status, def points)
+		void addPointsForView(Priority priority, ItemStatus status, Double points)
 		{
 			def newPoints = points + getPointsForView(priority,status)
 			setPointsForView(priority,status, newPoints)
@@ -86,7 +86,7 @@ class PointsOverView
 		
 		String toString()
 		{
-			return "PointsOverView - Total/Finished: ${getTotalPoints()}/${getPointsForItemStatus(ItemStatus.Finished)}"
+			return "PointsOverView - Total/Finished: ${totalPoints()}/${getPointsForItemStatus(ItemStatus.Finished)}"
 		}
 		
 		boolean equals(def other)

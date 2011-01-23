@@ -22,13 +22,12 @@ package org.agiletracking
 
 class PlotData {
 	String           title
-	def	             xMin
-	def              xMax 
-	def              yMin
-	def              yMax
-	def              xLabel
-	def              yLabel
-	
+	String           xLabel
+	String           yLabel
+	Double           xMin
+	Double           xMax 
+	Double           yMin
+	Double           yMax
 	List<PlotCurve>  curves
 	
 	PlotData(String title)

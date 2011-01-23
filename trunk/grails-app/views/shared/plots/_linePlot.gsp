@@ -2,7 +2,7 @@
 
   <g:if test="${plotData?.hasValidCurves()}">
 	  <%  
-	  	  org.agiletracking.PlotFormatUtil.calculateRangeValues(plotData)
+	  	  org.agiletracking.PlotFormatUtil.calculateMinMaxValues(plotData)
 	  %>
 
     	 <!-- Switch to easyChart by chart:lineChart ... , to googleChart: g:lineChart .../ -->

@@ -86,4 +86,16 @@ class PlotFormatUtilTests extends GroovyTestCase
 		assertTrue !plotData.curves[1].hasPoints()
 		assertTrue !plotData.hasValidCurves()
 	}
+
+	void testExceptionWhenFormattingTooManyColors() {
+		shouldFail(Exception) { PlotFormatUtil.formatColorsForCurves(5) }
+	}
+
+	void testFormatOneColors() {
+		assertEquals "ff0000" , PlotFormatUtil.formatColorsForCurves(1)
+	}
+
+	void testFormatTwoColors() {
+		assertEquals "ff0000,00ff00" , PlotFormatUtil.formatColorsForCurves(2)
+	}
 }

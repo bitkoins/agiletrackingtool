@@ -26,7 +26,7 @@ class Points2DaysCalculator
 	def pointsPerDayMax
 	def pointsUncertaintyPercentage
 	
-	def points2DaysRange(def points)
+	Range<Integer> points2DaysRange(Double points)
 	{
 		def minDays = this.pointsPerDayMin ? (points/this.pointsPerDayMax ) : 0
 		def maxDays = this.pointsPerDayMax ? (points/this.pointsPerDayMin ) : 0
@@ -43,7 +43,7 @@ class Points2DaysCalculator
 		return minDays.toInteger()..maxDays.toInteger()
 	}
 	
-	def points2Days(def points)
+	Integer points2Days(Double points)
 	{
 		def range = points2DaysRange(points)				
 		return Math.round((range.min()+range.max())/2.0).toInteger()

@@ -25,7 +25,7 @@ class PointsForGroup
 	PointsOverView overView	 
 	static belongsTo = [ group : ItemGroup, snapShot : PointsSnapShot ]
 	
-	PointsForGroup(def group, def snapShot) 
+	PointsForGroup(ItemGroup group, PointsSnapShot snapShot) 
 	{
 		this.group = group
 		this.snapShot = snapShot
@@ -39,7 +39,7 @@ class PointsForGroup
 		return "${group}: ${overView}"
 	}
 	
-	static def deleteWholeGroup(def group)
+	static void deleteWholeGroup(ItemGroup group)
 	{
 		findAllByGroup(group).each{ pointsForGroup ->
 			    pointsForGroup.snapShot.removeFromPointsForGroups(pointsForGroup)

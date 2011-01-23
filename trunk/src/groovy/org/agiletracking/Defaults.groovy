@@ -22,15 +22,15 @@ package org.agiletracking
 
 class Defaults {
 	
-	static List<Iteration> getIterations(Integer nr, def project)
+	static Collection<Iteration> getIterations(Integer nr, Project project)
 	{
-		List<Iteration> ret = []
+		Collection<Iteration> ret = []
 		nr.times {
 			Iteration iter = new Iteration(project:project)
 			iter.workingTitle = "Iteration-${it}"
 			iter.status = IterationStatus.FutureWork
 			iter.startTime = new Date() - 10
-			iter.endTime   = new Date()
+			iter.endTime = new Date()
 			iter.items = []
 			
 			ret << iter
@@ -39,9 +39,9 @@ class Defaults {
 		return ret
 	}
 	
-	static List<ItemGroup> getGroups(Integer nr, def project = getProjects(1)[0] )
+	static Collection<ItemGroup> getGroups(Integer nr, Project project = getProjects(1)[0] )
 	{
-		List<ItemGroup> ret = []
+		Collection<ItemGroup> ret = []
 		nr.times {
 			def group = new ItemGroup()			
 			group.name = "Category-${it}"
@@ -55,13 +55,13 @@ class Defaults {
 		return ret
 	}
 	
-	static List<Item> getItems(Integer nr, List<ItemGroup> groups, def project = getProjects(1)[0], def maxUid = 0)
+	static Collection<Item> getItems(Integer nr, Collection<ItemGroup> groups, Project project = getProjects(1)[0], Integer maxUid = 0)
 	{
 		maxUid = maxUid ? maxUid : Item.maxUid()				
-		List<Item> ret = []
+		Collection<Item> ret = []
 		def prios = [Priority.Low, Priority.Medium, Priority.High]
 		
-		List points = []
+		Collection points = []
 		9.times{ points << it }
 		
 		nr.times{ index -> 
@@ -91,11 +91,11 @@ class Defaults {
 		return ret
 	}
 	
-	static List<SubItem> getSubItems(Integer nr, List<Item> items)
+	static Collection<SubItem> getSubItems(Integer nr, Collection<Item> items)
 	{
-		List<SubItem> ret = []
+		Collection<SubItem> ret = []
 		
-		List points = []
+		Collection points = []
 		6.times{ points << it }
 		
 		nr.times{
@@ -111,7 +111,7 @@ class Defaults {
 		return ret
 	}
 	
-	static def getPointsOverView()
+	static PointsOverView getPointsOverView()
 	{
 		def myRandom = { Math.round(Math.random()*100.0) }
 		def overView = new PointsOverView()
@@ -123,11 +123,12 @@ class Defaults {
 		return overView	
 	}
 	
-	static def getSnapShots(def groups, def startTime, def endTime, def project = getProjects(1)[0])
+	static Collection<PointsSnapShot> getSnapShots(Collection<ItemGroup> groups, 
+				Date startDate, Date endDate, Project project = getProjects(1)[0])
 	{
 		def snapShots = []
 							
-		(startTime..endTime).eachWithIndex{ date, index ->
+		(startDate..endDate).eachWithIndex{ date, index ->
 			def snapShot = new PointsSnapShot(project, date)
 			snapShot.id = index + 1
 			snapShot.overView = getPointsOverView()
@@ -142,7 +143,7 @@ class Defaults {
 		return snapShots
 	}
 	
-	static def getProjects(Integer nr)
+	static Collection<Project> getProjects(Integer nr)
 	{
 		def projects = []
 		nr.times{
@@ -153,17 +154,4 @@ class Defaults {
 		}
 		return projects 
 	}
-	
-	static def getProjectDataSet(def mockDomainClosure, def projectId = 1, def itemMaxUid = 0)
-	{	
-		def now = new Date()
-	
-		def project = Defaults.getProjects(1)[0]
-		def groups = Defaults.getGroups(Util.random(3..8), project)
-		def items = Defaults.getItems(Util.random(5..10), groups, project, itemMaxUid )
-		def iterations = Defaults.getIterations(Util.random(2..5), project)
-		def snapShots = Defaults.getSnapShots(groups, now-10, now-5, project) 
-		
-		return [project, groups, items, iterations, snapShots] 
-	} 
 }

@@ -23,7 +23,7 @@ package org.agiletracking
 class PlotService {
     static transactional = true
         
-    def createIterationHistoryPlot(def iterations)
+    PlotData createIterationHistoryPlot(Collection<Iteration> iterations)
     {
     	def plotData = new PlotData("Iteration history")
 		plotData.xLabel = "Days ago from now"
@@ -38,7 +38,7 @@ class PlotService {
 			if ( daysFromNow < 0 )
 			{
 				plotCurve.xValues << daysFromNow
-				plotCurve.yValues << iteration.getPointsPerDay()*7
+				plotCurve.yValues << iteration.calculatePointsPerDay()*7
 			}
 		}
 		plotData.curves << plotCurve
@@ -47,7 +47,7 @@ class PlotService {
     
     }
     
-    def createPointsHistoryPlot(def snapShots)
+    PlotData createPointsHistoryPlot(Collection<PointsSnapShot> snapShots)
     {
     	def overViews = snapShots.collect{ it.overView }
 		def dates = snapShots.collect{ it.date }
@@ -61,13 +61,14 @@ class PlotService {
 		plotData.curves << PlotUtil.getPlotCurveForItemStatus(overViews,dates,now,"Finished",ItemStatus.Finished)
 		plotData.curves << PlotUtil.getTotalPlotCurveForPriority(overViews,dates,now,"Total High priority", Priority.High)
 			
-		def curveCombined = PlotUtil.getTotalPlotCurveForPriority(overViews,dates,now,"Total", Priority.High).add(PlotUtil.getTotalPlotCurveForPriority(overViews,dates,now,"Total", Priority.Medium), "Total High-Medium Priority")
+		def curveCombined = PlotUtil.getTotalPlotCurveForPriority(overViews,dates,now,"Total", Priority.High).plus(PlotUtil.getTotalPlotCurveForPriority(overViews,dates,now,"Total", Priority.Medium), "Total High-Medium Priority")
 		plotData.curves << curveCombined
 			
 		return plotData
 	}
 	
-	def createGroupPointsHistoryPlots(def snapShots, def groups)
+	Collection<PlotData> createGroupPointsHistoryPlots(Collection<PointsSnapShot> snapShots, 
+																	   Collection<ItemGroup> groups)
 	{
 		def plots = []
 		plots += _makePlots("for all items", snapShots.collect{it.overView}, snapShots.collect{it.date} )
@@ -91,7 +92,7 @@ class PlotService {
 		return plots
 	}
 	
-	def createFlowPlot(def snapShots)
+	PlotData createFlowPlot(Collection<PointsSnapShot> snapShots)
 	{
 		def overViews = snapShots.collect{ it.overView }
 		def dates = snapShots.collect{ it.date }
@@ -109,7 +110,7 @@ class PlotService {
 		return plotData
 	}
 			
-	def _makePlots(def title, def overViews,def dates) 
+	Collection<PlotData> _makePlots(String title, Collection<PointsOverView> overviews,Collection<Date> dates) 
 	{
 		def plotData = new PlotData("Finished points " + title)
 		plotData.xLabel = "Days ago from now"
@@ -121,8 +122,9 @@ class PlotService {
 
 		def now = new Date()		
 		[Priority.High,Priority.Medium,Priority.Low].each{ prio ->
-			plotData.curves << PlotUtil.getPlotCurveForView(overViews,dates,now,"${prio}-priority",prio, ItemStatus.Finished)
-			plotDataTotal.curves << PlotUtil.getTotalPlotCurveForPriority(overViews,dates,now,"${prio}-priority",prio)
+			plotData.curves << PlotUtil.getPlotCurveForView(overviews,dates,now,
+																		   "${prio}-priority",prio, ItemStatus.Finished)
+			plotDataTotal.curves << PlotUtil.getTotalPlotCurveForPriority(overviews,dates,now,"${prio}-priority",prio)
 		}
 		
 		def plots = []
@@ -130,7 +132,7 @@ class PlotService {
 		return plots
 	}
 	
-	def createBurnUpPlotData(def iteration)
+	PlotData createBurnUpPlotData(Iteration iteration)
     {
         def plotData = new PlotData("BurnDown chart") 
         plotData.xLabel = "Days since iteration start"
@@ -144,19 +146,19 @@ class PlotService {
 		dates = dates.collect{it + (now-iteration.startTime)}
 		def iterationCurve = PlotUtil.getPlotCurveForItemStatus(overViews,dates, now,"Finished", ItemStatus.Finished)
 		if ( iterationCurve.yValues.size() > 0 ) {
-			iterationCurve.yValues = iterationCurve.yValues.collect{ iteration.totalPoints() - (it - iterationCurve.yValues[0]) }
+			iterationCurve.yValues = iterationCurve.yValues.collect{ iteration.calculateTotalPoints() - (it - iterationCurve.yValues[0]) }
 		} 
 		plotData.curves << iterationCurve
 				
 		def nominalCurve = new PlotCurve("Steady Pace")
 		nominalCurve.xValues = [0, iteration.endTime-iteration.startTime]
-		nominalCurve.yValues = [iteration.totalPoints(), 0]
+		nominalCurve.yValues = [iteration.calculateTotalPoints(), 0]
 		plotData.curves << nominalCurve  
 	
         return plotData
    }
    
-   def createBugHistoryPlot(def iterations)
+   PlotData createBugHistoryPlot(Collection<Iteration> iterations)
    {
 		def plotCurve = new PlotCurve("Number of bugs solved")
 		

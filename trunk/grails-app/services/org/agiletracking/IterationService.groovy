@@ -21,9 +21,9 @@ along with Agile Tracking Tool.  If not, see <http://www.gnu.org/licenses/>.
 package org.agiletracking
 
 class IterationService {
-    static transactional = true
+   static transactional = true
 
-	def unloadItemsAndDelete(def iteration)
+	void unloadItemsAndDelete(Iteration iteration)
 	{
 	    iteration.items?.collect{it}.each{ item -> 
 				iteration.deleteItem(item.id) 
@@ -31,12 +31,12 @@ class IterationService {
 	    iteration.delete()
 	}	
 	
-	def getOngoingIteration(def project)
+	Iteration getOngoingIteration(Project project)
 	{
 		return Iteration.findAllByProject(project)?.find{ it.status == IterationStatus.Ongoing }
 	}
 	
-	def transferUnfinishedItems(def iteractionCurrent, def iterationNext)
+	void transferUnfinishedItems(Iteration iteractionCurrent, Iteration iterationNext)
 	{
 	    iteractionCurrent.copyUnfinishedItems(iterationNext)
 	    

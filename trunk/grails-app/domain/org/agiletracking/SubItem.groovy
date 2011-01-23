@@ -33,7 +33,7 @@ class SubItem
 	
 	SubItem() { }
 	
-	SubItem(def description, def points)
+	SubItem(String description, Double points)
 	{
 		this.description = description
 		this.points = points 
