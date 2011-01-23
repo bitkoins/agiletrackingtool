@@ -46,28 +46,6 @@ class ItemGroupTests extends GroovyTestCase {
     	project.delete()
     }
     
-    void testAddingAndDeletingItem()
-    {
-    	def item = items[0]
-    	def otherGroup = Defaults.getGroups(1,project)[0]
-    	otherGroup.id = group.id + 1
-    	
-    	otherGroup.addItem(item)
-    	
-    	project.save()
-    	group.save()
-    	assertTrue otherGroup.hasItem(item.id)
-    	assertEquals item.group , otherGroup
-    	
-    	assertFalse group.hasItem(item.id)
-    	
-    	otherGroup.deleteItem(item.id)
-    	otherGroup.save()
-    	assertFalse otherGroup.hasItem(item.id)
-    	assertTrue item.group == null
-    	project.delete()
-    }
-    
     void testAddingMultipleItems()
     {
     	items.each{ item -> group.addItem(item) }
@@ -102,22 +80,4 @@ class ItemGroupTests extends GroovyTestCase {
     	
     	groups.collect{ it.project }.unique()*.delete()
     }
-    
-    void testSavingGroupCascadesToItem()
-    {
-    	project.save()
-    	def groupA = Defaults.getGroups(1,project)[0]
-    	def groupB = Defaults.getGroups(1,project)[0]
-    	[groupA,groupB]*.save()
-    	
-    	def itemA = Defaults.getItems(1,[groupA],project)[0]
-    	itemA.save()
-    	
-    	groupB.addItem(itemA)
-    	groupB.save()
-    	
-    	def savedItemA = Item.get(itemA.id)
-    	assertEquals groupB.id, savedItemA.group.id   	
-    }
-    
 }

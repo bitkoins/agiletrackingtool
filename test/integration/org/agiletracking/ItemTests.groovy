@@ -51,7 +51,7 @@ class ItemTests extends GroovyTestCase {
     void testSave() {
     	def item = items[0]
     	project.save()
-		item.group.save()
+		item.save()
     	
     	if ( !item.validate() )
     		item.errors.allErrors.each { println it }
@@ -64,8 +64,6 @@ class ItemTests extends GroovyTestCase {
     	project.save()
     	items[0].save()
     	
-    	assertTrue subItem.item.id == items[0].id
-    	
     	if ( !subItem.validate() )
     		subItem.errors.allErrors.each { println it }
     	
@@ -76,12 +74,10 @@ class ItemTests extends GroovyTestCase {
     void testAddingAndDeletingSubItems()
     {
     	def subItems = Defaults.getSubItems(10,[items[0]])
-    	subItems.each{ it.item = null }
     	def item = items[0]
     	item.subItems = []
     	
     	item.addSubItem(subItems[0])
-    	assertTrue subItems[0].item.id == items[0].id
     	assertTrue item.subItems.size() == 1
     	
     	def deletedSubItemId = subItems[0].id

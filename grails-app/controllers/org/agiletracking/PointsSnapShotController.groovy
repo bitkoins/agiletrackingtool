@@ -23,6 +23,7 @@ package org.agiletracking
 class PointsSnapShotController {
 	def plotService
 	def iterationService
+	def itemService
 	
 	static navigation = [
 		group:'tags', 
@@ -57,12 +58,8 @@ class PointsSnapShotController {
 	}
 
 	def finishedWork = {
-			def groups = ItemGroup.findAllByProject(session.project)
-			groups.each{ group ->
-				group.items = group.items.collect{it}.findAll{ !it.checkUnfinished() }
-			}
-
-			return [groups:groups]
+		   def itemsByGroup = itemService.getFinishedItemsByGroup(session.project)
+			return [itemsByGroup:itemsByGroup]
 	}
 	
 	def plot = {

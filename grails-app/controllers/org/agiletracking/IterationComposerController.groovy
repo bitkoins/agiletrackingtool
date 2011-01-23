@@ -46,10 +46,16 @@ class IterationComposerController {
 		def itemsByGroup = [:] 
 		def prioGroup = new ItemGroup(name:"Prioritized items")
 		itemsByGroup[prioGroup]= prioItems
-		itemsByGroup += itemGroupService.transformToItemsByGroup(items.collect{it.group}.unique(),
+		itemsByGroup += itemGroupService.transformToItemsByGroup(ItemGroup.findAllByProject(session.project),
                                                                items)
+                                                               
+        def iterations = Iteration.findAllByProject(session.project)
+        def iterationByItem = [:]
+        iterations.each{ iterForItem ->
+        	  iterForItem.items.each{ iterationByItem[it] = iterForItem }
+        } 
 		
-		return [iteration:iter, itemsByGroup:itemsByGroup, isCompositionView:true]
+		return [iteration:iter, itemsByGroup:itemsByGroup, iterationByItem:iterationByItem, isCompositionView:true]
 	}
 	
 	def addItemToIteration = {

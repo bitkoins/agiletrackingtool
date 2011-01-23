@@ -21,8 +21,6 @@ along with Agile Tracking Tool.  If not, see <http://www.gnu.org/licenses/>.
 package org.agiletracking
 
 class PlanCalculatorTests extends GroovyTestCase {
-	
-	def items
 	def groups
 	def calc
 	def pointsPerDay
@@ -32,17 +30,18 @@ class PlanCalculatorTests extends GroovyTestCase {
 	def totalPoints
 	
 	void setUp() {
-		items = []
 		totalPoints = 0
 		groups = Defaults.getGroups(5)
+		def itemsByGroup = [:]
 		groups.eachWithIndex{ group, index ->
-			def groupItems = Defaults.getItems(5,[group])	
+			itemsByGroup[group] = []
+			def groupItems = Defaults.getItems(5,[group])				
 			groupItems.each{ 
 				it.status = ItemStatus.Request
 				it.points = 10 + index
 				it.priority = Priority.High
 				totalPoints += it.points
-				items << it
+				itemsByGroup[group] << it
 			}
 		}
 		
@@ -50,7 +49,7 @@ class PlanCalculatorTests extends GroovyTestCase {
 		pointsPerDayMax = 2.5
 		pointsPerDay = 2.5 
 		pointsUncertaintyPercentage = 0.0
-		calc = new PlanCalculator(items,pointsPerDayMin,pointsPerDayMax,pointsUncertaintyPercentage)
+		calc = new PlanCalculator(itemsByGroup,pointsPerDayMin,pointsPerDayMax,pointsUncertaintyPercentage)
 	}
 	
 	void testGroupListing()

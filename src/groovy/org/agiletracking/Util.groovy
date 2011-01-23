@@ -77,7 +77,6 @@ class Util {
 		PointsSnapShot.list()*.delete()
 		def allitems = Item.list()
 		def alliterations = Iteration.list()
-		allitems.each{ item -> item.group.deleteItem(item.id); item.iteration?.deleteItem(item.id) }
 		alliterations*.delete()
 		ItemGroup.list()*.delete()
 		allitems*.delete()

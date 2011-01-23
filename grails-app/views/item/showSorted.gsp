@@ -36,8 +36,6 @@
 			<tr>
 				<td width="15"><g:link action="edit" id="${item.id}">${item.uid}</g:link></td>
 				<td>${item.description}</td>
-				<td>${item.group}</td>
-				<td>${item.iteration}</td>
 				<td>${item.status}</td>
 				<td>${item.points}</td>
 			</tr>

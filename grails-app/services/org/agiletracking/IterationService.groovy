@@ -25,8 +25,10 @@ class IterationService {
 
 	def unloadItemsAndDelete(def iteration)
 	{
-	    iteration.items.collect{ it }?.each{ item -> iteration.deleteItem(item.id) } 
-	   	iteration.delete()
+	    iteration.items?.collect{it}.each{ item -> 
+				iteration.deleteItem(item.id) 
+		 }
+	    iteration.delete()
 	}	
 	
 	def getOngoingIteration(def project)
@@ -44,4 +46,12 @@ class IterationService {
 	    iterationNext.save()
 	    iteractionCurrent.save()
 	}
+
+	void deleteItem(Item item) {
+	    def iterations = Iteration.findAllByProject(item.project).findAll{ it.hasItem(item.id) }
+		 iterations.each{ iter -> 
+			iter.deleteItem(item.id)
+		 }
+	}
+
 }

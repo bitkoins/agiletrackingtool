@@ -98,7 +98,7 @@ class PointsSnapShotTests extends GroovyTestCase {
 		if ( !snapShot.validate() )
 			snapShot.errors.allErrors.each { println it }
     	
-		assertNotNull snapShot.save(flush:true)
+		assertNotNull snapShot.save()
 		
 		def snapShotSaved = PointsSnapShot.get(snapShot.id)
 		assertTrue snapShotSaved.pointsForGroups.size() == snapShot.pointsForGroups.size()

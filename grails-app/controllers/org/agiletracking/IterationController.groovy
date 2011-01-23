@@ -21,8 +21,6 @@ along with Agile Tracking Tool.  If not, see <http://www.gnu.org/licenses/>.
 package org.agiletracking
 
 class IterationController {
-
-	def itemService
 	def plotService
 	def iterationService
 	def projectService
@@ -81,7 +79,6 @@ class IterationController {
 	
 	def delete = {
 			def iteration = Iteration.get(params.id)
-			
 			flash.projectCheckPassed = projectService.executeWhenProjectIsCorrect(session.project, iteration, 
 			      { iterationService.unloadItemsAndDelete(iteration) } )
 			
