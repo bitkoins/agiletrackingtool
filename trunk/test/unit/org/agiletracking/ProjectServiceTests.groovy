@@ -85,22 +85,28 @@ class ProjectServiceTests extends GrailsUnitTestCase {
         
         def now = new Date()
         mockDomain(PointsSnapShot, Defaults.getSnapShots([], now-10, now, project) )
-        
+ 
         def group = new Object()
         def groupControl = mockFor(ItemGroup)
         groupControl.demand.static.findAllByProject(1..1) { _project -> return [ group ] }        
         def itemGroupServiceControl = mockFor(ItemGroupService)
-        itemGroupServiceControl.demand.static.deleteWholeGroup(1..1) { _group -> assertSame group, _group}
+        itemGroupServiceControl.demand.static.unloadItemsAndDelete(1..1) { _group -> assertSame group, _group}
         
         def iteration = new Object()
         def iterationControl = mockFor(Iteration)
         iterationControl.demand.static.findAllByProject(1..1) { _iteration-> return [iteration] }
         def iterationServiceControl = mockFor(IterationService)
         iterationServiceControl.demand.static.unloadItemsAndDelete(1..1) { _iteration -> assertSame iteration, _iteration }
-        
+		
         projectService.iterationService = iterationServiceControl.createMock()
         projectService.itemGroupService = itemGroupServiceControl.createMock()
-        projectService.delete(project)
+
+		  def itemControl = mockFor(Item)
+		  def numberOfFakeItems = 3
+		  itemControl.demand.static.findAllByProject { [new Item()]*numberOfFakeItems }
+		  itemControl.demand.delete(numberOfFakeItems) { } 
+
+	     projectService.delete(project)
         
         [iterationServiceControl, iterationServiceControl]*.verify()
         assertEquals 0, Project.count()

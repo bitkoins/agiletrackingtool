@@ -26,7 +26,7 @@ class ItemGroupServiceTests extends GrailsUnitTestCase {
         (groupA, groupB) = groups
 	mockDomain(ItemGroup, groups)
 		
-	itemsA = Defaults.getItems(2,[groupA],project,1)
+ 	itemsA = Defaults.getItems(2,[groupA],project,1)
      	itemsB = Defaults.getItems(3,[groupB],project,10)
      	items = itemsA + itemsB
      	mockDomain(Item, items)
@@ -36,36 +36,39 @@ class ItemGroupServiceTests extends GrailsUnitTestCase {
         super.tearDown()
     }
 
-    void testDeleteWholeGroup()
+    /*void testUnloadItemsAndDelete()
     {
-    	def iteration = Defaults.getIterations(1,project)[0]
-    	mockDomain(Iteration, [iteration] )
-    	
-    	items.each{ iteration.addItem(it) }
-    	
-    	itemGroupService.deleteWholeGroup(groupA)
-    	
-    	assertEquals 1, ItemGroup.count()
-    	assertEquals itemsB.size(), Item.count()
-    	assertEquals itemsB.size(), iteration.items.size()
-    }
+	 	 def originalCount = ItemGroup.count()
+    	 itemGroupService.unloadItemsAndDelete(groupA)
+    	 assertEquals originalCount-1, ItemGroup.count()
+    } */
+
+	void testDeleteItem() { 
+		 def item = itemsA[0]
+		 itemGroupService.deleteItem(item)
+		 assertFalse groupA.hasItem(item.id)
+	}
     
     void testTransformToItemsByGroup()
     {
-	def itemsByGroup = itemGroupService.transformToItemsByGroup(groups,items)
+		  def itemsByGroup = itemGroupService.transformToItemsByGroup(groups,items)
 	
-	assertEquals groups.size(), itemsByGroup.size()
-	assertEquals itemsA, itemsByGroup[groupA] 
-	assertEquals itemsB, itemsByGroup[groupB]
+  	     assertEquals groups.size(), itemsByGroup.size()		  
+		  def equalItems = { itemsA, itemsB -> 
+					def uids = { items -> items.collect{it.uid}.sort() }
+					assertEquals uids(itemsA), uids(itemsB) 
+		  }
+	     equalItems itemsA, itemsByGroup[groupA] 
+	     equalItems itemsB, itemsByGroup[groupB]
     }
     
     void testTransformToItemsByGroupWhenNoItemsPresent()
     {
     	def itemsByGroup = itemGroupService.transformToItemsByGroup(groups,[])
 		
-	assertEquals groups.size(), itemsByGroup.size()
-	assertEquals 0, itemsByGroup[groupA].size() 
-	assertEquals 0, itemsByGroup[groupB].size()
+		assertEquals groups.size(), itemsByGroup.size()
+		assertEquals 0, itemsByGroup[groupA].size() 
+		assertEquals 0, itemsByGroup[groupB].size()
     }
 
     def findItemInMap = { item, map -> map.collect{it.value}.flatten().find{ it == item } }

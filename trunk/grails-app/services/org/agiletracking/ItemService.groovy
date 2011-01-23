@@ -21,11 +21,12 @@ along with Agile Tracking Tool.  If not, see <http://www.gnu.org/licenses/>.
 package org.agiletracking
 
 class ItemService {
-    static transactional = true
+   static transactional = true
 	    
-    def itemGroupService
+   def itemGroupService
+	def iterationService 
 
-	def getUnfinishedItemsGroupMap(def project)
+	def getUnfinishedItemsByGroup(def project)
 	{
 		def items = getUnfinishedItems(project)
 		def groups = ItemGroup.findAllByProject(project)
@@ -37,10 +38,22 @@ class ItemService {
 		return Item.findAllByProjectAndStatusNotEqual(project,ItemStatus.Finished)
 	}
 
-	def deleteItem(def item)
+	def getFinishedItemsByGroup(def project) 
 	{
-		item.iteration?.deleteItem(item.id)
-		item.group?.deleteItem(item.id)
+		def items = getFinishedItems(project)
+		def groups = ItemGroup.findAllByProject(project)
+		return itemGroupService.transformToItemsByGroup(groups, items)
+	}
+
+	def getFinishedItems(def project) 
+	{
+		return Item.findAllByProjectAndStatus(project,ItemStatus.Finished)
+	}
+
+	void deleteItem(Item item)
+	{
+	   iterationService.deleteItem(item)
+	   itemGroupService.deleteItem(item)
 		item.delete()
 	}
 

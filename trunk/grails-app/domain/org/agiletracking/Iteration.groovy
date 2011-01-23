@@ -39,15 +39,6 @@ class Iteration extends ItemContainer {
 	
 	String toString() { return workingTitle }
 
-	List listUnfinishedItemsForGroup(def group)
-	{
-		def unItems = []
-		items.each{ 
-			if ((it.group == group) && it.checkUnfinished()) unItems << it
-		}		
-		return unItems
-	}
-	
 	void closeIteration()
 	{ 
 		status = IterationStatus.Finished
@@ -114,11 +105,6 @@ class Iteration extends ItemContainer {
 	def setPointsPerDay(){return}
 	def setDurationInDays(){ return }
 	def setDaysLeft() {return}
-	
-	void addItem(Item item)
-	{
-		super._addItem(item,"iteration")
-	}
 	
 	Iteration retrieveNextIteration()
 	{

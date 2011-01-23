@@ -34,9 +34,10 @@ class ProjectService {
     }
     
     def delete(def project) {
-    	PointsSnapShot.findAllByProject(project).each{ it.delete() }
+    	PointsSnapShot.findAllByProject(project).each{ it.delete() }		
 		Iteration.findAllByProject(project).each{ iteration -> iterationService.unloadItemsAndDelete(iteration) }
-		ItemGroup.findAllByProject(project).each{ group -> itemGroupService.deleteWholeGroup(group) }
+		ItemGroup.findAllByProject(project).each{ group -> itemGroupService.unloadItemsAndDelete(group) }
+		Item.findAllByProject(project)*.delete()
 		project.delete()
     }
     

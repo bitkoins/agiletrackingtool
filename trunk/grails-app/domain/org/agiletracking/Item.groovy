@@ -30,16 +30,13 @@ class Item {
 	Integer       uid
 	
 	Date          dateCreated
-        Date          lastUpdated
+   Date          lastUpdated
    
 	static hasMany = [subItems:SubItem]
-	static belongsTo = [iteration:Iteration,group:ItemGroup, project:Project]
-	static fetchMode = [subItems:"eager"]
+	static belongsTo = [project:Project]
 	
 	static constraints  = {
 		description(maxSize:255)
-		iteration(nullable:true)
-		group(nullable:true)
 		comment(nullable:true,maxSize:1024)
 		criteria(nullable:true,maxSize:1024)
 		itemPoints(scale:1)	
@@ -50,11 +47,10 @@ class Item {
 
 	Item()  { subItems = [] }
 	
-	Item(def project, def group)
+	Item(def project)
 	{
 		uid = maxUid(project) + 1
 		this.project = project
-		this.group = group
 		description = ""
 		points = 1
 		status = ItemStatus.Request
@@ -81,7 +77,6 @@ class Item {
 	
 	void addSubItem(SubItem subItem)
 	{
-		subItem.item = this
 		this.addToSubItems(subItem)		
 	}
 	
@@ -111,12 +106,6 @@ class Item {
 	def hasCriteria()
 	{
 		return criteria ? criteria.trim().size() != 0 : false
-	}
-	
-	def removeItemRelations()
-	{
-		iteration?.deleteItem(id)
-		group?.deleteItem(id)
 	}
 	
 	static def maxUid(def project)

@@ -21,9 +21,8 @@ along with Agile Tracking Tool.  If not, see <http://www.gnu.org/licenses/>.
 package org.agiletracking
 
 class ItemGroupController {
-	def itemGroupService
-	def pointsSnapShotService
 	def projectService
+	def itemDeletionService
 	
 	static navigation = [
 		group:'tags',
@@ -61,10 +60,9 @@ class ItemGroupController {
 		
 	def delete = { 
 		def group = ItemGroup.get(Integer.parseInt(params.id))
-		
-		flash.projectCheckPassed = projectService.executeWhenProjectIsCorrect(session.project, group,	
-		        {  pointsSnapShotService.deleteWholeGroup(group)
-			       itemGroupService.deleteWholeGroup(group) } )
+
+		flash.projectCheckPassed = projectService.executeWhenProjectIsCorrect(
+					session.project, group,	{ itemDeletionService.deleteGroupAndItems(group) } )
 		
 		redirect(action:'list')
 	}

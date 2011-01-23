@@ -83,50 +83,10 @@ class IterationTests extends GroovyTestCase {
     	assertTrue iter.items.size() == (items.size()-1)
     }
     
-    void testSetIterationForItem()
-    {
-    	def newItem = Defaults.getItems(1,groups,project)[0]
-    	newItem.save()
-    	assertTrue !newItem.iteration
-    	def newIteration= Defaults.getIterations(1,project)[0]
-    	newIteration.addItem(newItem)
-    	newIteration.save()
-    	
-    	assertTrue newItem.iteration == newIteration
-    	assertTrue newIteration.hasItem(newItem.id)
-    }
-    
-    void testMoveItemToOtherIteration()
-    {
-    	assertTrue iter.hasItem(items[0].id)
-    	def newIteration= Defaults.getIterations(1,project)[0]
-    	newIteration.save()
-    	newIteration.addItem(items[0])
-    	assertTrue newIteration.hasItem(items[0].id)
-    	assertFalse iter.hasItem(items[0].id)
-    }
-    
     void testDeleteItemFromIteration()
     {
     	iter.deleteItem(items[0].id)
     	assertFalse iter.hasItem(items[0].id)
-    	assertNull items[0].iteration
-    }
-    
-    void testGroupListing()
-    {
-    	items.each{ it.group = groups[0]; it.status = ItemStatus.Request  }
-    	items[1].group = groups[1]
-    	items[2].group = groups[2]
-    	
-    	assertTrue iter.listUnfinishedItemsForGroup(groups[0])?.size() == (items.size()-2)
-    	assertTrue iter.listUnfinishedItemsForGroup(groups[1])?.size() == 1    			
-    	assertTrue iter.listUnfinishedItemsForGroup(groups[1])[0] == items[1]
-    	assertTrue iter.listUnfinishedItemsForGroup(groups[2])?.size() == 1  
-    	assertTrue iter.listUnfinishedItemsForGroup(groups[2])[0] == items[2]
-    	
-    	items[2].status = ItemStatus.Finished
-    	assertTrue iter.listUnfinishedItemsForGroup(groups[2])?.size() == 0
     }
     
     void testGetNextIteration_WithNoFutureIterations()

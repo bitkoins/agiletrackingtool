@@ -26,39 +26,43 @@ class ItemServiceTests extends GrailsUnitTestCase {
    	super.tearDown()
    }
     
-   void testGetUnfinishedItemsGroupMap()
+   void testGetUnfinishedItemsByGroup()
    {
     	items.each{ it.status = ItemStatus.Blocking; }
-    	def itemsGroupMap = itemService.getUnfinishedItemsGroupMap(project)
-    	itemsGroupMap.each{group,itemList->
-    		nr += itemList.size() 
-    	}  
-    	assertEquals nr , items.size()
+    	def itemsGroupMap = itemService.getUnfinishedItemsByGroup(project)
+		assertEquals itemsGroupMap.values().flatten().size(), items.size()
    }
-    
-   void testGetUnfinishedItemsGroupMapWhenAllItemsAreFinished()
+   
+	void testGetFinishedItemsByGroup() 
+	{
+		items.each{ it.status = ItemStatus.Finished }
+		def itemsGroupMap = itemService.getFinishedItemsByGroup(project)
+		assertEquals itemsGroupMap.values().flatten().size(), items.size()
+	}
+ 
+   void testGetUnfinishedItemsByGroupWhenAllItemsAreFinished()
    {
     	items.each{ it.status = ItemStatus.Finished; }
-    	def itemsGroupMap = itemService.getUnfinishedItemsGroupMap(project)
-    	itemsGroupMap.each{group,items-> nr += items.size() }    	   	
-    	assertEquals nr , 0
+    	def itemsGroupMap = itemService.getUnfinishedItemsByGroup(project)
+    	assertEquals 0, itemsGroupMap.values().flatten().size()
    }
    
    void testDeleteItemRemovesFromIterationAndGroup()
    {
     	def item = items[0]
-    	def group = item.group
+
+		def itemGroupServiceMock = mockFor(ItemGroupService)
+		def iterationServiceMock = mockFor(IterationService)
+		def checkItem = { anItem -> assertEquals item.uid, anItem.uid }
+		def mockControls = [itemGroupServiceMock, iterationServiceMock]
+		mockControls.each{ it.demand.deleteItem(1..1) { itm -> checkItem(itm) } }
+		
+		itemService.itemGroupService = itemGroupServiceMock.createMock()
+		itemService.iterationService = iterationServiceMock.createMock()
     	
-    	def iteration = Defaults.getIterations(1,project)[0]
-    	mockDomain(Iteration, [iteration])
-    	
-    	iteration.addItem(item)
     	itemService.deleteItem(item)
     	
-    	assertNull Iteration.get(item.id)
-    	assertFalse group.hasItem(item.id)
-    	assertFalse iteration.hasItem(item.id)
-    	
+		mockControls*.verify()
    }
 
    void testRetrievingItemsThatBelongToProject()
