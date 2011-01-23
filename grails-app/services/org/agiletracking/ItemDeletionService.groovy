@@ -7,13 +7,13 @@ class ItemDeletionService {
 	 def itemGroupService
 	 def iterationService
 
-    def deleteGroupAndItems(ItemGroup group) {
-				def items = group.items.collect{it}
-				pointsSnapShotService.deleteWholeGroup(group)				
-				items.each{ item -> iterationService.deleteItem(item)
-										  itemGroupService.deleteItem(item)
-				}
-				items*.delete() 
-				group.delete()
+    void deleteGroupAndItems(ItemGroup group) {
+			def items = group.items.collect{it}
+			pointsSnapShotService.deleteWholeGroup(group)				
+			items.each{ item -> iterationService.deleteItem(item)
+									  itemGroupService.deleteItem(item)
+			}
+			items*.delete() 
+			group.delete()
     }
 }
