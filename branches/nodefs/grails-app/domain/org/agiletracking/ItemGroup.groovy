@@ -31,9 +31,6 @@ class ItemGroup extends ItemContainer {
 		project(nullable:false)
 	}
 	
-
-	void addItem(Item item)
-	{
-		super._addItem(item,"group")
-	}
+	Double totalPoints() { return items.sum{ it.points } }
+	Double finishedPoints() { return items.sum{ (it.status == ItemStatus.Finished) ? it.points : 0 } }
 }

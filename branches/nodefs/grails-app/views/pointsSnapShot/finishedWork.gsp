@@ -12,10 +12,12 @@
     	
       <div><br/><br/></div>
 			
-		<g:each var="group" in="${groups}">
+		<g:each var="keyValue" in="${itemsByGroup}">
+			<g:set var="group" value="${keyValue.key}"/>
+			<g:set var="items" value="${keyValue.value}"/>
 			<div id="groupItems${group.id}" class="itemGroup">
 			<h1 class="groupName">${group}</h1>
-			<g:each var="item" in="${group.items.collect{it}.sort{it.uid}.reverse()}">
+			<g:each var="item" in="${items.collect{it}.sort{it.uid}.reverse()}">
 				<div class="item">
 				<table>
 				<tr>

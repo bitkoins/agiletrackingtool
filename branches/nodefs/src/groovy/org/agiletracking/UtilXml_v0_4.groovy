@@ -50,8 +50,8 @@ class UtilXml_v0_4 {
 			
 			Items {
 				items.each{ item ->
-					Item(id:item.uid, groupId:item.group?.id) {
-						description(item.description)
+					Item(id:item.uid, grou    def groupId = groups.find{ group -> group.items.find{ it.id == item.id } }?.id
+					Item(id:item.uid, groupId:groupIitem.description)
 						points(item.itemPoints)
 						priority(item.priority)
 						status(item.status)

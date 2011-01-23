@@ -21,35 +21,27 @@ along with Agile Tracking Tool.  If not, see <http://www.gnu.org/licenses/>.
 package org.agiletracking
 
 class PlanCalculator {
-	def itemsByGroup 
+	def unfinishedItemsByGroup 
 	Points2DaysCalculator p2dCalc
 	
-	PlanCalculator(Collection<Item> items, Double pointsPerDayMin, Double pointsPerDayMax, Double pointsUncertaintyPercentage)
+	PlanCalculator(Map<ItemGroup,Collection<Item>> unfinishedItemsByGroup, Double pointsPerDayMin, Double pointsPerDayMax, Double pointsUncertaintyPercentage)
 	{
+		this.unfinishedItemsByGroup = unfinishedItemsByGroup
 		p2dCalc = new Points2DaysCalculator()
 		p2dCalc.pointsPerDayMin = pointsPerDayMin
 		p2dCalc.pointsPerDayMax = pointsPerDayMax
 		p2dCalc.pointsUncertaintyPercentage = pointsUncertaintyPercentage
-		
-		itemsByGroup = [:]
-		items.each{
-			if ( it.checkUnfinished() )
-			{
-				if ( !itemsByGroup.containsKey(it.group) ) itemsByGroup[it.group] = [it]
-				else itemsByGroup[it.group] << it
-			}
-		}
 	}
 	
 	Collection<ItemGroup> getGroups()
 	{
-		return itemsByGroup.keySet()
+		return unfinishedItemsByGroup.keySet()
 	}
 	
 	Double getUnfinishedPoints(ItemGroup group, Priority priority)
 	{
 		def sum = 0
-		itemsByGroup[group].findAll{ it.priority == priority }?.each{ sum += it.points }
+		unfinishedItemsByGroup[group].findAll{ it.priority == priority }?.each{ sum += it.points }
 		return sum
 	}
 	

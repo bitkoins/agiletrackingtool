@@ -25,7 +25,7 @@ class SubItem
 	String        description
 	Double        points
 	ItemStatus status
-	static belongsTo = [item:Item]
+	static belongsTo = Item
 	
 	static constraints  = {		
 		points(scale:1)

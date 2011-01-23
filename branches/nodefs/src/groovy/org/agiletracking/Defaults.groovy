@@ -65,7 +65,8 @@ class Defaults {
 		9.times{ points << it }
 		
 		nr.times{ index -> 
-			def item = new Item(project:project)
+			def item = new Item()
+			item.project = project
 			item.uid = index + (maxUid + 1)
 			item.id = item.uid + 1 
 			item.description = "Example Item  ${item.uid}"			
@@ -77,10 +78,6 @@ class Defaults {
 			{
 				def group = Util.random(groups)
 				group.addItem(item)
-			}
-			else
-			{
-				item.group = null
 			}
 			
 			item.status = ItemStatus.Request

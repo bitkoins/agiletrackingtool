@@ -22,8 +22,7 @@ package org.agiletracking
 
 class ItemContainer {
 	static hasMany = [items:Item]
-	static fetchMode = [items:"eager"]
-	
+		
 	/* Cannot define project-releation in ItemContainer as for grails-1.2.0.
 	 * Therefore project relation is defined twice in Iteration and ItemGroup. 
 	 */
@@ -33,30 +32,19 @@ class ItemContainer {
         items = []
     }
 
-	void _addItem(Item item, String belongsToFieldAsString)
+	void addItem(Item item)
 	{
-		def belongsToInstance = item[belongsToFieldAsString]
-	
-		if(belongsToInstance)
-		{
-			if ( this.id != belongsToInstance.id ) {
-				belongsToInstance.deleteItem(item?.id)
-			}
-		}
-		
 		if ( !this.items?.find{ it == item } ) {
 			this.addToItems(item)
 		}
-		
-		item[belongsToFieldAsString] = this
 	}
 	
-	
-	void deleteItem(def id)
+	void deleteItem(Long id)
 	{
 		if ( hasItem(id) ) {
 			def item = getItem(id)
 			this.removeFromItems(item)
+			this.save(flush:true)
 		}
 	}
 	
@@ -65,7 +53,7 @@ class ItemContainer {
 		return items.find{ it.id == id }
 	}
 	
-	boolean hasItem(def id)
+	boolean hasItem(Long id)
 	{
 		return getItem(id) != null
 	}

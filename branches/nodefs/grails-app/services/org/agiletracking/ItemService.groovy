@@ -24,8 +24,9 @@ class ItemService {
    static transactional = true
 	    
    def itemGroupService
+	def iterationService 
 
-	Map<ItemGroup,Collection<Item>> getUnfinishedItemsGroupMap(Project project)
+	Map<ItemGroup,Collection<Item>> getUnfinishedItemsByGroup(Project project)
 	{
 		def items = getUnfinishedItems(project)
 		def groups = ItemGroup.findAllByProject(project)
@@ -37,10 +38,22 @@ class ItemService {
 		return Item.findAllByProjectAndStatusNotEqual(project,ItemStatus.Finished)
 	}
 
+	Map<ItemGroup,Collection<Item>> getFinishedItemsByGroup(Project project) 
+	{
+		def items = getFinishedItems(project)
+		def groups = ItemGroup.findAllByProject(project)
+		return itemGroupService.transformToItemsByGroup(groups, items)
+	}
+
+	Collection<Item> getFinishedItems(Project project) 
+	{
+		return Item.findAllByProjectAndStatus(project,ItemStatus.Finished)
+	}
+
 	void deleteItem(Item item)
 	{
-		item.iteration?.deleteItem(item.id)
-		item.group?.deleteItem(item.id)
+	   iterationService.deleteItem(item)
+	   itemGroupService.deleteItem(item)
 		item.delete()
 	}
 

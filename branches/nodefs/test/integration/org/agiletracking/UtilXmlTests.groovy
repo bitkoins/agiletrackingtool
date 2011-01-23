@@ -124,14 +124,11 @@ class UtilXmlTests extends GroovyTestCase {
 			assertEquals item.criteria , importItems[index].criteria
 			assertEquals importProject , importItems[index].project
 			
-			assertEquals item.group.id , importItems[index].group.id
-			
 			assertEquals item.subItems.size() ,portItems[index].group.id
 			
 			assertTrue item.subItems.size() == importItems[index].subItems.size()
 			item.subItems.each{ subItem ->
-				def imEquals subItem.item.uid , importSubItem.item.uid
-				assertEquals subItem.id      , importSubItem.id
+				def imEquals subItem.id      , importSubItem.id
 				assertEquals subItem.points  , importSubItem.points
 				assertEquals subItem.status  ,m.points  == importSubItem.points
 				assertTrue subItem.status  == importSubItem.staEquals iter.id , importIterations[index].id

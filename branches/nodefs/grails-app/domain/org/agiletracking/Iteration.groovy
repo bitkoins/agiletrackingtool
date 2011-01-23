@@ -37,15 +37,6 @@ class Iteration extends ItemContainer {
 	
 	String toString() { return workingTitle }
 
-	Collection<Item> listUnfinishedItemsForGroup(ItemGroup group)
-	{
-		Collection<Item> unItems = []
-		items.each{ 
-			if ((it.group == group) && it.checkUnfinished()) unItems << it
-		}		
-		return unItems
-	}
-	
 	void closeIteration()
 	{ 
 		status = IterationStatus.Finished
@@ -88,11 +79,6 @@ class Iteration extends ItemContainer {
 			if (it.checkUnfinished() ) unfinishedItems << it
 		}
 		return unfinishedItems
-	}
-	
-	void addItem(Item item)
-	{
-		super._addItem(item,"iteration")
 	}
 	
 	Iteration retrieveNextIteration()

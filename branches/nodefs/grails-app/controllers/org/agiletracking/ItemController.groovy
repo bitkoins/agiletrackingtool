@@ -39,7 +39,7 @@ class ItemController {
 	]
 	
 	def backlog = {
-			def itemsByGroup = itemService.getUnfinishedItemsGroupMap(session.project)
+			def itemsByGroup = itemService.getUnfinishedItemsByGroup(session.project)
 			return [itemsByGroup:itemsByGroup]
 	}
 
@@ -68,13 +68,13 @@ class ItemController {
 	
 	def addItemToGroup = {
 		def group = ItemGroup.get(params.id)
-		def item = new Item(session.project,group)
+		def item = new Item(session.project)
 		flash.projectCheckPassed = projectService.executeWhenProjectIsCorrect(session.project, group,
 																	{ group.addItem(item); group.save() })
 		
 	    def newItemId = Integer.parseInt(params.newItemId) + 1
 		render(template:'/shared/item/editNewItem',
-		       model:[item:item,groupId:item.group.id,newItemId:newItemId]) 
+		       model:[item:item,groupId:group.id,newItemId:newItemId]) 
 	}
 	
 	def createGroup = {
@@ -86,8 +86,9 @@ class ItemController {
 				  def itemUidList = Project.get(session.project.id).getPrioritizedItemUidList()
 				  def prioItems = itemService.matchItemsWithUid(items, itemUidList)
 		        itemService.removeItemsFromList(items,itemUidList)
-				  def itemsByGroup = itemGroupService.transformToItemsByGroup(items.collect{it.group}.unique(),
-																								  items)
+		        def groups = ItemGroup.findAllByProject(session.project)
+		          
+				  def itemsByGroup = itemGroupService.transformToItemsByGroup(groups,items)
 
 				  return [prioItems:prioItems, itemsByGroup:itemsByGroup, message:flash.message ]
    }

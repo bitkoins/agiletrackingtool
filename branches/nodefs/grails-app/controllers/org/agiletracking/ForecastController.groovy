@@ -21,6 +21,7 @@ along with Agile Tracking Tool.  If not, see <http://www.gnu.org/licenses/>.
 package org.agiletracking
 
 class ForecastController {
+	def itemService
 	
 	static navigation = [
 		group:'tags', 
@@ -42,8 +43,8 @@ class ForecastController {
 		def pointsUncertaintyPercentage = params.pointsUncertaintyPercentage ? Double.parseDouble(params.pointsUncertaintyPercentage) : 0
 	    def daysHoliday = params.weeksHolidays ? Math.round(Double.parseDouble(params.weeksHolidays) * daysPerWeek).toInteger() : 0
 	    
-	    def items = Item.findAllByProject(session.project)
-		def planCalculator = new PlanCalculator(items,pointsPerDayMin,pointsPerDayMax, pointsUncertaintyPercentage)
+	   def unfinishedItemsByGroup = itemService.getUnfinishedItemsByGroup(session.project)
+		def planCalculator = new PlanCalculator(unfinishedItemsByGroup,pointsPerDayMin,pointsPerDayMax, pointsUncertaintyPercentage)
 		def dateByPriority = planCalculator.getWorkingDaysRangeByPriority(daysHoliday)
 		
 		def iterations = Iteration.findAllByProject(session.project).findAll{ it.status != IterationStatus.Finished }.sort{ it.startTime }

@@ -59,8 +59,8 @@
 				<div class="itemActions" style="width:10%">
 					<g:remoteLink action="addItemToIteration" params="[iterId:iteration.id]" id="${item.id}" update="iteration">
 						<div onclick="hideItem('itemBox${item.id}');">
-							<g:if test="${item.iteration}">
-						      	Move from Iteration ${item.iteration.id}
+							<g:if test="${iterationByItem[item]}">
+						      	Move from Iteration ${iterationByItem[item].id}
 							</g:if>
 							<g:else>Add to iteration</g:else>	
 						</div>

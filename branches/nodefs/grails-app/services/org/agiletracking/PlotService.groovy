@@ -167,7 +167,7 @@ class PlotService {
 		iterations.sort{ it.endTime}.each{ iter ->
 			def nrBugs = 0
 			iter.items.each{ item ->
-				if( item.group.name.toLowerCase().contains("bug") && (item.status == ItemStatus.Finished) ) nrBugs++
+				if( item.description?.toLowerCase().contains("bug") && (item.status == ItemStatus.Finished) ) nrBugs++
 			}
 			
 			def daysAgo = Util.getDaysInBetween(now, iter.endTime)

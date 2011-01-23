@@ -27,11 +27,8 @@ class ItemGroupService {
 					Collection<ItemGroup> groups, Collection<Item> items)
     {
     	def itemsByGroup = [:]
-
-    	groups.each{ group -> itemsByGroup[group] = [] }
-    	items.each{ item ->
-    		def foundGroup = groups.find{ item.group.id == it.id}  
-    		if(foundGroup) itemsByGroup[foundGroup] << item 
+		groups.each{ group -> 
+    		itemsByGroup[group] = group.items.findAll{ itemOfGroup -> items.find{ it.uid == itemOfGroup.uid } }  
     	}
     	return itemsByGroup 
     }
@@ -39,19 +36,23 @@ class ItemGroupService {
      void removeItemsFromGroupMap(Collection<Item> itemsToRemove, 
 							   			 Map<ItemGroup,Collection<Item>> itemsByGroup)
      {
-     	  itemsToRemove.each{ item ->
-		     def foundGroup = itemsByGroup.find{ it.key.id == item.group.id }.key
-   		  if(foundGroup) itemsByGroup[foundGroup] -= item
-        }
-     }
-	   
-     void deleteWholeGroup(ItemGroup group)
-     {
-		group.items.collect{it}.each{ item ->
-			item.iteration?.deleteItem(item.id)
-			item.group?.deleteItem(item.id)
-	        	item.delete()
+		itemsByGroup.keySet().each{ group -> 
+				itemsByGroup[group].removeAll( itemsToRemove ) 
 		}
-		group.delete()
     }
+	   
+    void unloadItemsAndDelete(ItemGroup group)
+    {
+	   group.items?.collect{it}.each{ item ->			
+        	group.deleteItem(item.id)
+		}	
+		group.delete()
+   }
+
+	void deleteItem(Item item) {
+		def groups = ItemGroup.findAllByProject(item.project).findAll{ it.hasItem(item.id) }
+		groups.each{ group -> 
+			group.deleteItem(item.id)
+		}
+	}
 }

@@ -21,7 +21,6 @@ along with Agile Tracking Tool.  If not, see <http://www.gnu.org/licenses/>.
 package org.agiletracking
 
 class CurrentWorkController {
-
 	def itemService
 	def plotService
 	def iterationService
@@ -116,14 +115,18 @@ class CurrentWorkController {
 	def subItemFinished = {
 		def id = Integer.parseInt(params.id)
 		def subItem = SubItem.get(id)
+
+		def items = Item.findAllByProject(session.project)
+		def item = items.find{ it.subItems.find{it.id == subItem.id} }
+
 		subItem.status = ItemStatus.Finished
-		if (subItem.item.status == ItemStatus.Request) {
-				subItem.item.status = ItemStatus.InProgress
+		if (item.status == ItemStatus.Request) {
+				item.status = ItemStatus.InProgress
 		}
 		
-		flash.projectCheckPassed = projectService.executeWhenProjectIsCorrect(session.project,  subItem.item,{ subItem.save() })
+		flash.projectCheckPassed = projectService.executeWhenProjectIsCorrect(session.project,item,{subItem.save(); item.save()})
 			
-		render(template:'itemView',model:[item:subItem.item] )
+		render(template:'itemView',model:[item:item])
 	}
 	
 	def editItem = {
