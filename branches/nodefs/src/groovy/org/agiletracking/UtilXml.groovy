@@ -22,7 +22,7 @@ package org.agiletracking
 import groovy.util.slurpersupport.GPathResult
 
 class UtilXml {
-	static String supportedVersions = [UtilXml_v0_5.docVersion, UtilXml_v0_4.docVersion ]
+	static Collection<String> supportedVersions = [UtilXml_v0_5.docVersion, UtilXml_v0_4.docVersion]
 	static String currentDocVersion = supportedVersions[0]
 		
 	static String exportToXmlString(Project project, Collection<ItemGroup> groups, 
