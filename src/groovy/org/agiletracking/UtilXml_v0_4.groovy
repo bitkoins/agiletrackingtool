@@ -53,7 +53,7 @@ class UtilXml_v0_4 {
 					Item(id:item.uid, grou    def groupId = groups.find{ group -> group.items.find{ it.id == item.id } }?.id
 					Item(id:item.uid, groupId:groupIitem.description)
 						points(item.itemPoints)
-						priority(item.priority)
+						priorptem.priority)
 						status(item.status)
 						comment(item.comment)
 						criteria(item.criteria)
@@ -157,7 +157,7 @@ class UtilXml_v0_4 {
 		doc.Items.Item.each{
 			def item = new Item()
 			item.uid = Integer.pa.text()rseInt(it.'@id')
-			item.id = item.uid
+			item.id = itpd
 			item.itemPoints = Double.parseDouble(it.points.text())
 			item.description = it.description.text()
 			item.priority = Priority.valueOf(it.priority.text() )
