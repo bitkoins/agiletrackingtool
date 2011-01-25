@@ -28,17 +28,18 @@ class PlanCalculatorTests extends GroovyTestCase {
 	def pointsPerDayMax
 	def pointsUncertaintyPercentage
 	def totalPoints
+	def magicNr = 10
 	
 	void setUp() {
 		totalPoints = 0
-		groups = Defaults.getGroups(5)
+		groups = Defaults.getGroups(2)
 		def itemsByGroup = [:]
 		groups.eachWithIndex{ group, index ->
 			itemsByGroup[group] = []
-			def groupItems = Defaults.getItems(5,[group])				
+			def groupItems = Defaults.getItems(2,[group])				
 			groupItems.each{ 
 				it.status = ItemStatus.Request
-				it.points = 10 + index
+				it.points = magicNr + index
 				it.priority = Priority.High
 				totalPoints += it.points
 				itemsByGroup[group] << it
@@ -59,9 +60,10 @@ class PlanCalculatorTests extends GroovyTestCase {
 	
 	void testUnfinishedPointsForGroup_WithUnFinishedItemsOfHighPriority()
 	{
+	   def nrGroups = groups.size()
 		groups.eachWithIndex{ group,index ->
-			assertTrue calc.getUnfinishedPoints(group,Priority.High) == 5*(10+index)
-			assertTrue calc.getWorkingDaysLeft(group,Priority.High) == (5*(10+index)/pointsPerDay).toInteger()
+			assertTrue calc.getUnfinishedPoints(group,Priority.High) == nrGroups*(magicNr+index)
+			assertTrue calc.getWorkingDaysLeft(group,Priority.High) == (nrGroups*(magicNr+index)/pointsPerDay).toInteger()
 			assertTrue calc.getUnfinishedPoints(group,Priority.Low) == 0
 		}
 	}
@@ -74,24 +76,28 @@ class PlanCalculatorTests extends GroovyTestCase {
 		assertTrue calc.getWorkingDaysLeft(Priority.Low) == 0
 	}
 	
+	static def round = { Math.round(it).toInteger() }
 	void testDaysLeftRange()
 	{
-		calc.p2dCalc.pointsPerDayMin = 2.0
-		calc.p2dCalc.pointsPerDayMax = 3.0
+		calc.p2dCalc.pointsPerDayMin = 2
+		calc.p2dCalc.pointsPerDayMax = 3
 		
 		def minDays = calc.getWorkingDaysRangeLeft(Priority.High).min()
 		def maxDays = calc.getWorkingDaysRangeLeft(Priority.High).max()
-		
-		assertTrue maxDays == (totalPoints/calc.p2dCalc.pointsPerDayMin).toInteger()
-		assertTrue minDays == (totalPoints/calc.p2dCalc.pointsPerDayMax).toInteger()
-		assertTrue calc.getWorkingDaysLeft(Priority.High) == (minDays+maxDays)/2.0
+	
+		assertEquals( round(totalPoints/calc.p2dCalc.pointsPerDayMin), maxDays )
+		assertEquals( round(totalPoints/calc.p2dCalc.pointsPerDayMax), minDays )
+
+		def expectedDuration = (totalPoints/calc.p2dCalc.pointsPerDayMin + 
+										totalPoints/calc.p2dCalc.pointsPerDayMax)/2
+		assertEquals( round(expectedDuration), calc.getWorkingDaysLeft(Priority.High) )
 	}
 	
 	void testPointsUncertaintyPercentagePositive()
 	{
 		calc.p2dCalc.pointsUncertaintyPercentage = 10
 		def range = calc.getWorkingDaysRangeLeft(Priority.High)
-		assertTrue range.max() == (range.min()*1.10).toInteger()
+		assertEquals( round(range.min()*1.10), range.max() )
 	}
 	
 	

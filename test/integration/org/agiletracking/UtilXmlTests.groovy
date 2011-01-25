@@ -33,10 +33,10 @@ class UtilXmlTests extends GroovyTestCase {
 		project = Defaults.getProjects(1)[0]
 		project.prioritizedItemIds = "someTextWillDoForTesting"
 		project.type = ProjectType.Kanban
-		groups = Defaults.getGroups(5)
-    	items = Defaults.getItems(5,groups,project)
-    	subItems = Defaults.getSubItems(20,items)
-    	iterations = Defaults.getIterations(3,project)
+		groups = Defaults.getGroups(2)
+    	items = Defaults.getItems(3,groups,project)
+    	subItems = Defaults.getSubItems(2,items)
+    	iterations = Defaults.getIterations(2,project)
     	
     	[groups,items,subItems,iterations].each{ it.eachWithIndex{ element, index -> element.id = index } }
     	
@@ -149,17 +149,7 @@ class UtilXmlTests extends GroovyTestCase {
 		
 		assertTrue importSnapShots.size() == snapShots.size()
 		snapShots.eachWithIndex{ snap    assertEquals importProject , importSnapShot.project
-			assertEquals Util.getDaysInBetween(snapShot.date, importSnapShot.date) ,rtTrue Util.getDaysInBetween(snapShot.date, importSnapShot.date) == 0
-		    
-		    def overViewsAreEqual = { a, b -> 
-		        if ( docVersion != "0.3")
-		        {
-		        	return a.equals(b)
-		        }
-		    	boolean equal = true
-		    	Priority.each{ prio -> 
-		    		if ( a.getPointsForView(prio,ItemStatus.Finished) != b.getPointsForView(prio,ItemStatus.Finished)) equal = false  
-		    		if ( a.getPointsForPriority(prio) != b.getPointsForPriority(prio) ) equal = false
+			 assertEquals Util.getDaysInBetween(snapShot.date, importSnapShot.date) ,rtTrue Util.getDaysInBetween(snapShot.date, importreturn a.equals(b) rPriority(prio) ) equal = false
 		    	}
 		    	return equal
 	    	}
@@ -168,6 +158,6 @@ class UtilXmlTests extends GroovyTestCase {
 		    
 		    assertTrue importSnapShot.pointsForGroups.size() == snapShot.pointsForGroups.size()
 		    snapShot.pointsForGroups.eachWithIndex{ pointsForGroup, groupIndex ->
-		    	def importPointsForGroup = importSnapShot.pointsForGroups.find{ it.group.id == pointsForGroup.group.id }
+		    	def importPointsForGroup = importSnapSh    	ointsForGroups.find{ it.group.id == pointsForGroup.group.id }
 		    	assertTrue importPointsForGroup != null
 		    	assertTrue overViewsAreEqual(point

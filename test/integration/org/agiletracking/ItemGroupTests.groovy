@@ -30,7 +30,7 @@ class ItemGroupTests extends GroovyTestCase {
 	{
 		project = Defaults.getProjects(1)[0]
 		group = Defaults.getGroups(1,project)[0]
-		items = Defaults.getItems(5,[group],project)
+		items = Defaults.getItems(3,[group],project)
 	}
 	
 	void tearDown()

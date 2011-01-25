@@ -18,7 +18,7 @@ class ItemServiceTests extends GrailsUnitTestCase {
 		project = Defaults.getProjects(1)[0]
 		groups = Defaults.getGroups(2,project)
 		mockDomain(ItemGroup, groups)
-		items = Defaults.getItems(5,groups,project, 123)
+		items = Defaults.getItems(3,groups,project, 123)
 		mockDomain(Item, items)
     }
 
@@ -99,7 +99,7 @@ class ItemServiceTests extends GrailsUnitTestCase {
 
    void testRemoveItemsFromListThatExist()
    {
-		def itemUidsToRemove = items[2..3].collect{it.uid}
+		def itemUidsToRemove = items[1..2].collect{it.uid}
 		def newSize = items.size() - itemUidsToRemove.size()
 		itemService.removeItemsFromList( items, itemUidsToRemove)
 		assertEquals newSize, items.size()

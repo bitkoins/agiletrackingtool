@@ -2,32 +2,29 @@ package org.agiletracking
 import grails.test.*
 
 class ItemGroupServiceTests extends GrailsUnitTestCase {
-	def itemGroupService
-
-	def project
-	
-	def groupA
-	def groupB
-	def groups
-	
-	def itemsA
+	 def itemGroupService
+	 def project
+	 def groupA
+	 def groupB
+	 def groups
+	 def itemsA
     def itemsB
     def items
 
     protected void setUp() {
-        super.setUp()
+      super.setUp()
         
-        itemGroupService = new ItemGroupService()
+      itemGroupService = new ItemGroupService()
         
-        project = Defaults.getProjects(1)[0]
+      project = Defaults.getProjects(1)[0]
     	mockDomain(Project, [project] )
     	
-        groups = Defaults.getGroups(2,project)
-        (groupA, groupB) = groups
-	mockDomain(ItemGroup, groups)
+      groups = Defaults.getGroups(2,project)
+      (groupA, groupB) = groups
+		mockDomain(ItemGroup, groups)
 		
- 	itemsA = Defaults.getItems(2,[groupA],project,1)
-     	itemsB = Defaults.getItems(3,[groupB],project,10)
+ 		itemsA = Defaults.getItems(1,[groupA],project,1)
+     	itemsB = Defaults.getItems(2,[groupB],project,10)
      	items = itemsA + itemsB
      	mockDomain(Item, items)
     }
@@ -35,13 +32,6 @@ class ItemGroupServiceTests extends GrailsUnitTestCase {
     protected void tearDown() {
         super.tearDown()
     }
-
-    /*void testUnloadItemsAndDelete()
-    {
-	 	 def originalCount = ItemGroup.count()
-    	 itemGroupService.unloadItemsAndDelete(groupA)
-    	 assertEquals originalCount-1, ItemGroup.count()
-    } */
 
 	void testDeleteItem() { 
 		 def item = itemsA[0]
@@ -75,21 +65,19 @@ class ItemGroupServiceTests extends GrailsUnitTestCase {
     void testRemoveItemsFromGroupMap()
     {
     	def itemsByGroup = itemGroupService.transformToItemsByGroup(groups,items)
-	def itemsToRemove = items[1..2]
-        itemGroupService.removeItemsFromGroupMap(itemsToRemove, itemsByGroup)
-	assertEquals groups.size(), itemsByGroup.size()
-	itemsToRemove.each{ item -> assertNull findItemInMap(item,itemsByGroup) }
-	(items-itemsToRemove).each{ item -> assertEquals item, findItemInMap(item, itemsByGroup) }
+		def itemsToRemove = items[1..2]
+      itemGroupService.removeItemsFromGroupMap(itemsToRemove, itemsByGroup)
+		assertEquals groups.size(), itemsByGroup.size()
+		itemsToRemove.each{ item -> assertNull findItemInMap(item,itemsByGroup) }
+		(items-itemsToRemove).each{ item -> assertEquals item, findItemInMap(item, itemsByGroup) }
     }
 
     void testRemoveItemsFromGroupMapIgnoresUnknownItem()
     {
-	def itemLeftOut = items.pop()
- 	def itemsByGroup = itemGroupService.transformToItemsByGroup(groups,items)
-        itemGroupService.removeItemsFromGroupMap([itemLeftOut], itemsByGroup)
-	assertNull findItemInMap(itemLeftOut,itemsByGroup)
-	items.each{ item -> assertEquals item, findItemInMap(item, itemsByGroup) }
+		def itemLeftOut = items.pop()
+	 	def itemsByGroup = itemGroupService.transformToItemsByGroup(groups,items)
+      itemGroupService.removeItemsFromGroupMap([itemLeftOut], itemsByGroup)
+		assertNull findItemInMap(itemLeftOut,itemsByGroup)
+		items.each{ item -> assertEquals item, findItemInMap(item, itemsByGroup) }
     }
-
-
 }

@@ -26,17 +26,17 @@ class BootStrap {
      def authenticateService
 
      def init = { servletContext ->
-        DataSourceUtils.tuneDataSource(servletContext) 
-        def md5pass = authenticateService.passwordEncoder(ConfigurationHolder.config.agile.demo.password)
-	def userAgile = new User(username:ConfigurationHolder.config.agile.demo.username,
-                            userRealName:"Mister Demo", passwd:md5pass, 
-                            enabled:true,email:"agiletracking@gmail.com",
-                            emailShow:true,description:"None",
-			    agreeToTermsOfUse:true)
+     		DataSourceUtils.tuneDataSource(servletContext) 
+		   def md5pass = authenticateService.passwordEncoder(ConfigurationHolder.config.agile.demo.password)
+	  		def userAgile = new User(username:ConfigurationHolder.config.agile.demo.username,
+                              userRealName:"Mister Demo", passwd:md5pass, 
+                              enabled:true,email:"agiletracking@gmail.com",
+                              emailShow:true,description:"None",
+			                     agreeToTermsOfUse:true)
 
-	def userRole = new Role(description:"userRole", authority:"ROLE_USER")
-        userRole.addToPeople(userAgile)
- 	userRole.save()
+	  		def userRole = new Role(description:"userRole", authority:"ROLE_USER")
+     		userRole.addToPeople(userAgile)
+ 	  		userRole.save()
      }
      
      def destroy = {

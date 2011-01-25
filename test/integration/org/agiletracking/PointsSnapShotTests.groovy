@@ -31,7 +31,7 @@ class PointsSnapShotTests extends GroovyTestCase {
 		
 	void setUp() {
 		project = Defaults.getProjects(1)[0]
-		groups = Defaults.getGroups(3,project)
+		groups = Defaults.getGroups(2,project)
 		items = Defaults.getItems(3,groups,project)
 		items.each{ it.points = defaultItemPoint }
 		this.date = new Date()
@@ -182,7 +182,7 @@ class PointsSnapShotTests extends GroovyTestCase {
 
 	void testDeleteWholeGroup()
 	{
-		def nrSnapShots = 10
+		def nrSnapShots = 2
 		def snapShots = Defaults.getSnapShots(groups, date -(nrSnapShots-1), date, project)
 		assertTrue snapShots.size() == nrSnapShots
 		def deletedGroup = groups[0]
