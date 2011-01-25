@@ -36,9 +36,9 @@ class IterationTests extends GroovyTestCase {
 		iter.endTime = iter.startTime + 10
 		iter.save()
 			
-		groups = Defaults.getGroups(5,project)
+		groups = Defaults.getGroups(2,project)
     	groups*.save()
-    	items = Defaults.getItems(5,groups,project)
+    	items = Defaults.getItems(3,groups,project)
     	items*.save()    		
 		items.each{ item ->
 			item.points = 100

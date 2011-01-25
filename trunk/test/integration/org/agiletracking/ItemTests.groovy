@@ -32,7 +32,7 @@ class ItemTests extends GroovyTestCase {
 		projects = Defaults.getProjects(2)
 		project = projects[0]
 		groups = Defaults.getGroups(2,project)
-		items = Defaults.getItems(5,groups,project)
+		items = Defaults.getItems(3,groups,project)
 	}
 	
 	void tearDown()
@@ -141,16 +141,16 @@ class ItemTests extends GroovyTestCase {
 
     void testRetrieveLatestItem()
     {
-	/* Hard to test because when saving the item date is updated again. 
-	 * Implementation wise it's the same as maxUid() */
-	saveItemsAndGroups()
-	assertNotNull Item.lastUpdateDateForProject(project).class
+		/* Hard to test because when saving the item date is updated again. 
+		 * Implementation wise it's the same as maxUid() */
+		saveItemsAndGroups()
+		assertNotNull Item.lastUpdateDateForProject(project).class
     }
 
     void testItemHasNoCriteria()
     {
-    	def values = [null, "  ", " ", ""]
-    	values.each{
+   	def values = [null, "  ", " ", ""]
+	   values.each{
     		items[0].criteria = null
         	assertFalse items[0].hasCriteria()	
     	}

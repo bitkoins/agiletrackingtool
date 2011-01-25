@@ -77,12 +77,9 @@ class UtilXml {
 			items.each{ item -> group.addItem(item) }
 		}
 		
-		def setProject = { it.project = map.project }
-		
-		map.groups.each{ setProject(it) }
-		map.items.each{ setProject(it) }
-		map.iterations.each{ setProject(it) }
-		map.snapShots.each{ setProject(it) }
+		map.with {
+		   (groups+items+iterations+snapShots).each{ it.project = map.project }
+		}
 	}
 }
 
