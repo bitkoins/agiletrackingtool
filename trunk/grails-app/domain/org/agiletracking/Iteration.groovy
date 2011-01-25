@@ -54,7 +54,7 @@ class Iteration extends ItemContainer {
 		return Util.getDaysInBetween(startTime,endTime)
 	}
 	
-	Integer calculateDaysLeft(def now)
+	Integer calculateDaysLeft(Date now)
 	{
 		def days =  Util.getDaysInBetween(now,endTime) 
 		if ( days < 0) return 0 
