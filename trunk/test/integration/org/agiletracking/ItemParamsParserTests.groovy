@@ -56,10 +56,10 @@ class ItemParamsParserTests extends GroovyTestCase
 	void testPointsAreUnchangedWhenNotCorrectlySet()
 	{
 		def originalPoints = 7
-		item.itemPoints = originalPoints
+		item.points = originalPoints
 		params['points'] = "SomethingThatDoesntLookLikePoints"
 		ItemParamsParser.updateItemWithParams(item,params)
-		assertTrue item.itemPoints == originalPoints
+		assertTrue item.points == originalPoints
 	}
 	
 	void testWithNullItemPoitsParams()

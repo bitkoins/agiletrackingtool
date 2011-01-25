@@ -41,7 +41,7 @@ class ItemParamsParser {
 			return ret
 		}
 		
-		item.itemPoints = pointsParser(item.itemPoints, params.points)
+		item.points = pointsParser(item.points, params.points)
 		item.priority = Priority.valueOf(params.priority)
 		
 		def deletedSubItemIdList = []		

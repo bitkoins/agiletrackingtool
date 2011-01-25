@@ -33,7 +33,7 @@ class PointsSnapShotTests extends GroovyTestCase {
 		project = Defaults.getProjects(1)[0]
 		groups = Defaults.getGroups(3,project)
 		items = Defaults.getItems(3,groups,project)
-		items.each{ it.itemPoints = defaultItemPoint }
+		items.each{ it.points = defaultItemPoint }
 		this.date = new Date()
 		takeSnapShot()
 		snapShots = []

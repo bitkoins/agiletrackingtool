@@ -30,7 +30,7 @@ class PointsOverViewTests extends GroovyTestCase {
 	void setUp() {
 		groups = Defaults.getGroups(3)
 		items = Defaults.getItems(3,groups)
-		items.each{ it.itemPoints = defaultItemPoint }
+		items.each{ it.points = defaultItemPoint }
 		overView = new PointsOverView()
 	}
 	

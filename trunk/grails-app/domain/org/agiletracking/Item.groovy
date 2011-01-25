@@ -25,7 +25,7 @@ import org.agiletracking.ItemGroup
 
 class Item {
 	String        description
-	Double        itemPoints	
+	Double        points	
 	ItemStatus    status
 	Priority      priority
 	String        comment
@@ -42,7 +42,7 @@ class Item {
 		description(maxSize:255)
 		comment(nullable:true,maxSize:1024)
 		criteria(nullable:true,maxSize:1024)
-		itemPoints(scale:1)	
+		points(scale:1)	
 		uid(nullable:true)
 		project(nullable:false)
 		lastUpdated(nullable:true)
@@ -98,14 +98,9 @@ class Item {
 		if ( !(subItems?.size() == 0)){ 
 			p = subItems.sum{ it.points }
 		}
-		return [itemPoints,p].max()
+		return [this.@points,p].max()
 	}
-	
-	void setPoints(Double points)
-	{
-		this.itemPoints = points
-	}
-	
+		
 	boolean hasCriteria()
 	{
 		return criteria ? criteria.trim().size() != 0 : false
