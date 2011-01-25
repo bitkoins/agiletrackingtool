@@ -43,7 +43,7 @@ class Util {
 		return Math.ceil(new Double(listSize) / maxSize).toInteger()
 	}
 	
-	static Collection makeListShorterWithScaling(def list, def maxSize)
+	static Collection makeListShorterWithScaling(Collection list, Integer maxSize)
 	{
 		if ( list.size() <= maxSize) return list
 		def retList = []

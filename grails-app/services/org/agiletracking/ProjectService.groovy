@@ -41,18 +41,18 @@ class ProjectService {
     }
     
     boolean executeWhenProjectIsCorrect(Project project, Object objectForProjectCheck, 
-											    Closure closureToCallWhenProjectIsValid = { } )
+											       Closure closureToCallWhenProjectIsValid = { } )
     {
   		 def projectCheckPassed = false
 		 
        if( project && objectForProjectCheck && 
             objectForProjectCheck.project.id == project.id ) {
         	   projectCheckPassed = true
-        }
+       }
         
-        if(projectCheckPassed) closureToCallWhenProjectIsValid()
+       if(projectCheckPassed) closureToCallWhenProjectIsValid()
         
-        return projectCheckPassed
+       return projectCheckPassed
     }
 	
     String exportToXmlString(Project project, String docVersion = UtilXml.currentDocVersion)

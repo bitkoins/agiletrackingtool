@@ -45,11 +45,6 @@ class ItemService {
 		return itemGroupService.transformToItemsByGroup(groups, items)
 	}
 
-	def getFinishedItems(def project) 
-	{
-		return Item.findAllByProjectAndStatus(project,ItemStatus.Finished)
-	}
-
 	Collection<Item> getFinishedItems(Project project) 
 	{
 		return Item.findAllByProjectAndStatus(project,ItemStatus.Finished)

@@ -68,12 +68,12 @@ class Item {
 		return (status != ItemStatus.Finished)
 	}
 	
-	SubItem getSubItem(def id) 
+	SubItem getSubItem(Long id) 
 	{
 		subItems?.find{ it.id == id }
 	}
 	
-	boolean hasSubItem(def id)
+	boolean hasSubItem(Long id)
 	{
 		return getSubItem(id) != null
 	}
@@ -83,7 +83,7 @@ class Item {
 		this.addToSubItems(subItem)		
 	}
 	
-	void deleteSubItem(def id)
+	void deleteSubItem(Long id)
 	{
 		if ( hasSubItem(id) ) {
 			def subItem = getSubItem(id)
@@ -111,12 +111,12 @@ class Item {
 		return _retrieveMaxValueForField(project,"uid")
 	}	
 
-	static Date lastUpdateDateForProject(def project)
+	static Date lastUpdateDateForProject(Project project)
 	{	
 		return _retrieveMaxValueForField(project,"lastUpdated")
 	}
 
-	static def _retrieveMaxValueForField(def project, def fieldAsString)
+	static def _retrieveMaxValueForField(Project project, String fieldAsString)
 	{
  		def max = Item.createCriteria().get {
 			eq("project",project)

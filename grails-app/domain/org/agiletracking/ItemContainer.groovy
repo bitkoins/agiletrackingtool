@@ -48,7 +48,7 @@ class ItemContainer {
 		}
 	}
 	
-	Item getItem(def id) 
+	Item getItem(Long id) 
 	{
 		return items.find{ it.id == id }
 	}
