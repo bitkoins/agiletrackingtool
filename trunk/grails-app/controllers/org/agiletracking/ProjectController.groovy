@@ -38,10 +38,10 @@ class ProjectController {
 	
 	def select = {	
 		def project = Project.get(params.id)
-                flash.projectCheckPassed = checkProjectForUser(project) 
-	        if(flash.projectCheckPassed) session.project = project
+      flash.projectCheckPassed = checkProjectForUser(project) 
+	   if(flash.projectCheckPassed) session.project = project
 
-	        redirect(controller:'currentWork')
+	   redirect(controller:'currentWork')
 	}
 	
 	def delete = {
