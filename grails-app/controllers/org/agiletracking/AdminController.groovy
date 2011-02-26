@@ -51,16 +51,10 @@ class AdminController {
 			def map = UtilXml.importFromXmlString(xml)
 
 			map.project.user = authenticateService.userDomain()
+			
 			map.project.save()
-
-			map.groups*.save()
 			map.items*.save()
-			map.iterations*.save()
-			
-			UtilXml.setRelationToDomainObjects(map)
-			
 			map.groups*.save()
-			map.items*.save()
 			map.iterations*.save()
 			map.snapShots*.save()
 			

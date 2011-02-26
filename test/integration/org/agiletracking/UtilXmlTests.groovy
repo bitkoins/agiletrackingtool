@@ -86,8 +86,6 @@ class UtilXmlTests extends GroovyTestCase {
 		def importIterations = outputMap.iterations
 		def importSnapShots = outputMap.snapShots
 		def importProject = outputMap.project
-				
-		UtilXml.setRelationToDomainObjects(outputMap)
 		
 		outputMap.itemsByIteration.each{ iter, items ->
 			items.each{ item -> iter.addItem(item) }
