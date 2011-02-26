@@ -64,10 +64,13 @@ class UtilXml {
 				throw new Exception("Version ${docVersion} is not supported.")
 				break;
 		}
+
+		_setRelationToDomainObjects(ret)
+
 		return ret
 	}
 	
-	static void setRelationToDomainObjects(Map map)
+	static void _setRelationToDomainObjects(Map map)
 	{
 		map.itemsByIteration.each{ iter, items ->
 			items.each{ item -> iter.addItem(item) } 
