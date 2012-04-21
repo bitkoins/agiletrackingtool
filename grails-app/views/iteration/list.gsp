@@ -23,7 +23,7 @@
     	<g:javascript library="prototype" />
     	<nav:renderSubItems group="tags" />
     	
-    	<g:render template="/shared/plots/linePlot" model="[plotData:plotData, plotSize:[540,240] "/>
+    	<g:render template="/shared/plots/linePlot" model="[plotData:plotData, plotSize:[540,240] ]"/>
 	
 		<div class="iteration">
 		<h1>Current iteration:</h1>

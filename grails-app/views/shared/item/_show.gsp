@@ -34,7 +34,7 @@
 
 <g:if test="${!isCompositionView}">
 	<div class="subItems">
-		<g:each var="subItem" in in="${item.subItems.collect{it}.sort{it.id}}">
+		<g:each var="subItem" in="${item.subItems.collect{it}.sort{it.id}}">
 			<g:render template="/shared/subItem/show" model="[subItem:subItem]"/> 
 		</g:each>
 	</div>
