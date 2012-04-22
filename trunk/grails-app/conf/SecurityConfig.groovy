@@ -1,12 +1,16 @@
 security {
 	// see DefaultSecurityConfig.groovy for all settable/overridable properties
 	active = true 
-   cacheUsers = false
-	loginUserDomainClass = "User"
-	authorityDomainClass = "Role"
+	cacheUsers = false
+	loginUserDomainClass = 'org.agiletracking.User'
+	authorityDomainClass = 'org.agiletracking.Role'
 
-  	useRequestMapDomainClass = false
-        
+  	useRequestMapDomainClass = true
+	requestMapClass='org.agiletracking.Requestmap'
+	    
+	defaultTargetUrl="/project/list" 
+	alwaysUseDefaultTargetUrl = true
+	
     requestMapString = '''\
            CONVERT_URL_TO_LOWERCASE_BEFORE_COMPARISON 
 			  PATTERN_TYPE_APACHE_ANT 

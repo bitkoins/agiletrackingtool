@@ -78,7 +78,11 @@ log4j = {
            'net.sf.ehcache.hibernate'
 
     warn   'org.mortbay.log'
-}
+
+	root {
+		debug 'stdout', 'console'
+		}
+	}
 
 agile.demo.username="demo"
 agile.demo.password="demo"
