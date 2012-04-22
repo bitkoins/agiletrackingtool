@@ -21,7 +21,7 @@ class BootStrap {
 
 	def authenticateService
 
-	def init = { servletContext ->
+	def init = { servletContext -> 
 		DataSourceUtils.tuneDataSource(servletContext)
 
 		def pmMd5Pass = authenticateService.passwordEncoder("pm")
