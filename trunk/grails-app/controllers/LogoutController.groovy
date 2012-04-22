@@ -5,6 +5,6 @@ class LogoutController {
 	 */
 	def index = {
 		session.invalidate()
-		redirect(uri: '/login/auth')
+		redirect(uri: '/login/auth') 
 	}
 }
