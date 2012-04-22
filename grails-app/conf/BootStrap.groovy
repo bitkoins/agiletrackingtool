@@ -24,8 +24,8 @@ class BootStrap {
 	def init = { servletContext -> 
 		DataSourceUtils.tuneDataSource(servletContext)
 
-		def pmMd5Pass = authenticateService.passwordEncoder("pm")
-		def pmAgile = new User(username:"pm",
+		def pmMd5Pass = authenticateService.passwordEncoder("scrummaster")
+		def pmAgile = new User(username:"scrummaster",
 				userRealName:"Mister Demo", passwd:pmMd5Pass,
 				enabled:true,email:"agiletracking@gmail.com",
 				emailShow:true,description:"None",
