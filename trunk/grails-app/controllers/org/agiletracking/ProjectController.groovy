@@ -55,7 +55,13 @@ class ProjectController {
 		redirect(action:'list')
 	}
 
-	def list = { [projects:Project.findAllByUser(authenticateService.userDomain() ) ] }
+	def list = { 
+		if (authenticateService.isLoggedIn()) { 
+			[projects:Project.findAllByUser(authenticateService.userDomain() ) ]
+		} else{
+			redirect(controller:'login', action:'auth')
+		}
+	}
 	
 	def create = {
 		render(view:'edit', model : [project:new Project()] ) 	

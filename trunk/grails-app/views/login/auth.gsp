@@ -50,8 +50,8 @@
 			<div class='fheader'>Please Login..</div>
 			<br/>
 			<p>For demonstration purposes use:</p>
-			<p>Login ID='pm' and Password='pm'</p>
-			<p>Login ID='admin' and Password='admin'</p>
+			<p>Scrummaster Login ID='scrummaster' and Password='scrummaster'</p>
+			<p>Admin Login ID='admin' and Password='admin'</p>
 			<br/>
 			<form action='${postUrl}' method='POST' id='loginForm' class='cssform'>
 				<p>
