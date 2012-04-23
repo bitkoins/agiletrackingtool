@@ -26,7 +26,7 @@
 	</g:each>		
 
 	<g:if test="${projects?.size() == 0}">		
-           <g:link controller="admin" action="loadDefaults">Load example project data</g:link>
+           <g:link action="loadDefaults">Load example project data</g:link>
 	</g:if>
 
 	</div>

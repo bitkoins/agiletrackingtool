@@ -94,4 +94,51 @@ class ProjectController {
 	{
 		return (project.user.id == authenticateService.userDomain().id)
 	}
+	
+	
+	def loadDefaults = {
+		1.times { projectId ->
+			def project = new Project(name:"Example project ${projectId}")
+		project.user = authenticateService.userDomain()
+			project.save()
+
+			def groups = Defaults.getGroups(5,project)
+			groups*.save()
+			def items = Defaults.getItems(25,groups,project)
+			items*.save()
+		
+			Defaults.getSubItems(items.size(),items)*.save()
+			def iters = Defaults.getIterations(3,project)
+		 
+			def snapShots = []
+		
+			 def nowDate = new Date()
+			def durationInDays = 10
+			def startTime = nowDate - iters.size()*durationInDays
+			iters.eachWithIndex{ iter, iterIndex ->
+				iter.startTime = startTime + iterIndex*durationInDays
+				iter.endTime = iter.startTime+ durationInDays
+				iter.status = IterationStatus.Finished
+							
+				5.times{ itemIndex ->
+					def item = Util.random(items)
+					if (item)
+					{
+						item.status = ItemStatus.Finished
+						item.save()
+						items = items - item
+						iter.addItem(item)
+					}
+				
+					def snapShot = PointsSnapShot.takeSnapShot(project, iter.startTime+itemIndex)
+					snapShot.save()
+				}
+			}
+		
+			iters[-1].status = IterationStatus.Ongoing
+			iters*.save()
+		}
+		
+		redirect(controller:"project", action:"list")
+	}
 }
