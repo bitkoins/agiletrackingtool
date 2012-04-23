@@ -1,3 +1,4 @@
+<g:javascript library="prototype" />
 <table class="status${item.status}">
 	<tr>
 		<td width="20">${item.uid}</td>

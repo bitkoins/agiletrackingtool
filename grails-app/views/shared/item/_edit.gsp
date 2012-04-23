@@ -1,4 +1,5 @@
 <div style="visibility: hidden;">
+<g:javascript library="prototype" />
 <div style="padding-bottom:20px;background-color: #99FF66">
 	<g:set var="divId" value="newSubItem" />
 	<div id="subItemTemplate">
@@ -38,7 +39,7 @@
 <div class="subItems">
 	<div id="subItemContainer">
 		<h2>SubItems:</h2>
-		<g:each var="subItem" in in="${item.subItems.collect{it}.sort{it.id}}">
+		<g:each var="subItem" in="${item.subItems.collect{it}.sort{it.id}}">
 		<g:set var="divId" value="subItem_${subItem.id}" />
 		<div id="${divId}" class="subItem">
 			<g:render template="/shared/subItem/editTemplate" model="[isNew:false,subItem:subItem,divId:divId]"/>

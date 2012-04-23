@@ -1,3 +1,4 @@
+<g:javascript library="prototype" />
 <div onmouseover="showItem('infoForItem${item.id}')" onmouseout="hideItem('infoForItem${item.id}')">
 <table>
 	<tr onmouseover="this.className='on'" onmouseout="this.className='out'"> 
