@@ -29,7 +29,6 @@
 	        		</g:form>
 		        </li>
 		        <br/>
-		        <li><g:link style=";"  action="loadDefaults">Load example project data</g:link></li>
 	        </ul>
 	</div>
     </body>
